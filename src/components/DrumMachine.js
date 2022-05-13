@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import '../App.css';
 
 function DrumMachine() {
@@ -61,8 +60,8 @@ function DrumMachine() {
     ];
 
   return (
-    <div>
-      
+    <div className="text-3xl">
+      Drum Machine
     </div>
   );
 }
