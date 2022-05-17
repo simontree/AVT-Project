@@ -64,25 +64,27 @@
 
   .channel {
       display: grid;
+      border-radius: 10%;
       align-items: center;
-      width: 300px;
+      width: min-content;
       margin: auto;
       border: 2px solid #000000;
       grid-template-areas: 
       'switch fileTitle fileTitle fileTitle fileTitle context'
       'play play play play play play'
-      'volIcon volSlider volSlider volSlider space space'
-      'speedIcon speedSlider speedSlider speedSlider space space'
+      'volIcon volSlider volSlider volSlider vol vol'
+      'speedIcon speedSlider speedSlider speedSlider speed speed'
       'midiText midiText channel1 channel2 channel3 channel4'
       'filter filter filter filter filter filter '
       ;
-      column-gap: 10px;
-      row-gap: 10px;
+      column-gap: 5px;
+      row-gap: 5px;
       background-color: rgb(212, 119, 255);
       padding: 5px;
   }
   .fileTitle {
       grid-area: fileTitle;
+      width:max-content;
   }
 
   .fileTitle + p {
@@ -106,30 +108,132 @@
   }
   .volSlider{
     grid-area: volSlider;
-    background-color: #000000;
     height: 15px;
   }
+  .volSlider {
+    width: 100%;
+  }
+  
+  .vSlider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .vSlider:hover {
+    opacity: 1;
+  }
+  
+  .vSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #800798;
+    cursor: pointer;
+  }
+  
+  .vSlider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #8c04aae7;
+    cursor: pointer;
+  }
+
   .speedIcon{
     grid-area: speedIcon;
   }
   .speedSlider{
     grid-area: speedSlider;
-    background-color: #000000;
     height: 15px;
   }
   .midiText{
     grid-area: midiText;
   }
 
-  .midiChannel1{
+  #midiChannel1{
     grid-area: channel1;
   }
-  .midiChannel2{
+  #midiChannel2{
     grid-area: channel2;
   }
-  .midiChannel3{
+  #midiChannel3{
     grid-area: channel3;
   }
-  .midiChannel4{
+  #midiChannel4{
     grid-area: channel4;
   }
+
+
+
+  /* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
