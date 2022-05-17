@@ -6,6 +6,7 @@ function App() {
   return (
     <div>
       <Channel></Channel>
+      <Channel></Channel>
     </div>
   );
 }

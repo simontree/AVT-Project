@@ -4,8 +4,8 @@
 .switch {
     display: inline-block;
     position: relative;
-    width: 60px;
-    height: 34px;
+    width: 45px;
+    height: 25px;
   }
   
   .switch input { 
@@ -29,8 +29,8 @@
   .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 17px;
+    width: 17px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -47,9 +47,9 @@
   }
   
   input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(19px);
+    -ms-transform: translateX(19px);
+    transform: translateX(19px);
   }
   
   /* Rounded sliders */
@@ -157,6 +157,7 @@
   }
   .midiText{
     grid-area: midiText;
+    font-size: 10;
   }
 
   #midiChannel1{
@@ -178,7 +179,7 @@
 .container {
   display: block;
   position: relative;
-  padding-left: 35px;
+  padding-left: 25px;
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 12px;
@@ -200,8 +201,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 25px;
-  width: 25px;
+  height: 18px;
+  width: 18px;
   background-color: #eee;
   border-radius: 50%;
 }
@@ -230,8 +231,8 @@
 
 /* Style the indicator (dot/circle) */
 .container .checkmark:after {
- 	top: 9px;
-	left: 9px;
+ 	top:5px;
+	left: 5px;
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;

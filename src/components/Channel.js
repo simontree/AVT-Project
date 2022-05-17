@@ -37,11 +37,11 @@ function Channel() {
       </div>
       <div className='speedSlider'>
         <input type={'range'} min='0' max='99' 
-          className='vSlider' id="spRange"></input>
+          className='vSlider' id="Range"></input>
       </div>
 
 
-      <div className='midiText'>Midi Channel</div>
+      <label className='midiText' >MidiChannel</label>
       <label className='container' id='midiChannel1'>1
         <input type={'radio'} name="radio" ></input>
         <span class='checkmark'></span>
