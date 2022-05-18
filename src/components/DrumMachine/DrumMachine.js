@@ -61,13 +61,31 @@ const audioClips =  [
 function DrumMachine() {
 
   const [volume, setVolume] = useState(1);
+  const [recording, setRecording] = useState("");
+
+  const playRecording = () => {
+    let index = 0;
+    let recordArray = recording.split(" ");
+
+    const interval = setInterval(() => {
+      const audioTag = document.getElementById(recordArray[index]);
+      audioTag.volume = volume;
+      audioTag.currentTime = 0;
+      audioTag.play();
+      index++;
+    }, 300);
+    setTimeout(
+      () => clearInterval(interval),
+      300 * recordArray.length -1
+    )
+  };
     
   return (
     <div className="text-3xl text-center bg-blue-400">
       Drum Machine
       <div className="flex">
       {audioClips.map(clip => (
-        <Pad key={clip.id} clip={clip} volume={volume}/>
+        <Pad key={clip.id} clip={clip} volume={volume} setRecording={setRecording}/>
       ))}</div>
       <br/>
       <h4>Volume</h4>
@@ -78,7 +96,17 @@ function DrumMachine() {
         value={volume} 
         max="1" 
         min="0"/> 
-    </div>
+      <h3>{recording}</h3>
+      {/* check if recording is not empty, if so show buttons*/}
+      {recording && (
+        <>
+        <button onClick={playRecording} class="bg-green-500 rounded-full p-2 text-base text-white mt-5 hover:rounded-lg ">
+          Play</button>
+        <button onClick={() => setRecording("")} class="bg-red-500 rounded-full p-2 text-base text-white hover:rounded-lg">
+          Clear</button>
+        </>
+      )}
+    </div> 
   );
 }
 
