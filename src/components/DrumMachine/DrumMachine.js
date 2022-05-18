@@ -1,5 +1,4 @@
-import '../App.css';
-import Button from 'react-bootstrap/Button';
+import Pad from './Pad';
 
 function DrumMachine() {
 
@@ -69,17 +68,6 @@ function DrumMachine() {
       ))}</div>
     </div>
   );
-}
-
-function Pad({clip}){
-  return(
-    <div>
-      <Button className="btn bg-slate-500 p-4 m-3">
-      <audio className="clip" id={clip.keyTrigger} src={clip.url}/>
-      {clip.keyTrigger}
-      </Button>
-    </div>
-  )
 }
 
 export default DrumMachine;
