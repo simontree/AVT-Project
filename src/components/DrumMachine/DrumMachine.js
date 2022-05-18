@@ -2,6 +2,10 @@ import Pad from './Pad';
 import React, {useState} from 'react';
 import PadRow from './PadRow';
 
+// for cross browser compatibility
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
 //TODO: audioclips auslagern später
 const audioClips =  [ 
   {
@@ -62,6 +66,8 @@ const audioClips =  [
 
 function DrumMachine() {
 
+  
+
   const [volume, setVolume] = useState(1);
   const [recording, setRecording] = useState("");
   const [speed, setSpeed] = useState(0.5);
@@ -81,15 +87,6 @@ function DrumMachine() {
       600 * speed * recordArray.length -1
     )
   };
-
-  // const kickPad = audioClips.find((clip) => clip.id === "Kick");
-  // const kickPadArray = []
-
-  // const loopKick = () => {
-  //   for(let i=0; i<8;i++){
-  //     kickPadArray.push(<li><Pad key={kickPad.id} clip={kickPad} volume={volume}/></li>)
-  //   };
-  // };loopKick();
     
   return (
     <div className="text-3xl text-center bg-blue-400">
