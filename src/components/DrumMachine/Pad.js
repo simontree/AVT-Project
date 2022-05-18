@@ -1,11 +1,12 @@
 import Button from 'react-bootstrap/Button';
 
-function Pad({clip}){
+function Pad({clip, volume}){
 
     const playSound = () => {
         const audioTag = document.getElementById(clip.keyTrigger);
         audioTag.currentTime = 0;
         audioTag.play();
+        audioTag.volume = volume;
     }
 
     return(
