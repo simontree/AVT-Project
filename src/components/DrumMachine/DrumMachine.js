@@ -96,6 +96,9 @@ function DrumMachine() {
       Drum Machine - Final
       <br/>
           <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume}/>
+          <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume}/>
+      <br/>
+      <hr/>
       <br/>
       Drum Machine - All Clips
       <div className="flex">
