@@ -1,6 +1,8 @@
 import Pad from './Pad';
 import React, {useState} from 'react';
+import PadRow from './PadRow';
 
+//TODO: audioclips auslagern später
 const audioClips =  [ 
   {
     keyCode: 81,
@@ -79,10 +81,23 @@ function DrumMachine() {
       600 * speed * recordArray.length -1
     )
   };
+
+  // const kickPad = audioClips.find((clip) => clip.id === "Kick");
+  // const kickPadArray = []
+
+  // const loopKick = () => {
+  //   for(let i=0; i<8;i++){
+  //     kickPadArray.push(<li><Pad key={kickPad.id} clip={kickPad} volume={volume}/></li>)
+  //   };
+  // };loopKick();
     
   return (
     <div className="text-3xl text-center bg-blue-400">
-      Drum Machine
+      Drum Machine - Final
+      <br/>
+          <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume}/>
+      <br/>
+      Drum Machine - All Clips
       <div className="flex">
       {audioClips.map(clip => (
         <Pad key={clip.id} clip={clip} volume={volume} setRecording={setRecording}/>

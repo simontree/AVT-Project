@@ -12,7 +12,7 @@ function Pad({clip, volume, setRecording}){
 
     return(
       <div>
-        <button onClick={playSound} className="btn bg-slate-500 p-4 m-3">
+        <button onClick={playSound} className="btn bg-slate-500 p-4 m-3 box-border h-17 w-20">
         <audio className="clip" id={clip.keyTrigger} src={clip.url}/>
         {clip.keyTrigger}
         </button>
