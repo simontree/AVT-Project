@@ -62,21 +62,21 @@ function DrumMachine() {
 
   const [volume, setVolume] = useState(1);
   const [recording, setRecording] = useState("");
+  const [speed, setSpeed] = useState(0.5);
 
   const playRecording = () => {
     let index = 0;
     let recordArray = recording.split(" ");
-
     const interval = setInterval(() => {
       const audioTag = document.getElementById(recordArray[index]);
       audioTag.volume = volume;
       audioTag.currentTime = 0;
       audioTag.play();
       index++;
-    }, 300);
+    }, speed * 600);
     setTimeout(
       () => clearInterval(interval),
-      300 * recordArray.length -1
+      600 * speed * recordArray.length -1
     )
   };
     
@@ -104,6 +104,15 @@ function DrumMachine() {
           Play</button>
         <button onClick={() => setRecording("")} class="bg-red-500 rounded-full p-2 text-base text-white hover:rounded-lg">
           Clear</button>
+          <br/>
+          <h4 class="mt-5">Speed</h4>
+        <input 
+          type="range" 
+          step="0.01" 
+          onChange={(e) => setSpeed(e.target.value)}
+          value={speed} 
+          max="1.2" 
+          min="0.1"/> 
         </>
       )}
     </div> 
