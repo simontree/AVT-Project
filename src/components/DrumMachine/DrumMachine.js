@@ -2,10 +2,6 @@ import Pad from './Pad';
 import React, {useState} from 'react';
 import PadRow from './PadRow';
 
-// for cross browser compatibility
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioCtx = new AudioContext();
-
 //TODO: audioclips auslagern später
 const audioClips =  [ 
   {
@@ -66,7 +62,11 @@ const audioClips =  [
 
 function DrumMachine() {
 
-  
+  // for cross browser compatibility
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  const audioCtx = new AudioContext();
+
+  const [bpm, setBpm] = useState(80);
 
   const [volume, setVolume] = useState(1);
   const [recording, setRecording] = useState("");
@@ -92,12 +92,26 @@ function DrumMachine() {
     <div className="text-3xl text-center bg-blue-400">
       Drum Machine - Final
       <br/>
+      <section class="controls-main">
+        <label for="bpm">BPM</label>
+        <input 
+        name="bpm" 
+        id="bpm" 
+        type="range" 
+        min="50" 
+        max="180" 
+        onChange={(e) => setBpm(e.target.value)}
+        value={bpm} 
+        step="1" />
+        <span id="bpmval">{bpm}</span>
+        <button class="ml-10" data-playing="false">Play</button>
+      </section>
           <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume}/>
           <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume}/>
       <br/>
       <hr/>
       <br/>
-      Drum Machine - All Clips
+      Drum Machine - All Clips and Random features
       <div className="flex">
       {audioClips.map(clip => (
         <Pad key={clip.id} clip={clip} volume={volume} setRecording={setRecording}/>

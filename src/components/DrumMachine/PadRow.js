@@ -11,14 +11,14 @@ function PadRow({audioClips, padClip, volume}){
       };
     };
     loopPad();
-    console.log("cool")
+
     return(
-        <div>
+        <section>
             <ul class="grid grid-cols-10">
                 <li class="mt-7">{padClip}</li>
         {padArray}
         </ul>
-        </div>
+        </section>
     );
 }
 
