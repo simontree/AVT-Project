@@ -70,12 +70,12 @@
       margin: auto;
       border: 2px solid #000000;
       grid-template-areas: 
-      'switch fileTitle fileTitle fileTitle fileTitle context'
-      'play play play play play play'
+      'switch fileTitle fileTitle fileTitle context space'
+      'spacel spacel play play spacer spacer'
       'volIcon volSlider volSlider volSlider vol vol'
       'speedIcon speedSlider speedSlider speedSlider speed speed'
       'midiText midiText channel1 channel2 channel3 channel4'
-      'filter filter filter filter filter filter '
+      'filter filter filter filter filter filter'
       ;
       column-gap: 5px;
       row-gap: 5px;
@@ -99,6 +99,7 @@
       grid-area: play;
       grid-column-start: 2;
       grid-column-end: 3;
+      position: relative;
   }
   .playButton{
     width: 100px;
@@ -158,6 +159,7 @@
   .midiText{
     grid-area: midiText;
     font-size: 10;
+    width: min-content;
   }
 
   #midiChannel1{
