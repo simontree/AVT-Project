@@ -11,10 +11,11 @@ function App() {
   const [FILE, setFILE] = useState();
   const [gainVal, setGainVal] = useState();
   const playSong = async (FILE_URL, gainValue) =>{
-    setFILE(FILE_URL);
+    setFILE("./chicken.wav");
     setGainVal(gainValue);
     console.log(FILE + " " + gainVal.gain.value);
-    const response = await fetch(FILE);
+    const response = await  fetch(FILE);
+    
     const soundBuffer = await response.arrayBuffer();
     console.log(soundBuffer);
     const songBuffer = await audioContext.decodeAudioData(soundBuffer);  

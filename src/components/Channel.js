@@ -11,7 +11,7 @@ const Channel = (props) => {
   var isPlaying = false;
 
   console.log(audioContext.sampleRate);
-  const FILE_URL = "271417__soneproject__hats-6.wav";
+  const FILE_URL = "./chicken.wav";
 
   const channelStateChange = (event) =>{
     console.log(event.target.checked);
