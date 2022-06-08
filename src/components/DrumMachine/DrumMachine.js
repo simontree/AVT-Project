@@ -72,6 +72,29 @@ function DrumMachine() {
   const [recording, setRecording] = useState("");
   const [speed, setSpeed] = useState(0.5);
 
+  //for sequencer
+  const lookahead = 25.0;         // How frequently to call scheduling function (in milliseconds)
+  const scheduleAheadTime = 0.1;  // How far ahead to schedule audio (sec)
+
+  let currentNote = 0;
+  let nextNoteTime = 0.0; // when the next note is due.
+
+  function nextNote() {
+      const secondsPerBeat = 60.0 / bpm;
+      nextNoteTime += secondsPerBeat; // Add beat length to last beat time
+      // Advance the beat number, wrap to zero
+      currentNote++;
+      if (currentNote === 8) {
+              currentNote = 0;
+      }
+  }
+
+  const notesInQueue = [];
+
+  const [pad, setPad] = useState("");
+
+  console.log("pad: "+pad);
+
   const playRecording = () => {
     let index = 0;
     let recordArray = recording.split(" ");
@@ -106,8 +129,8 @@ function DrumMachine() {
         <span id="bpmval">{bpm}</span>
         <button class="ml-10" data-playing="false">Play</button>
       </section>
-          <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume}/>
-          <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume}/>
+          <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume} setPad={setPad}/>
+          <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume} setPad={setPad}/>
       <br/>
       <hr/>
       <br/>
