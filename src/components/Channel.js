@@ -1,13 +1,13 @@
 import "./ChannelCss/Channel.css";
 import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { audioContext, primaryGainControl } from "../App";
 
 const Channel = () => {
   const [volume, setVolume] = useState(80);
   const channelGain = audioContext.createGain();
-  channelGain.gain.setValueAtTime(0.8, 0);
+  channelGain.gain.setValueAtTime(0.9, 0);
   channelGain.connect(primaryGainControl);
 
   //Global variables
@@ -17,10 +17,9 @@ const Channel = () => {
   var isPlaying = false;
   var rate = 1;
   var isPlaying = false;
-  let src = process.env.PUBLIC_URL + "Audios/sample4.mp3"
+  let src = process.env.PUBLIC_URL + "Audios/sample4.mp3";
   let source;
 
-  
   const playAudio = () => {
     const audioPlayer = document.querySelector("audio.channel1");
     source = audioContext.createMediaElementSource(audioPlayer);
@@ -44,28 +43,24 @@ const Channel = () => {
     console.log("Channel audioContext clicked.");
   };
 
-  const playPauseClicked = async () => {
-    if(isPlaying){
-      pauseAudio();
-    }else{
-      playAudio();
-    }
-    console.log("Channel PlayPause clicked. " + isPlaying);
+  const playPauseClicked = () => {
+    isPlaying ? pauseAudio() : playAudio();
+    document.querySelector(".channelPlay button").textContent = !isPlaying ? "Play" : "Pause";
   };
 
   const volSliderChange = (event) => {
+    console.log(channelGain)
     const value = event.target.value;
     setVolume(value);
     primaryGainControl.gain.setValueAtTime(
       volume / 100,
       audioContext.currentTime
     );
-    console.log(value);
   };
 
   const speedSliderChange = (event) => {
     const value = event.target.value;
-    console.log(source.mediaElement.playbackRate)
+    console.log(source.mediaElement.playbackRate);
     source.mediaElement.playbackRate = value;
     document.querySelector(".speedValue label").textContent = value;
   };
@@ -77,15 +72,11 @@ const Channel = () => {
   const addFilterEvent = (event) => {
     console.log("Channel add filter clicked.");
   };
-//USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF
+  //USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF
   return (
-    <div className="channel2">
-      <audio
-      className="channel1"
-      controls={true}
-      autoPlay={false}
-      >
-        <source type="audio/mp3" src = {src} />  
+    <div className="channel">
+      <audio className="channel1" controls={true} autoPlay={false}>
+        <source type="audio/mp3" src={src} />
       </audio>
       <div className="channelTop">
         <div className="switchContainer">
