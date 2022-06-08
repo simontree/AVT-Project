@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Channel from './components/Channel';
 import { useState } from 'react';
@@ -11,7 +10,8 @@ primaryGainControl.gain.setValueAtTime(0.05,0);
 function App() {
   const [FILE, setFILE] = useState();
   const [gainVal, setGainVal] = useState();
-
+  const a = process.env.REACT_APP_PUBLIC_URL;
+  console.log(a)
   return (
     <div>
       <Channel></Channel>

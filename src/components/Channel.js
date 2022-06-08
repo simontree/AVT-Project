@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../App";
 
 const Channel = () => {
-  console.log(audioContext);
-  console.log(primaryGainControl);
   const [volume, setVolume] = useState(80);
   const channelGain = audioContext.createGain();
   channelGain.gain.setValueAtTime(0.8, 0);
@@ -17,24 +15,20 @@ const Channel = () => {
   var offsetToResume = 0;
   var pauseTime = 0;
   var isPlaying = false;
-  var songSource = audioContext.createBufferSource();
   var rate = 1;
   var isPlaying = false;
-  var FILE_URL = process.env.PUBLIC_URL+ "271417__soneproject__hats-6.wav";
+  let src = process.env.PUBLIC_URL + "Audios/sample4.mp3"
+  //console.log(src)
 
-
-  const playAudio = async () => {
-    if (isPlaying) return;
-    channelGain.gain.setValueAtTime(volume / 100, audioContext.currentTime);
-    const response = await fetch(FILE_URL);
-    const buffer = await response.arrayBuffer();
-    const songBuffer = await audioContext.decodeAudioData(buffer);
-    songSource = audioContext.createBufferSource();
-    songSource.buffer = songBuffer;
-    songSource.connect(channelGain);
-    startTime = audioContext.currentTime;
-    songSource.start(audioContext.currentTime, offsetToResume);
+  const playAudio = () => {
+    const audioPlayer = document.querySelector("audio.channel1");
+    audioPlayer.play();
     isPlaying = true;
+  };
+  const pauseAudio = () => {
+    const audioPlayer = document.querySelector("audio.channel1");
+    audioPlayer.pause();
+    isPlaying = false;
   };
 
   const channelStateChange = (event) => {
@@ -46,7 +40,11 @@ const Channel = () => {
   };
 
   const playPauseClicked = async () => {
-    playAudio();
+    if(isPlaying){
+      pauseAudio();
+    }else{
+      playAudio();
+    }
     console.log("Channel PlayPause clicked. " + isPlaying);
   };
 
@@ -74,6 +72,13 @@ const Channel = () => {
 //USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF
   return (
     <div className="channel2">
+      <audio
+      className="channel1"
+      controls={true}
+      autoPlay={false}
+      >
+        <source type="audio/mp3" src = {src} />  
+      </audio>
       <div className="channelTop">
         <div className="switchContainer">
           <label className="switch">
