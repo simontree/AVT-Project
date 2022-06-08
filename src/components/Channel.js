@@ -18,14 +18,19 @@ const Channel = () => {
   var rate = 1;
   var isPlaying = false;
   let src = process.env.PUBLIC_URL + "Audios/sample4.mp3"
-  //console.log(src)
+  let source;
 
+  
   const playAudio = () => {
     const audioPlayer = document.querySelector("audio.channel1");
+    source = audioContext.createMediaElementSource(audioPlayer);
+    source.connect(channelGain);
+    console.log(source);
     audioPlayer.play();
     isPlaying = true;
   };
   const pauseAudio = () => {
+    source.disconnect();
     const audioPlayer = document.querySelector("audio.channel1");
     audioPlayer.pause();
     isPlaying = false;
@@ -59,7 +64,10 @@ const Channel = () => {
   };
 
   const speedSliderChange = (event) => {
-    console.log(event.target.value);
+    const value = event.target.value;
+    console.log(source.mediaElement.playbackRate)
+    source.mediaElement.playbackRate = value;
+    document.querySelector(".speedValue label").textContent = value;
   };
 
   const midiChannelChange = (event) => {
@@ -129,7 +137,8 @@ const Channel = () => {
           <input
             type={"range"}
             min="0"
-            max="99"
+            max="3"
+            step="1"
             onChange={speedSliderChange}
             className="sSlider"
             id="sRange"
