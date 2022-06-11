@@ -12,7 +12,7 @@ function Channel(){
 
   var [isPlaying, setIsPlaying] = useState(false);
   var [rate, setRate] = useState(1);
-  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
+  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/chicken.wav");
   var mediaElementSource;
   var audioPlayer;
 
@@ -84,7 +84,7 @@ function Channel(){
     return (
       
       <div className="channel">
-        <audio className="channel1" controls={true} autoPlay={false}>
+        <audio className="channel1" controls={true} autoPlay={false} onEnded={pauseAudio}>
           <source type="audio/mp3" src={src} />
         </audio>
         <div className="channelTop">
