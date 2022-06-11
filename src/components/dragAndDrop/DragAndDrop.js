@@ -6,10 +6,10 @@ class DragAndDrop extends React.Component {
     constructor(props) {
         super(props);
         this.dndRef = React.createRef();
-        this.playRef = React.createRef();
         this.isPlaying = false;
         this.handleClick = this.playSong.bind(this);
     }
+
 
     componentDidMount() {
         const active = () => this.dndRef.current.classList.add("green-border");
@@ -19,13 +19,19 @@ class DragAndDrop extends React.Component {
             const dt = event.dataTransfer;
             const files = dt.files;
             for (const file of files) {
-                console.log(file.name)
-                //let audio = document.createElement("audio");
-                //audio.setAttribute("src", dt.getData('url'));
-                //document.body.appendChild(audio);
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                    var audio = document.createElement('audio');
+                    var source = document.createElement("source")
+                    source.type = file.type;
+                    source.src = ev.target.result;
+                    audio.appendChild(source)
+                    document.body.appendChild(audio);
+                }
+                reader.readAsDataURL(file);
             }
-        }
 
+        }
         this.dndRef.current.addEventListener("drop", handleDrop);
 
 
@@ -63,6 +69,7 @@ class DragAndDrop extends React.Component {
                 <section className="droparea" ref={this.dndRef} >
                     <p>Drag and Drop Area</p>
                 </section>
+                <button onClick={this.handleClick}>Play</button>
             </div>
         )
     }
