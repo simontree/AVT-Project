@@ -4,22 +4,32 @@ import "./ChannelCss/Slider.css";
 import React, { useEffect, useState} from "react";
 import { audioContext, primaryGainControl } from "../index";
 
-function Channel(){
-  const channelID = "0"
+function Channel(props){
+  
+  var [channelID, setChannelID] = useState(-1);
+  var [audioID, setAudioID] = useState("base");
   const [volume, setVolume] = useState(50);
 
   var [isEnabled, setIsEnabled] = useState(false);
 
   var [isPlaying, setIsPlaying] = useState(false);
   var [rate, setRate] = useState(1);
-  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/chicken.wav");
+  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
   var mediaElementSource;
   var audioPlayer;
 
   var [playBtnTxt, setplayBtnTxt] = useState("Play");
+  useEffect(() =>{
+    setChannelID(props.requestChannelID());
+    audioPlayer = document.querySelector("audio.channel");
+    setAudioID("audio" + channelID);
+    audioPlayer.className = "channel" + channelID;
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+  },[])
 
   useEffect(()=>{
-    audioPlayer = document.querySelector("audio.channel1");
+    setAudioID("audio" + channelID);
+    audioPlayer = document.getElementById(audioID);
     mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
   })
 
@@ -84,7 +94,7 @@ function Channel(){
     return (
       
       <div className="channel">
-        <audio className="channel1" controls={true} autoPlay={false} onEnded={pauseAudio}>
+        <audio id={audioID} className="channel" controls={true} autoPlay={false} onEnded={pauseAudio}>
           <source type="audio/mp3" src={src} />
         </audio>
         <div className="channelTop">
