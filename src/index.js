@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Channel from './components/Channel';
+
+export const audioContext = new AudioContext();
+export const out = audioContext.destination;
+export const primaryGainControl = audioContext.createGain();
+primaryGainControl.gain.setValueAtTime(0.4,0);
+primaryGainControl.connect(out);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Channel/>
   </React.StrictMode>
 );
 
