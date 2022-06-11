@@ -11,8 +11,7 @@ primaryGainControl.connect(out);
 function App() {
   const [FILE, setFILE] = useState();
   const [gainVal, setGainVal] = useState();
-  const a = process.env.REACT_APP_PUBLIC_URL;
-  console.log(a)
+  
   return (
     <div>
       <Channel></Channel>
