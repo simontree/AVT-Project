@@ -1,40 +1,46 @@
 import "./ChannelCss/Channel.css";
 import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { audioContext, primaryGainControl } from "../App";
 
 function Channel(){
-  const [volume, setVolume] = useState(80);
+  const channelID = "0"
   const channelGain = audioContext.createGain();
   channelGain.gain.setValueAtTime(0.9, 0);
   channelGain.connect(primaryGainControl);
+  const [volume, setVolume] = useState(80);
 
-  //Global variables
-  var startTime = 0;
-  var offsetToResume = 0;
-  var pauseTime = 0;
-  var isPlaying = false;
-  var rate = 1;
-  var isPlaying = false;
-  let src = process.env.PUBLIC_URL + "Audios/sample4.mp3";
-  let source;
+  var [isPlaying, setIsPlaying] = useState(false);
+  var [rate, setRate] = useState(1);
+  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
+  var mediaElementSource;
+  var audioPlayer;
+
+  var [playBtnTxt, setplayBtnTxt] = useState("Play");
+  var [rateTxt, setRateTxt] = useState("1");
+  var [volumeTxt, setVolumeText] = useState("50");
+
+  useEffect(()=>{
+    audioPlayer = document.querySelector("audio.channel1");
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+  })
 
   const playAudio = () => {
-    const audioPlayer = document.querySelector("audio.channel1");
-    source = audioContext.createMediaElementSource(audioPlayer);
-    source.connect(channelGain);
-    console.log(source);
+    mediaElementSource.connect(channelGain);
     audioPlayer.play();
-    isPlaying = true;
+    setIsPlaying(true);
   };
   const pauseAudio = () => {
-    source.disconnect();
-    const audioPlayer = document.querySelector("audio.channel1");
+    mediaElementSource.disconnect();
     audioPlayer.pause();
-    isPlaying = false;
+    setIsPlaying(false);
   };
-
+  const playPauseClicked = () => {
+    isPlaying ? pauseAudio() : playAudio();
+    setplayBtnTxt((prevText)=>{return isPlaying ? "Play" : "Pause"});
+  };
+  
   const channelStateChange = (event) => {
     console.log(event.target.checked);
   };
@@ -43,26 +49,22 @@ function Channel(){
     console.log("Channel audioContext clicked.");
   };
 
-  const playPauseClicked = () => {
-    isPlaying ? pauseAudio() : playAudio();
-    document.querySelector(".channelPlay button").textContent = !isPlaying ? "Play" : "Pause";
-  };
+
 
   const volSliderChange = (event) => {
-    console.log(channelGain)
-    const value = event.target.value;
-    setVolume(value);
-    primaryGainControl.gain.setValueAtTime(
-      volume / 100,
-      audioContext.currentTime
-    );
+    setVolume(() => {
+      const updatedVolume = event.target.value
+      audioPlayer.volume = updatedVolume/100;
+      return updatedVolume});
+    setVolumeText(event.target.value.toString());
   };
 
   const speedSliderChange = (event) => {
-    const value = event.target.value;
-    console.log(source.mediaElement.playbackRate);
-    source.mediaElement.playbackRate = value;
-    document.querySelector(".speedValue label").textContent = value;
+    setRate(() => {
+      const updatedRate = event.target.value;
+      mediaElementSource.mediaElement.playbackRate = updatedRate;
+      return updatedRate});
+    setRateTxt(()=>rate.toString());
   };
 
   const midiChannelChange = (event) => {
@@ -98,7 +100,7 @@ function Channel(){
   
         <div className="channelPlay">
           <button className="playButton" onClick={playPauseClicked}>
-            Play
+            {playBtnTxt}
           </button>
         </div>
   
@@ -132,12 +134,13 @@ function Channel(){
               max="3"
               step="1"
               onChange={speedSliderChange}
+              onMouseUp={speedSliderChange}
               className="sSlider"
               id="sRange"
             ></input>
           </div>
           <div className="speedValue">
-            <label>5</label>
+            <label>{rateTxt}</label>
           </div>
         </div>
   
