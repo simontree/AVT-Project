@@ -3,14 +3,15 @@ import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
 import React, { useEffect, useState} from "react";
 import { audioContext, primaryGainControl } from "../index";
+import { element } from "prop-types";
 
 function Channel(props){
   
   var [channelID, setChannelID] = useState(-1);
   var [audioID, setAudioID] = useState("base");
   const [volume, setVolume] = useState(50);
-
-  var [isEnabled, setIsEnabled] = useState(false);
+  const [midiChannel, setMidiChannel] = useState(0)
+  var [isEnabled, setIsEnabled] = useState(true);
 
   var [isPlaying, setIsPlaying] = useState(false);
   var [rate, setRate] = useState(1);
@@ -84,8 +85,31 @@ function Channel(props){
   };
 
   const midiChannelChange = (event) => {
-    console.log(event.target.value);
+    const selectedValue = event.target.value;
+    const target = event.target.id;
+    const radios = props.requestRadioButtons();
+    radios.forEach(element => {
+      if(element.checked && element.id != target && element.value == selectedValue && selectedValue!="0"){
+        element.checked = false;
+      }
+    });
+    setRadioButtons();
   };
+
+  const setRadioButtons = () =>{
+    var numberOfChannels = props.requestNumberOfChannels();
+    var radios;
+    var checked;
+    for(var i = 0; i < numberOfChannels; i++){
+      radios = Array.from(document.getElementById("radioButtons" + i).children)
+      .filter((element) => {
+        return element.localName === 'input';
+      });
+      checked = radios.filter((element) => {return element.checked})
+      if(checked.length==0) radios[4].checked = true;
+    }
+  }
+
 
   const addFilterEvent = (event) => {
     console.log("Channel add filter clicked.");
@@ -100,7 +124,7 @@ function Channel(props){
         <div className="channelTop">
           <div className="switchContainer">
             <label className="switch">
-              <input type="checkbox" onClick={channelStateChange} />
+              <input type="checkbox" onChange={channelStateChange} checked={isEnabled}/>
               <span className="slider round"></span>
             </label>
           </div>
@@ -166,39 +190,47 @@ function Channel(props){
           <div className="midiLabel">
             <label>Midi Channel</label>
           </div>
-          <div className="midiChannels">
+          <div className="midiChannels" id={"radioButtons"+channelID}>
             <input
               type="radio"
-              id="m1"
-              name="midiChannel"
+              id={"m1" + channelID}
+              name={"midiChannel" + channelID}
               value="1"
               onChange={midiChannelChange}
             />
-            <label htmlFor="m1">1</label>
+            <label htmlFor={"m1" + channelID}>1</label>
             <input
               type="radio"
-              id="m2"
-              name="midiChannel"
+              id={"m2" + channelID}
+              name={"midiChannel" + channelID}
               value="2"
               onChange={midiChannelChange}
             />
-            <label htmlFor="m2">2</label>
+            <label htmlFor={"m2" + channelID}>2</label>
             <input
               type="radio"
-              id="m3"
-              name="midiChannel"
+              id={"m3" + channelID}
+              name={"midiChannel" + channelID}
               value="3"
               onChange={midiChannelChange}
             />
-            <label htmlFor="m3">3</label>
+            <label htmlFor={"m3" + channelID}>3</label>
             <input
               type="radio"
-              id="m4"
-              name="midiChannel"
+              id={"m4" + channelID}
+              name={"midiChannel" + channelID}
               value="4"
               onChange={midiChannelChange}
             />
-            <label htmlFor="m4">4</label>
+            <label htmlFor={"m4" + channelID}>4</label>
+            <input
+              type="radio"
+              id={"mx" + channelID}
+              name={"midiChannel" + channelID}
+              value="0"
+              onChange={midiChannelChange}
+            />
+            <label htmlFor={"mx" + channelID}>X</label>
           </div>
         </div>
   

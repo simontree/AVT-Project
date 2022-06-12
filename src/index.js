@@ -13,35 +13,29 @@ primaryGainControl.connect(out);
 
 var channels = 0;
 var audioTags = [];
-const requestChannelID = () => {
-  return channels++;
-};
-const requestAudioTag = () => {
-  const audioTags = document.getElementsByTagName("audio");
-  return audioTags;
-};
-
+const requestChannelID = () => {return channels++;}
+const requestRadioButtons = () => {return Array.from(document.querySelectorAll("input[type='radio']"));}
+const requestNumberOfChannels = () => {return Array.from(document.getElementsByClassName("channel")).length;}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
 
 root.render(
   <div>
     <Channel
       requestChannelID={requestChannelID}
-      requestAudioTag={requestAudioTag}
+      requestRadioButtons={requestRadioButtons}
+      requestNumberOfChannels={requestNumberOfChannels}
     />
     <Channel
       requestChannelID={requestChannelID}
-      requestAudioTag={requestAudioTag}
+      requestRadioButtons={requestRadioButtons}
+      
+      requestNumberOfChannels={requestNumberOfChannels}
     />
     <Channel
       requestChannelID={requestChannelID}
-      requestAudioTag={requestAudioTag}
-    />
-    <Channel
-      requestChannelID={requestChannelID}
-      requestAudioTag={requestAudioTag}
+      requestRadioButtons={requestRadioButtons}
+      requestNumberOfChannels={requestNumberOfChannels}
     />
   </div>
 );
