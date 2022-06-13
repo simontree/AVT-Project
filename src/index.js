@@ -1,42 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Channel from "./components/Channel";
-
-export const audioContext = new AudioContext();
-export const out = audioContext.destination;
-export const primaryGainControl = audioContext.createGain();
-primaryGainControl.gain.setValueAtTime(0.4, 0);
-primaryGainControl.connect(out);
-
-var channels = 0;
-var audioTags = [];
-const requestChannelID = () => {return channels++;}
-const requestRadioButtons = () => {return Array.from(document.querySelectorAll("input[type='radio']"));}
-const requestNumberOfChannels = () => {return Array.from(document.getElementsByClassName("channel")).length;}
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <div>
-    <Channel
-      requestChannelID={requestChannelID}
-      requestRadioButtons={requestRadioButtons}
-      requestNumberOfChannels={requestNumberOfChannels}
-    />
-    <Channel
-      requestChannelID={requestChannelID}
-      requestRadioButtons={requestRadioButtons}
-      
-      requestNumberOfChannels={requestNumberOfChannels}
-    />
-    <Channel
-      requestChannelID={requestChannelID}
-      requestRadioButtons={requestRadioButtons}
-      requestNumberOfChannels={requestNumberOfChannels}
-    />
+    <App></App>
   </div>
 );
 

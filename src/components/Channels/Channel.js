@@ -2,46 +2,51 @@ import "./ChannelCss/Channel.css";
 import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
 import React, { useEffect, useState} from "react";
-import { audioContext, primaryGainControl } from "../index";
+import { audioContext, primaryGainControl } from "../../App";
 import { element } from "prop-types";
 
 function Channel(props){
   
-  var [channelID, setChannelID] = useState(-1);
-  var [audioID, setAudioID] = useState("base");
-  const [volume, setVolume] = useState(50);
-  const [midiChannel, setMidiChannel] = useState(0)
-  var [isEnabled, setIsEnabled] = useState(true);
+  const [channelID, setChannelID] = useState(props.id);
+  const [audioPlayerID, setAudioPlayerID] = useState("base");
+  const [volume, setVolume] = useState(props.volume);
+  const [isEnabled, setIsEnabled] = useState(props.isEnabled);
+  const [selectedMidi, setSelectedMidi] = useState(props.selectedMidi)
 
-  var [isPlaying, setIsPlaying] = useState(false);
-  var [rate, setRate] = useState(1);
-  var [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
+  const [isPlaying, setIsPlaying] = useState(props.isPlaying);
+  const [rate, setRate] = useState(props.rate);
+  const [src, setSrc] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
   var mediaElementSource;
   var audioPlayer;
+  var currentMidiChannel;
 
   var [playBtnTxt, setplayBtnTxt] = useState("Play");
   useEffect(() =>{
-    setChannelID(props.requestChannelID());
-    audioPlayer = document.querySelector("audio.channel");
-    setAudioID("audio" + channelID);
-    audioPlayer.className = "channel" + channelID;
+    setChannelID(props.id);
+    setAudioPlayerID("audio" + channelID);
+    audioPlayer = document.querySelector("#"+audioPlayerID);
     mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    currentMidiChannel = document.querySelector("#m"+selectedMidi+""+channelID);
+    currentMidiChannel.checked = true;
+    audioPlayer.volume = 5/100;
   },[])
 
   useEffect(()=>{
-    setAudioID("audio" + channelID);
-    audioPlayer = document.getElementById(audioID);
+    setAudioPlayerID("audio" + channelID);
+    audioPlayer = document.getElementById(audioPlayerID);
     mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    setSelectedMidi(props.selectedMidi);
   })
 
   const playAudio = () => {
-    console.log(isEnabled)
     if(!isEnabled) return;
     mediaElementSource.connect(primaryGainControl);
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
+    console.log(audioPlayer)
   };
+
   const pauseAudio = () => {
     mediaElementSource.disconnect();
     audioPlayer.pause();
@@ -53,15 +58,17 @@ function Channel(props){
   };
   
   const channelStateChange = (event) => {
-    const state = event.target.checked;
+    const isSliderOn = event.target.checked;
     setIsEnabled(()=>{
-      if(!state){
+      if(!isSliderOn){
         pauseAudio();
+        document.querySelector("#m0"+channelID).checked=true;
         //Remove from midi
         //Block Buttons and sliders?
       }
-      return state;
+      return isSliderOn;
     });
+    console.log("Channel " + channelID + " is "+ (isSliderOn ? "enabled.":"disabled."))
   };
 
   const contextClicked = () => {
@@ -85,29 +92,9 @@ function Channel(props){
   };
 
   const midiChannelChange = (event) => {
-    const selectedValue = event.target.value;
-    const target = event.target.id;
-    const radios = props.requestRadioButtons();
-    radios.forEach(element => {
-      if(element.checked && element.id != target && element.value == selectedValue && selectedValue!="0"){
-        element.checked = false;
-      }
-    });
-    setRadioButtons();
-  };
-
-  const setRadioButtons = () =>{
-    var numberOfChannels = props.requestNumberOfChannels();
-    var radios;
-    var checked;
-    for(var i = 0; i < numberOfChannels; i++){
-      radios = Array.from(document.getElementById("radioButtons" + i).children)
-      .filter((element) => {
-        return element.localName === 'input';
-      });
-      checked = radios.filter((element) => {return element.checked})
-      if(checked.length==0) radios[4].checked = true;
-    }
+    const selectedValue = parseInt(event.target.value);
+    const radioButtonID = event.target.id;
+    props.changeMidi(selectedValue,radioButtonID );
   }
 
 
@@ -117,8 +104,8 @@ function Channel(props){
   //USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF
     return (
       
-      <div className="channel">
-        <audio id={audioID} className="channel" controls={true} autoPlay={false} onEnded={pauseAudio}>
+      <div className="channel" id={channelID}>
+        <audio id={audioPlayerID} className="channelAudio" controls={true} autoPlay={false} onEnded={pauseAudio}>
           <source type="audio/mp3" src={src} />
         </audio>
         <div className="channelTop">
@@ -225,7 +212,7 @@ function Channel(props){
             <label htmlFor={"m4" + channelID}>4</label>
             <input
               type="radio"
-              id={"mx" + channelID}
+              id={"m0" + channelID}
               name={"midiChannel" + channelID}
               value="0"
               onChange={midiChannelChange}
