@@ -32,6 +32,7 @@ const Channels = (props) =>{
                  audioURL={channel.audioURL}
                  requestNumberOfChannels={props.requestNumberOfChannels}
                  requestRadioButtons={props.requestRadioButtons}
+                 backgroundColor={channel.color}
                  changeMidi={changeMidi}
                  destroyChannel={handleDestroyChannel}
                 />

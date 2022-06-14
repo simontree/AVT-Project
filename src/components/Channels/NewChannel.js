@@ -10,10 +10,12 @@ const NewChannel = (props) =>{
             rate: props.defaultRate,
             isEnabled: props.defaultState,
             isPlaying: props.defaultIsPlaying,
-            audioURL: props.defaultAudioUrl
+            audioURL: props.defaultAudioUrl,
+            color: props.color()
         }
         console.log(channelData);
         props.addChannelHandler(channelData);
+        props.setNextID(prev => prev + 1)
     }
 
 

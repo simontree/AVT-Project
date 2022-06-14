@@ -27,6 +27,7 @@ const DUMMY_CHANNELS = [
     isEnabled: defaultState,
     isPlaying: defaultIsPlaying,
     audioURL: defaultAudioUrl,
+    color:defaultColor
   },
   {
     id: 1,
@@ -36,6 +37,7 @@ const DUMMY_CHANNELS = [
     isEnabled: defaultState,
     isPlaying: defaultIsPlaying,
     audioURL: defaultAudioUrl,
+    color:defaultColor
   },
   {
     id: 2,
@@ -45,6 +47,7 @@ const DUMMY_CHANNELS = [
     isEnabled: defaultState,
     isPlaying: defaultIsPlaying,
     audioURL: defaultAudioUrl,
+    color:defaultColor
   },
   {
     id: 3,
@@ -54,6 +57,7 @@ const DUMMY_CHANNELS = [
     isEnabled: defaultState,
     isPlaying: defaultIsPlaying,
     audioURL: defaultAudioUrl,
+    color:defaultColor
   },
   {
     id: 4,
@@ -63,6 +67,7 @@ const DUMMY_CHANNELS = [
     isEnabled: defaultState,
     isPlaying: defaultIsPlaying,
     audioURL: defaultAudioUrl,
+    color:defaultColor
   },
 ];
 
@@ -171,6 +176,16 @@ function App() {
     // console.log(currentChannelElements)
   }
 
+  const defineRandomColor = () =>{
+    let color = '#';
+    for (let i = 0; i < 6; i++){
+        const random = Math.random();
+        const bit = (random * 16) | 0;
+        color += (bit).toString(16);
+    };
+    return color;
+  }
+
   return (
     <div>
       <NewChannel
@@ -181,6 +196,7 @@ function App() {
         defaultState={defaultState}
         defaultIsPlaying={defaultIsPlaying}
         defaultAudioUrl={defaultAudioUrl}
+        color={defineRandomColor}
         addChannelHandler={addChannelHandler}
         setNextID={setNextID}
       />
