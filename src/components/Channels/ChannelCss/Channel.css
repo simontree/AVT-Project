@@ -61,3 +61,10 @@
   width: 100%;
   height: 30px;
 }
+
+.optionsMenu{
+  z-index: 5;
+  background-color: blue;
+  width: 20px;
+  height: 40px;
+}

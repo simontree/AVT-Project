@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../UI/Card";
 import Channel from "./Channel";
 
 const Channels = (props) =>{
 
-    const channels = props.channels;
+    var channels = props.channels;
+    useEffect(()=>{
+        channels = props.channels;
+        console.log(channels)
+        mapChannels();
+    },[props.channels])
     let channelsContent = <p>No Channels started</p>;
 
     const changeMidi = (num, radioID) => {
-        //move up, change remap
         props.testChannelModification(num, radioID);
+    }
+    const handleDestroyChannel = (element) => {
+        props.handleDestroyChannel(element);
     }
     const mapChannels = () => {
         if(channels.length > 0){
+            //console.log(channels)
             channelsContent = channels.map((channel) =>(
                 <Channel
                  id={channel.id}
@@ -25,6 +33,7 @@ const Channels = (props) =>{
                  requestNumberOfChannels={props.requestNumberOfChannels}
                  requestRadioButtons={props.requestRadioButtons}
                  changeMidi={changeMidi}
+                 destroyChannel={handleDestroyChannel}
                 />
             ))
         }
@@ -34,8 +43,8 @@ const Channels = (props) =>{
 
 
     return(
-        <div>
-            <Card className="channels">
+        <div id="channelsContainer">
+            <Card className="channels" >
             {channelsContent}
             </Card>
         </div>
