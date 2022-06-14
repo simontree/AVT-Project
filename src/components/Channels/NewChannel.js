@@ -13,7 +13,6 @@ const NewChannel = (props) =>{
             audioURL: props.defaultAudioUrl,
             color: props.color()
         }
-        console.log(channelData);
         props.addChannelHandler(channelData);
         props.setNextID(prev => prev + 1)
     }

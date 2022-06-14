@@ -7,7 +7,6 @@ const Channels = (props) =>{
     var channels = props.channels;
     useEffect(()=>{
         channels = props.channels;
-        console.log(channels)
         mapChannels();
     },[props.channels])
     let channelsContent = <p>No Channels started</p>;

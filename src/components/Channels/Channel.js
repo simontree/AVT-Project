@@ -4,6 +4,11 @@ import "./ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
 import { element } from "prop-types";
+import Filter from "./Filters/Filter";
+import NewFilter from "./Filters/NewFilter";
+import Filters from "./Filters/Filters";
+
+const defaultFilterStrength = 0.05;
 
 function Channel(props) {
   const [channelID] = useState(props.id);
@@ -19,8 +24,11 @@ function Channel(props) {
   var mediaElementSource;
   var audioPlayer;
   var currentMidiChannel;
-
   var [playBtnTxt, setplayBtnTxt] = useState("Play");
+
+  var [filters, setFilters] = useState([]);
+  const [nextFilterID, setNextFilterID] = useState(0);
+
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.querySelector("#" + audioPlayerID);
@@ -51,7 +59,6 @@ function Channel(props) {
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
-    console.log(audioPlayer);
   };
 
   const pauseAudio = () => {
@@ -105,12 +112,26 @@ function Channel(props) {
     props.changeMidi(selectedValue, radioButtonID);
   };
 
-  const addFilterEvent = (event) => {
-    console.log("Channel add filter clicked.");
+  const addFilterEvent = (filter) => {
+    setFilters(prev =>{
+      return [...filters, filter];
+    });
   };
+  const applyFilter = () =>{
+    console.log(document.getElementById(audioPlayerID))
+  }
+
+  const getNextFilterID = () => {
+    setNextFilterID(prev => prev+1)
+    return "filter" + channelID + "" + nextFilterID;
+  }
   //USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF "background-color: rgb(212, 119, 255);"
   return (
-    <div className="channel" id={channelID} style={{backgroundColor: `${color}` }}>
+    <div
+      className="channel"
+      id={channelID}
+      style={{ backgroundColor: `${color}` }}
+    >
       <audio
         id={audioPlayerID}
         className="channelAudio"
@@ -137,7 +158,9 @@ function Channel(props) {
         </div>
 
         <div className="channelContext">
-          <button value={"..."} onClick={contextClicked}>X</button>
+          <button value={"..."} onClick={contextClicked}>
+            X
+          </button>
         </div>
       </div>
 
@@ -176,7 +199,7 @@ function Channel(props) {
             type={"range"}
             min="0"
             max="3"
-            step="1"
+            step="0.25"
             onChange={speedSliderChange}
             onMouseUp={speedSliderChange}
             className="sSlider"
@@ -242,20 +265,16 @@ function Channel(props) {
       <div className="filterSection">
         <label className="filterTitle">Filters (*￣3￣)╭</label>
       </div>
-      <div className="activeFilters">
-        <div className="filter">
-          <label value={"Name"}>Name</label>
-        </div>
-      </div>
-      <div>
-        <button
-          className="addFilterButton"
-          value={"Add Filter"}
-          onClick={addFilterEvent}
-        >
-          Add Filter
-        </button>
-      </div>
+      <Filters
+        filters={filters}
+        applyFilter={applyFilter}
+      ></Filters>
+      <NewFilter
+        addFilterEvent={addFilterEvent}
+        getNextFilterID={getNextFilterID}
+        defaultStrength={defaultFilterStrength}
+      ></NewFilter>
+      
     </div>
   );
 }
