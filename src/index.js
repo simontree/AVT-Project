@@ -9,8 +9,10 @@ import App from "./App";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <DragAndDrop />
+    <div>
+        <DragAndDrop />
     <App></App>
+    </div>
 
 );
 
