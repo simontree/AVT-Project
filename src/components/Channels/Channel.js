@@ -9,7 +9,8 @@ import NewFilter from "./Filters/NewFilter";
 import Filters from "./Filters/Filters";
 
 const defaultFilterStrength = 0.05;
-
+const defaultFilterType = "lowpass";
+//Audio - (Filter-FilterGain)* - ChannelGain - PrimaryGain
 function Channel(props) {
   const [channelID] = useState(props.id);
   const [audioPlayerID, setAudioPlayerID] = useState("base");
@@ -33,7 +34,7 @@ function Channel(props) {
 
   var [filters, setFilters] = useState([]);
   const [nextFilterID, setNextFilterID] = useState(0);
-
+  var biquadFilters = []
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     channelGain.gain.value=0.35;
@@ -51,11 +52,13 @@ function Channel(props) {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
     setSelectedMidi(props.selectedMidi);
+    //applyFilters(filters);
   });
 
   const playAudio = () => {
     if (!isEnabled) return;
     mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+
     mediaElementSource.connect(channelGain);
     channelGain.connect(primaryGainControl);
 
@@ -125,32 +128,37 @@ function Channel(props) {
     });
   };
   const applyFilters = (filters) =>{
-    //console.log(filters)
-    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    console.log(filters);
     channelGain.disconnect();
     mediaElementSource.disconnect();
-    
-    //TEMP
-    const type = "highpass"; 
-    const treshhold = 8000;
-    
+
     let i = 0;
-    // filters.forEach((filter)=>{
-    //   if(filter.isFilterEnabled){
-    //     biquadFilters[i] = audioContext.createBiquadFilter();
-    //     biquadFilters[i].type = type;
-    //     biquadFilters[i].frequency.value = treshhold*10;
+    filters.forEach((filter)=>{
+      if(filter.isFilterEnabled){
+        biquadFilters[i] = audioContext.createBiquadFilter();
+        biquadFilters[i].type = filter.type;
+        switch(filter.type){
+          case "lowpass":
+            biquadFilters[i].frequency.value = 150;
+            break;
+          case "highpass":
+            biquadFilters[i].frequency.value = 8000;
+            break;
+        }
+        biquadFilters[i].gain.value = filter.strength;
+        console.log(biquadFilters[i])
+        
 
-    //     let filterGain = audioContext.createGain();
-    //     filterGain.gain.value = filter.strength;
+        let filterGain = audioContext.createGain();
+        filterGain.gain.value = filter.strength;
 
-    //     filterGain.connect(channelGain);
-    //     biquadFilters[i].connect(filterGain);
-    //     mediaElementSource.connect(biquadFilters[i]);
-    //     filterGain.connect(primaryGainControl);
-    //     i++
-    //   }
-    // })
+        filterGain.connect(channelGain);
+        biquadFilters[i].connect(filterGain);
+        mediaElementSource.connect(biquadFilters[i]);
+        filterGain.connect(primaryGainControl);
+        i++
+      }
+    })
     if(i==0) //channelGain.connect(primaryGainControl);
     console.log("filters applied: " + i)
   }
@@ -169,7 +177,7 @@ function Channel(props) {
       <audio
         id={audioPlayerID}
         className="channelAudio"
-        controls={true}
+        controls={false}
         autoPlay={false}
         onEnded={pauseAudio}
       >
@@ -302,11 +310,13 @@ function Channel(props) {
       <Filters
         filters={filters}
         applyFilters={applyFilters}
+        channelID={channelID}
       ></Filters>
       <NewFilter
         addFilterEvent={addFilterEvent}
         getNextFilterID={getNextFilterID}
         defaultStrength={defaultFilterStrength}
+        defaultFilterType={defaultFilterType}
       ></NewFilter>
       
     </div>

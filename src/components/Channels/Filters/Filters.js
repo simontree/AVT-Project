@@ -11,11 +11,12 @@ const Filters = (props) => {
     mapFilters();
   }, [props.filters]);
 
-  const handleFilterStateChange = (state, filterStrength, filterID) => {
+  const handleFilterStateChange = (state, filterStrength, filterID, filterType) => {
     filters.forEach(filter => {
       if(filter.id === filterID){
         filter.isFilterEnabled = state;
         filter.strength = filterStrength;
+        filter.type = filterType;
       }
     });
     props.applyFilters(filters);
@@ -28,7 +29,9 @@ const Filters = (props) => {
           id={filter.id}
           strength={filter.strength}
           isFilterEnabled={filter.isFilterEnabled}
+          filterType={filter.type}
           filterStateChange={handleFilterStateChange}
+          channelID={props.channelID}
         />
       ));
     }

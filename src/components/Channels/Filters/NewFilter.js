@@ -5,7 +5,8 @@ const NewFilter = (props) => {
     var filterData = {
       id: props.getNextFilterID(),
       strength: props.defaultStrength,
-      isFilterEnabled: false
+      isFilterEnabled: false,
+      type: props.defaultFilterType
     };
     props.addFilterEvent(filterData);
   };
