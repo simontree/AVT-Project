@@ -21,9 +21,14 @@ function Channel(props) {
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
   const [rate, setRate] = useState(props.rate);
   const [audioSourceURL, setAudioSourceURL] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
+  
   var mediaElementSource;
   var audioPlayer;
+
   var currentMidiChannel;
+
+  var channelGain = audioContext.createGain();
+
   var [playBtnTxt, setplayBtnTxt] = useState("Play");
 
   var [filters, setFilters] = useState([]);
@@ -31,8 +36,9 @@ function Channel(props) {
 
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
+    channelGain.gain.value=0.35;
     audioPlayer = document.querySelector("#" + audioPlayerID);
-    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+
     currentMidiChannel = document.querySelector(
       "#m" + selectedMidi + "" + channelID
     );
@@ -44,25 +50,24 @@ function Channel(props) {
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
-    try{
-      mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
-    }catch(error){
-      // console.log(channelID);
-      // console.log(error)
-    }
     setSelectedMidi(props.selectedMidi);
   });
 
   const playAudio = () => {
     if (!isEnabled) return;
-    mediaElementSource.connect(primaryGainControl);
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    mediaElementSource.connect(channelGain);
+    channelGain.connect(primaryGainControl);
+
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
   };
 
   const pauseAudio = () => {
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource.disconnect();
+    channelGain.disconnect();
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
@@ -86,7 +91,8 @@ function Channel(props) {
     );
   };
 
-  const contextClicked = () => {
+  const destroyChannel = () => {
+    pauseAudio();
     props.destroyChannel(document.getElementById(channelID));
   };
 
@@ -101,6 +107,7 @@ function Channel(props) {
   const speedSliderChange = (event) => {
     setRate(() => {
       const updatedRate = event.target.value;
+      mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
       mediaElementSource.mediaElement.playbackRate = updatedRate;
       return updatedRate;
     });
@@ -117,15 +124,42 @@ function Channel(props) {
       return [...filters, filter];
     });
   };
-  const applyFilter = () =>{
-    console.log(document.getElementById(audioPlayerID))
+  const applyFilters = (filters) =>{
+    //console.log(filters)
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    channelGain.disconnect();
+    mediaElementSource.disconnect();
+    
+    //TEMP
+    const type = "highpass"; 
+    const treshhold = 8000;
+    
+    let i = 0;
+    // filters.forEach((filter)=>{
+    //   if(filter.isFilterEnabled){
+    //     biquadFilters[i] = audioContext.createBiquadFilter();
+    //     biquadFilters[i].type = type;
+    //     biquadFilters[i].frequency.value = treshhold*10;
+
+    //     let filterGain = audioContext.createGain();
+    //     filterGain.gain.value = filter.strength;
+
+    //     filterGain.connect(channelGain);
+    //     biquadFilters[i].connect(filterGain);
+    //     mediaElementSource.connect(biquadFilters[i]);
+    //     filterGain.connect(primaryGainControl);
+    //     i++
+    //   }
+    // })
+    if(i==0) //channelGain.connect(primaryGainControl);
+    console.log("filters applied: " + i)
   }
 
   const getNextFilterID = () => {
     setNextFilterID(prev => prev+1)
     return "filter" + channelID + "" + nextFilterID;
   }
-  //USE AUDIO TAG INSTEAD OF ONLY  CONTEXT STUFF "background-color: rgb(212, 119, 255);"
+
   return (
     <div
       className="channel"
@@ -158,7 +192,7 @@ function Channel(props) {
         </div>
 
         <div className="channelContext">
-          <button value={"..."} onClick={contextClicked}>
+          <button value={"..."} onClick={destroyChannel}>
             X
           </button>
         </div>
@@ -267,7 +301,7 @@ function Channel(props) {
       </div>
       <Filters
         filters={filters}
-        applyFilter={applyFilter}
+        applyFilters={applyFilters}
       ></Filters>
       <NewFilter
         addFilterEvent={addFilterEvent}
