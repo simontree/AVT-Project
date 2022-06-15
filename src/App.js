@@ -71,6 +71,7 @@ const DUMMY_CHANNELS = [
   },
 ];
 
+const defaultAudioType = "audio/mp3"
 function App() {
 
   const [channels, setChannels] = useState([]);
@@ -195,6 +196,7 @@ function App() {
         defaultState={defaultState}
         defaultIsPlaying={defaultIsPlaying}
         defaultAudioUrl={defaultAudioUrl}
+        defaultAudioType={defaultAudioType}
         color={defineRandomColor}
         addChannelHandler={addChannelHandler}
         setNextID={setNextID}

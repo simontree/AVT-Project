@@ -34,9 +34,11 @@ const Channels = (props) =>{
                  backgroundColor={channel.color}
                  changeMidi={changeMidi}
                  destroyChannel={handleDestroyChannel}
+                 audioType = {channel.audioType}
                 />
             ))
         }
+        console.log(channels);
     }
     mapChannels();
 
