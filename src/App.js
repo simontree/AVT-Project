@@ -208,7 +208,6 @@ function App() {
         testChannelModification={testChannelModification}
         handleDestroyChannel={destroyChannel}
       ></Channels>
-      
     </div>
   );
 }

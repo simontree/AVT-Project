@@ -1,0 +1,22 @@
+.droparea {
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 384px;
+    max-width: 100%;
+    height: 160px;
+    border: 4px dashed grey;
+    border-radius: 15px;
+}
+
+.droparea i {
+    font-size: 3rem;
+    flex-grow: 1;
+    padding-top: 1rem;
+}
+
+.green-border {
+    border-color: green;
+}
