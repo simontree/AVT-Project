@@ -9,7 +9,7 @@ class DragAndDrop extends React.Component {
         this.isPlaying = false;
         this.handleClick = this.playSong.bind(this);
     }
-
+    allowedFileTypes = ["audio/wav", "audio/mp3", "audio/ogg"]
 
     componentDidMount() {
         const active = () => this.dndRef.current.classList.add("green-border");
@@ -19,18 +19,22 @@ class DragAndDrop extends React.Component {
             const dt = event.dataTransfer;
             const files = dt.files;
             for (const file of files) {
-                var reader = new FileReader();
-                reader.onload = function (ev) {
-                    var audio = document.createElement('audio');
-                    var source = document.createElement("source")
-                    source.type = file.type;
-                    source.src = ev.target.result;
-                    audio.appendChild(source)
-                    document.body.appendChild(audio);
+                if (this.allowedFileTypes.includes(file.type)) {
+                    var reader = new FileReader();
+                    reader.onload = function (ev) {
+                        var audio = document.createElement('audio');
+                        var source = document.createElement("source")
+                        source.type = file.type;
+                        source.src = ev.target.result;
+                        audio.appendChild(source)
+                        document.body.appendChild(audio);
+                    }
+                    reader.readAsDataURL(file);
+                }  else {
+                    //Notification here
+                    window.alert("Files of type: " + file.type + "are currently not supported. Please use a supported file type!");
                 }
-                reader.readAsDataURL(file);
             }
-
         }
         this.dndRef.current.addEventListener("drop", handleDrop);
 
