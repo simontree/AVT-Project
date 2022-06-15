@@ -129,6 +129,8 @@ function Channel(props) {
   };
   const applyFilters = (filters) =>{
     console.log(filters);
+    
+    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
     channelGain.disconnect();
     mediaElementSource.disconnect();
 
