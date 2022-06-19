@@ -10,7 +10,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
     <div>
-        <DragAndDrop />
     <App></App>
     </div>
 

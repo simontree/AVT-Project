@@ -21,8 +21,8 @@ function Channel(props) {
 
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
   const [rate, setRate] = useState(props.rate);
-  const [audioSourceURL, setAudioSourceURL] = useState(process.env.PUBLIC_URL + "Audios/sample4.mp3");
-  
+  const [audioSourceURL, setAudioSourceURL] = useState(props.audioURL);
+  //if in public folder, use process.env.PUBLIC_URL +  first for URL
   var mediaElementSource;
   var audioPlayer;
 
@@ -36,6 +36,7 @@ function Channel(props) {
   const [nextFilterID, setNextFilterID] = useState(0);
   var biquadFilters = []
   useEffect(() => {
+    console.log(audioSourceURL)
     setAudioPlayerID("audio" + channelID);
     channelGain.gain.value=0.35;
     audioPlayer = document.querySelector("#" + audioPlayerID);

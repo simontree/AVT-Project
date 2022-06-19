@@ -1,8 +1,10 @@
 import React from "react";
+import DragAndDrop from "../dragAndDrop/DragAndDrop";
 
 const NewChannel = (props) =>{
 
-    const createNewChannel = () =>{
+    const createNewChannel = (source) =>{
+        console.log(source);
         var channelData = 
         {   id: props.nextAvailableID,
             selectedMidi: props.defaultMidi,
@@ -10,7 +12,7 @@ const NewChannel = (props) =>{
             rate: props.defaultRate,
             isEnabled: props.defaultState,
             isPlaying: props.defaultIsPlaying,
-            audioURL: props.defaultAudioUrl,
+            audioURL: source == null ? props.defaultAudioUrl : source,
             audioType: props.defaultAudioType,
             color: props.color()
         }
@@ -21,7 +23,7 @@ const NewChannel = (props) =>{
 
     return(
         <div>
-            <button onClick={createNewChannel}>Add Channel</button>
+            <DragAndDrop createNewChannel={createNewChannel} />
         </div>
     )
 }
