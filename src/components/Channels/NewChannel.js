@@ -3,8 +3,8 @@ import DragAndDrop from "../dragAndDrop/DragAndDrop";
 
 const NewChannel = (props) =>{
 
-    const createNewChannel = (source) =>{
-        console.log(source);
+    const createNewChannel = (source, type) =>{
+        console.log(source + " " + type);
         var channelData = 
         {   id: props.nextAvailableID,
             selectedMidi: props.defaultMidi,
@@ -13,7 +13,7 @@ const NewChannel = (props) =>{
             isEnabled: props.defaultState,
             isPlaying: props.defaultIsPlaying,
             audioURL: source == null ? props.defaultAudioUrl : source,
-            audioType: props.defaultAudioType,
+            audioType: type==null ? props.defaultAudioType : type,
             color: props.color()
         }
         props.addChannelHandler(channelData);

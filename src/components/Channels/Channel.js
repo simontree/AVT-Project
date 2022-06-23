@@ -22,6 +22,7 @@ function Channel(props) {
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
   const [rate, setRate] = useState(props.rate);
   const [audioSourceURL, setAudioSourceURL] = useState(props.audioURL);
+  const [type, setType] = useState(props.audioType);
   //if in public folder, use process.env.PUBLIC_URL +  first for URL
   var mediaElementSource;
   var audioPlayer;
@@ -183,7 +184,7 @@ function Channel(props) {
         autoPlay={false}
         onEnded={pauseAudio}
       >
-        <source type="audio/mp3" src={audioSourceURL} />
+        <source type={type} src={audioSourceURL} />
       </audio>
       <div className="channelTop">
         <div className="switchContainer">
