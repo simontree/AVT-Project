@@ -7,9 +7,8 @@ class DragAndDrop extends React.Component {
         super(props);
         this.dndRef = React.createRef();
         this.isPlaying = false;
-        this.handleClick = this.playSong.bind(this);
     }
-    allowedFileTypes = ["audio/wav", "audio/mp3", "audio/ogg"]
+    allowedFileTypes = ["audio/wav", "audio/mpeg", "audio/ogg", "audio/x-ms-wma"]
 
     componentDidMount() {
         const active = () => this.dndRef.current.classList.add("green-border");
@@ -20,22 +19,16 @@ class DragAndDrop extends React.Component {
             const dt = event.dataTransfer;
             const files = dt.files;
             for (const file of files) {
-                if (true) {
-                    var reader = new FileReader();
+                if (this.allowedFileTypes.includes(file.type)) {
+                    const reader = new FileReader();
                     reader.onload = function (ev) {
-                        var audio = document.createElement('audio');
-                        var source = document.createElement("source")
-                        source.type = file.type;
-                        source.src = ev.target.result;
-                        audio.appendChild(source)
-                        document.body.appendChild(audio);
-                        console.log(source.src);
-                        handleNewChannel(source.src, source.type);
+                        //console.log(source.src);
+                        handleNewChannel(ev.target.result, file.type);
                     }
                     reader.readAsDataURL(file);
                 }  else {
                     //Notification here
-                    window.alert("Files of type: " + file.type + "are currently not supported. Please use a supported file type!");
+                    window.alert("Files of type: \"" + file.type + "\" are currently not supported. Please use a supported file type!");
                 }
             }
         }
@@ -57,26 +50,12 @@ class DragAndDrop extends React.Component {
         });
     }
 
-    playSong() {
-        const audiotack = document.getElementsByTagName("audio")[0];
-        if (audiotack !== null && audiotack !== undefined) {
-            if (this.isPlaying) {
-                this.isPlaying = false;
-                audiotack.pause();
-            } else {
-                this.isPlaying = true;
-                audiotack.play();
-            }
-        }
-    }
-
     render() {
         return (
             <div>
                 <section className="droparea" ref={this.dndRef} >
                     <p>Drag and Drop Area</p>
                 </section>
-                <button onClick={this.handleClick}>Play</button>
             </div>
         )
     }
