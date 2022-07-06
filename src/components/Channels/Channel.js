@@ -25,6 +25,7 @@ function Channel(props) {
   const [rate, setRate] = useState(props.rate);
   const [audioSourceURL, setAudioSourceURL] = useState(props.audioURL);
   const [type, setType] = useState(props.audioType);
+  const [filterGain, setFilterGain] = useState(0);
   //if in public folder, use process.env.PUBLIC_URL +  first for URL
   var audioPlayer;
   var currentMidiChannel;
@@ -198,13 +199,23 @@ function Channel(props) {
   }
 
   const lowpassFilterInput = (e) => {
-    console.log(e.currentTarget.value);
-    lowpassGain.gain.value = e.currentTarget.value;
+    console.log(document.getElementById("lowpasscheckbox" + channelID).checked);
+    
+    setFilterGain(() =>{
+      var updatedGain = e.target.value;
+      lowpassGain.gain.value = updatedGain;
+      return updatedGain;
+    });
+    filterCheck(!document.getElementById("lowpasscheckbox" + channelID).checked);
+    filterCheck(document.getElementById("lowpasscheckbox" + channelID).checked);
   };
 
   const lowpassFilterClick = (e) => {
-    if (e.currentTarget.checked) {
-      lowpassGain.gain.value = document.getElementById('lowpass' + channelID).value;
+    filterCheck(e.currentTarget.checked);
+  };
+  const filterCheck = (isOn) =>{
+    if (isOn) {
+      lowpassGain.gain.value = filterGain;
       mediaElementSource.disconnect();
       lowpassGain.connect(outputNode);
       lowpassFilter.connect(lowpassGain);
@@ -219,7 +230,7 @@ function Channel(props) {
       mediaElementSource.connect(outputNode);
       toggleOutputConnection();
     }
-  };
+  }
 
   return (
     <div
@@ -366,7 +377,7 @@ function Channel(props) {
             Highpass Filter
           </label>
           <br></br>
-            <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" onInput={lowpassFilterInput}/>
+            <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" value={filterGain} onInput={lowpassFilterInput}/>
       </div>
     </div>
   );
