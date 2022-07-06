@@ -6,7 +6,6 @@ function Pad(props){
 
     const playSound = () => {
         const audioTag = document.getElementById(props.clip.keyTrigger);
-        const button = document.querySelector('button');
         audioTag.currentTime = 0;
         audioTag.play();
         audioTag.volume = props.volume;
