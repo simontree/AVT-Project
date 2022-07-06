@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Channels from "./components/Channels/Channels";
 import NewChannel from './components/Channels/NewChannel';
 import { toBeChecked } from '@testing-library/jest-dom/dist/matchers';
+import Channel from './components/Channels/Channel';
+import Master from './components/Master/Master';
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -208,6 +210,13 @@ function App() {
         testChannelModification={testChannelModification}
         handleDestroyChannel={destroyChannel}
       ></Channels>
+      <Master>
+        id={"master"}
+        volume={defaultVolume}
+        rate={defaultRate}
+        color={"#000000"}
+        isPlaying={defaultIsPlaying}
+      </Master>
     </div>
   );
 }

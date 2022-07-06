@@ -3,6 +3,7 @@ import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
+import { masterOutputNode } from "../Master/Master";
 import { element } from "prop-types";
 import Filter from "./Filters/Filter";
 import NewFilter from "./Filters/NewFilter";
@@ -53,14 +54,14 @@ function Channel(props) {
   }
 
   useEffect(() => {
-    console.log(audioSourceURL)
+    //console.log(audioSourceURL)
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
-    outputNode.connect(primaryGainControl);
+    outputNode.connect(masterOutputNode);
     audioPlayer = document.querySelector("#" + audioPlayerID);
     mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
-    console.log("MediaElement Here:")
-    console.log(mediaElementSource)
+    /*console.log("MediaElement Here:")
+    console.log(mediaElementSource)*/
     mediaElementSource.connect(outputNode);
     currentMidiChannel = document.querySelector(
       "#m" + selectedMidi + "" + channelID
@@ -84,7 +85,7 @@ function Channel(props) {
     }
 
     //mediaElementSource.connect(outputNode);
-    //outputNode.connect(primaryGainControl);
+    //outputNode.connect(masterOutputNode);
 
     audioPlayer.play();
     setIsPlaying(true);
@@ -112,9 +113,9 @@ function Channel(props) {
       }
       return isSliderOn;
     });
-    console.log(
+    /*console.log(
       "Channel " + channelID + " is " + (isSliderOn ? "enabled." : "disabled.")
-    );
+    );*/
   };
 
   const destroyChannel = () => {
@@ -150,7 +151,7 @@ function Channel(props) {
     });
   };
   const applyFilters = (filters) =>{
-    console.log(filters);
+    //console.log(filters);
     outputNode.disconnect();
     mediaElementSource.disconnect();
 
@@ -168,7 +169,7 @@ function Channel(props) {
             break;
         }
         biquadFilters[i].gain.value = filter.strength;
-        console.log(biquadFilters[i])
+        //console.log(biquadFilters[i])
         
 
         let filterGain = audioContext.createGain();
@@ -177,11 +178,11 @@ function Channel(props) {
         filterGain.connect(outputNode);
         biquadFilters[i].connect(filterGain);
         mediaElementSource.connect(biquadFilters[i]);
-        filterGain.connect(primaryGainControl);
+        filterGain.connect(masterOutputNode);
         i++
       }
     })
-    if(i==0) //outputNode.connect(primaryGainControl);
+    if(i==0) //outputNode.connect(masterOutputNode);
     console.log("filters applied: " + i)
   }
 
@@ -199,7 +200,7 @@ function Channel(props) {
   }
 
   const lowpassFilterInput = (e) => {
-    console.log(document.getElementById("lowpasscheckbox" + channelID).checked);
+    //console.log(document.getElementById("lowpasscheckbox" + channelID).checked);
     
     setFilterGain(() =>{
       var updatedGain = e.target.value;
@@ -371,7 +372,7 @@ function Channel(props) {
       <div className="filterSection">
         <label className="filterTitle">Filters (*￣3￣)╭</label>
       </div>
-      <div>
+      <div id={"filtercontainer" + channelID}>
         <input className="ml-6 focus: ring-red-0/0" id={"lowpasscheckbox"+channelID} type="checkbox" onChange={lowpassFilterClick}/>
           <label className="font-bold"  htmlFor="lowpass">
             Highpass Filter
