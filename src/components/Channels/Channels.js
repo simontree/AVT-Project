@@ -35,10 +35,12 @@ const Channels = (props) =>{
                  changeMidi={changeMidi}
                  destroyChannel={handleDestroyChannel}
                  audioType = {channel.audioType}
+                 masterRate = {props.masterRate}
+                 masterPlay = {props.masterPlay}
                 />
             ))
         }
-        console.log(channels);
+        //console.log(channels);
     }
     mapChannels();
 

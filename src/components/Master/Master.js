@@ -5,14 +5,14 @@ import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
 
 export var masterOutputNode;
+export var masterRate = 1;
 function Master(props) {
   const [channelID] = useState(props.id);
   const [volume, setVolume] = useState(props.volume);
   const [color, setColor] = useState(props.backgroundColor);
 
-  const [isPlaying, setIsPlaying] = useState(props.isPlaying);
-  const [rate, setRate] = useState(props.rate);
-
+  const [allPlaying, setAllPlaying] = useState(false);
+  const [buttonTxt, setButtonTxt] = useState("All Play")
   useEffect(() => {
     
     masterOutputNode = audioContext.createGain();
@@ -22,10 +22,14 @@ function Master(props) {
   }, []);
 
   const playPauseClicked = () =>{
-    console.log("hi");
+    props.masterPlayPause();
+    playBtnTxt();
   }
   const playBtnTxt = () =>{
-    console.log("hi");
+    setButtonTxt((old)=>{
+      var updated = old == "All Pause" ? "All Play" : "All Pause";
+      return updated;
+    })
   }
   const volSliderChange = (event) => {
     setVolume(() => {
@@ -34,8 +38,9 @@ function Master(props) {
       return updatedVolume;
     });
   };
-  const speedSliderChange = () =>{
-    console.log("hi");
+  const speedSliderChange = (event) =>{
+    const updatedRate = event.target.value;
+    props.updateMasterRate(updatedRate);
   }
 
 
@@ -46,7 +51,7 @@ function Master(props) {
       style={{ backgroundColor: `${color}` }}>
       <div className="channelPlay">
         <button className="playButton" onClick={playPauseClicked}>
-          {"Button"}
+          {buttonTxt}
         </button>
       </div>
       <div className="volumeControl">
@@ -83,11 +88,11 @@ function Master(props) {
             onMouseUp={speedSliderChange}
             className="sSlider"
             id="masterRange"
-            value={rate}
+            value={props.masterRate}
           ></input>
         </div>
         <div className="speedValue">
-          <label>{rate}</label>
+          <label>{props.masterRate}</label>
         </div>
       </div>
 

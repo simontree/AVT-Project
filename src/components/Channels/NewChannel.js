@@ -4,7 +4,7 @@ import DragAndDrop from "../dragAndDrop/DragAndDrop";
 const NewChannel = (props) =>{
 
     const createNewChannel = (source, type) =>{
-        console.log(source + " " + type);
+        //console.log(source + " " + type);
         var channelData = 
         {   id: props.nextAvailableID,
             selectedMidi: props.defaultMidi,

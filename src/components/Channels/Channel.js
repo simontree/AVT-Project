@@ -3,7 +3,7 @@ import "./ChannelCss/Switch.css";
 import "./ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
-import { masterOutputNode } from "../Master/Master";
+import { masterOutputNode, masterRate } from "../Master/Master";
 import { element } from "prop-types";
 import Filter from "./Filters/Filter";
 import NewFilter from "./Filters/NewFilter";
@@ -27,6 +27,7 @@ function Channel(props) {
   const [audioSourceURL, setAudioSourceURL] = useState(props.audioURL);
   const [type, setType] = useState(props.audioType);
   const [filterGain, setFilterGain] = useState(0);
+  var thisMediaES;
   //if in public folder, use process.env.PUBLIC_URL +  first for URL
   var audioPlayer;
   var currentMidiChannel;
@@ -49,7 +50,7 @@ function Channel(props) {
 
     filter.type = filterType;
     filter.frequency.value = filterFrequency;
-
+    
     return filter
   }
 
@@ -132,12 +133,31 @@ function Channel(props) {
   };
 
   const speedSliderChange = (event) => {
+    const updatedRate = event.target.value;
+    handleRateChange(updatedRate)
+  };
+
+  const handleRateChange = (value) => {
     setRate(() => {
-      const updatedRate = event.target.value;
-      mediaElementSource.mediaElement.playbackRate = updatedRate;
+      const updatedRate = value;
+      //console.log(mediaElementSource);
+      //mediaElementSource.mediaElement.playbackRate = updatedRate * props.masterRate;
+      audioPlayer.playbackRate = updatedRate * props.masterRate;
       return updatedRate;
     });
-  };
+  }
+
+  useEffect(()=>{
+    handleRateChange(rate);
+    console.log("Master Rate Changed:");
+    console.log("Rate: " + rate);
+    console.log("Master Rate: " + props.masterRate)
+  },[props.masterRate])
+
+  useEffect(()=>{
+    console.log("MasterPlay: " + props.masterPlay);
+    props.masterPlay ? playAudio() : pauseAudio();
+  },[props.masterPlay])
 
   const midiChannelChange = (event) => {
     const selectedValue = parseInt(event.target.value);
@@ -193,7 +213,7 @@ function Channel(props) {
 
   function toggleOutputConnection () {
     if (!lowpassSet) {
-      outputNode.connect(audioContext.destination);
+      outputNode.connect(masterOutputNode);
     } else {
       outputNode.disconnect();
     }
@@ -223,7 +243,7 @@ function Channel(props) {
       mediaElementSource.connect(lowpassFilter);
       lowpassSet = true;
       toggleOutputConnection();
-      lowpassGain.connect(audioContext.destination);
+      lowpassGain.connect(masterOutputNode);
     } else {
       lowpassSet = false;
       lowpassGain.disconnect();

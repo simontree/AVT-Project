@@ -20,6 +20,7 @@ const defaultIsPlaying = false;
 const defaultAudioUrl = "Audios/sample4.mp3";
 const defaultColor = "#FE80F0"
 
+
 const DUMMY_CHANNELS = [
   {
     id: 0,
@@ -78,6 +79,9 @@ function App() {
 
   const [channels, setChannels] = useState([]);
   const [nextID, setNextID] = useState(5);
+  const [masterRate, setMasterRate] = useState(1);
+  const [masterPlay, setMasterPlay] = useState(false);
+
   const addChannelHandler = (channel) => {
     setChannels(prevChannels => {
       return [...channels,channel];
@@ -142,9 +146,6 @@ function App() {
     }
   },[midiIsUpdated])
 
-  useEffect(()=>{
-  })
-
   const  destroyChannel = (element) =>{
     document.getElementById("channelsContainer").childNodes[0].removeChild(element)
     // const currentChannelElements = Array.from(document.getElementsByClassName("channel"));
@@ -188,6 +189,17 @@ function App() {
     return color;
   }
 
+  const updateMasterRate = (e) =>{
+    setMasterRate((old) =>{
+      const updatedMasterRate = e;
+      console.log(updatedMasterRate);
+      return updatedMasterRate;
+    })
+  }
+  const masterPlayPause = () =>{
+    setMasterPlay((old) => !old)
+  }
+
   return (
     <div>
       <NewChannel
@@ -209,13 +221,19 @@ function App() {
         requestNumberOfChannels={requestNumberOfChannels}
         testChannelModification={testChannelModification}
         handleDestroyChannel={destroyChannel}
+        masterRate = {masterRate}
+        masterPlay = {masterPlay}
       ></Channels>
-      <Master>
-        id={"master"}
-        volume={defaultVolume}
-        rate={defaultRate}
-        color={"#000000"}
-        isPlaying={defaultIsPlaying}
+      <Master
+      id={"master"}
+      volume={defaultVolume}
+      rate={defaultRate}
+      color={"#000000"}
+      isPlaying={defaultIsPlaying}
+      updateMasterRate = {updateMasterRate}
+      masterRate = {masterRate}
+      masterPlayPause = {masterPlayPause}
+      >
       </Master>
     </div>
   );
