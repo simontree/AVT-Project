@@ -12,7 +12,7 @@ import Filters from "./Filters/Filters";
 const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
 //Audio - (Filter-FilterGain)* - outputNode - PrimaryGain
-var mediaElementSource = undefined;
+var mediaElementSource = [];
 
 function Channel(props) {
   const [channelID] = useState(props.id);
@@ -60,10 +60,10 @@ function Channel(props) {
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
     audioPlayer = document.querySelector("#" + audioPlayerID);
-    mediaElementSource = audioContext.createMediaElementSource(audioPlayer);
+    mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     /*console.log("MediaElement Here:")
-    console.log(mediaElementSource)*/
-    mediaElementSource.connect(outputNode);
+    console.log(mediaElementSource[channelID])*/
+    mediaElementSource[channelID].connect(outputNode);
     currentMidiChannel = document.querySelector(
       "#m" + selectedMidi + "" + channelID
     );
@@ -85,7 +85,7 @@ function Channel(props) {
       audioContext.resume();
     }
 
-    //mediaElementSource.connect(outputNode);
+    //mediaElementSource[channelID].connect(outputNode);
     //outputNode.connect(masterOutputNode);
 
     audioPlayer.play();
@@ -94,7 +94,7 @@ function Channel(props) {
   };
 
   const pauseAudio = () => {
-    //mediaElementSource.disconnect();
+    //mediaElementSource[channelID].disconnect();
     //outputNode.disconnect();
     audioPlayer.pause();
     setIsPlaying(false);
@@ -140,8 +140,8 @@ function Channel(props) {
   const handleRateChange = (value) => {
     setRate(() => {
       const updatedRate = value;
-      //console.log(mediaElementSource);
-      //mediaElementSource.mediaElement.playbackRate = updatedRate * props.masterRate;
+      //console.log(mediaElementSource[channelID]);
+      //mediaElementSource[channelID].mediaElement.playbackRate = updatedRate * props.masterRate;
       audioPlayer.playbackRate = updatedRate * props.masterRate;
       return updatedRate;
     });
@@ -173,7 +173,7 @@ function Channel(props) {
   const applyFilters = (filters) =>{
     //console.log(filters);
     outputNode.disconnect();
-    mediaElementSource.disconnect();
+    mediaElementSource[channelID].disconnect();
 
     let i = 0;
     filters.forEach((filter)=>{
@@ -197,7 +197,7 @@ function Channel(props) {
 
         filterGain.connect(outputNode);
         biquadFilters[i].connect(filterGain);
-        mediaElementSource.connect(biquadFilters[i]);
+        mediaElementSource[channelID].connect(biquadFilters[i]);
         filterGain.connect(masterOutputNode);
         i++
       }
@@ -237,10 +237,10 @@ function Channel(props) {
   const filterCheck = (isOn) =>{
     if (isOn) {
       lowpassGain.gain.value = filterGain;
-      mediaElementSource.disconnect();
+      mediaElementSource[channelID].disconnect();
       lowpassGain.connect(outputNode);
       lowpassFilter.connect(lowpassGain);
-      mediaElementSource.connect(lowpassFilter);
+      mediaElementSource[channelID].connect(lowpassFilter);
       lowpassSet = true;
       toggleOutputConnection();
       lowpassGain.connect(masterOutputNode);
@@ -248,7 +248,7 @@ function Channel(props) {
       lowpassSet = false;
       lowpassGain.disconnect();
       lowpassFilter.disconnect();
-      mediaElementSource.connect(outputNode);
+      mediaElementSource[channelID].connect(outputNode);
       toggleOutputConnection();
     }
   }
