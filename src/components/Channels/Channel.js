@@ -55,14 +55,11 @@ function Channel(props) {
   }
 
   useEffect(() => {
-    //console.log(audioSourceURL)
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
     audioPlayer = document.querySelector("#" + audioPlayerID);
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
-    /*console.log("MediaElement Here:")
-    console.log(mediaElementSource[channelID])*/
     mediaElementSource[channelID].connect(outputNode);
     currentMidiChannel = document.querySelector(
       "#m" + selectedMidi + "" + channelID
@@ -114,9 +111,6 @@ function Channel(props) {
       }
       return isSliderOn;
     });
-    /*console.log(
-      "Channel " + channelID + " is " + (isSliderOn ? "enabled." : "disabled.")
-    );*/
   };
 
   const destroyChannel = () => {
@@ -140,7 +134,6 @@ function Channel(props) {
   const handleRateChange = (value) => {
     setRate(() => {
       const updatedRate = value;
-      //console.log(mediaElementSource[channelID]);
       //mediaElementSource[channelID].mediaElement.playbackRate = updatedRate * props.masterRate;
       audioPlayer.playbackRate = updatedRate * props.masterRate;
       return updatedRate;
@@ -149,13 +142,9 @@ function Channel(props) {
 
   useEffect(()=>{
     handleRateChange(rate);
-    console.log("Master Rate Changed:");
-    console.log("Rate: " + rate);
-    console.log("Master Rate: " + props.masterRate)
   },[props.masterRate])
 
   useEffect(()=>{
-    console.log("MasterPlay: " + props.masterPlay);
     props.masterPlay ? playAudio() : pauseAudio();
   },[props.masterPlay])
 
@@ -171,7 +160,6 @@ function Channel(props) {
     });
   };
   const applyFilters = (filters) =>{
-    //console.log(filters);
     outputNode.disconnect();
     mediaElementSource[channelID].disconnect();
 
@@ -189,7 +177,6 @@ function Channel(props) {
             break;
         }
         biquadFilters[i].gain.value = filter.strength;
-        //console.log(biquadFilters[i])
         
 
         let filterGain = audioContext.createGain();
@@ -202,7 +189,7 @@ function Channel(props) {
         i++
       }
     })
-    if(i==0) //outputNode.connect(masterOutputNode);
+    if(i==0)
     console.log("filters applied: " + i)
   }
 
@@ -220,8 +207,6 @@ function Channel(props) {
   }
 
   const lowpassFilterInput = (e) => {
-    //console.log(document.getElementById("lowpasscheckbox" + channelID).checked);
-    
     setFilterGain(() =>{
       var updatedGain = e.target.value;
       lowpassGain.gain.value = updatedGain;
