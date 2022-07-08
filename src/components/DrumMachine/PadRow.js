@@ -4,11 +4,27 @@ import Pad from './Pad';
  */
 function PadRow(props){
     const padToFind = props.audioClips.find((clip) => clip.id === props.padClip);
-    // props.setPad(padToFind.id);
     const padArray = []
     const loopPad = () => {
       for(let i=0; i<8;i++){
-        padArray.push(<li><Pad key={padToFind.id} clip={padToFind} volume={props.volume} setPad={props.setPad}/></li>)
+        padArray.push(<li>
+          <button 
+          key={padToFind.id} 
+          className="pads p-4 m-3 box-border h-17 w-20"
+          type="button" 
+          role="switch" 
+          aria-checked={props.ariaChecked} 
+          onClick={props.play} 
+          >
+          <audio 
+          className="clip" 
+          id={padToFind.keyTrigger} 
+          src={padToFind.url}
+          />
+          {padToFind.keyTrigger}
+          </button>
+          </li>
+          )
       };
     };
     loopPad();
@@ -17,8 +33,8 @@ function PadRow(props){
         <section>
             <ul class="grid grid-cols-10">
                 <li class="mt-7">{props.padClip}</li>
-        {padArray}
-        </ul>
+            {padArray}
+            </ul>
         </section>
     );
 }
