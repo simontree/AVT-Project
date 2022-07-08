@@ -1,4 +1,3 @@
-import Pad from './Pad';
 import React, {useState} from 'react';
 import PadRow from './PadRow';
 
@@ -62,15 +61,13 @@ const audioClips =  [
 
 function DrumMachine() {
 
-  // for cross browser compatibility
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioCtx = new AudioContext();
 
   const [bpm, setBpm] = useState(80);
 
   const [volume, setVolume] = useState(1);
   const [recording, setRecording] = useState("");
-  const [speed, setSpeed] = useState(0.5);
+
 
   //for sequencer
   const lookahead = 25.0;         // How frequently to call scheduling function (in milliseconds)
@@ -79,7 +76,7 @@ function DrumMachine() {
   let currentNote = 0;
   let nextNoteTime = 0.0; // when the next note is due.
 
-  function nextNote() {
+  const nextNote = () => {
       const secondsPerBeat = 60.0 / bpm;
       nextNoteTime += secondsPerBeat; // Add beat length to last beat time
       // Advance the beat number, wrap to zero
@@ -89,27 +86,66 @@ function DrumMachine() {
       }
   }
 
+  // Create a queue for the notes that are to be played, with the current time that we want them to play:
   const notesInQueue = [];
 
   const [pad, setPad] = useState("");
 
-  console.log("pad: "+pad);
+  // console.log("pad: "+pad[0]);
 
-  const playRecording = () => {
-    let index = 0;
-    let recordArray = recording.split(" ");
-    const interval = setInterval(() => {
-      const audioTag = document.getElementById(recordArray[index]);
-      audioTag.volume = volume;
-      audioTag.currentTime = 0;
-      audioTag.play();
-      index++;
-    }, speed * 600);
-    setTimeout(
-      () => clearInterval(interval),
-      600 * speed * recordArray.length -1
-    )
-  };
+  const scheduleNote = (beatNumber, time) => {
+    notesInQueue.push({note: beatNumber, time: time});
+    if(document.getElementById("Kick").querySelectorAll("button")[beatNumber].getAttribute("aria-checked") === "true"){
+      console.log("play kick")
+    }
+  }
+
+  let timerID;
+
+  const scheduler = () => {
+    // while there are notes that will need to play before the next interval,
+    // schedule them and advance the pointer.
+
+    while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime ) {
+        scheduleNote(currentNote, nextNoteTime);
+        nextNote();
+    }
+    timerID = window.setTimeout(scheduler, lookahead);
+  }
+
+  let lastNoteDrawn = 7;
+
+  const pads = document.querySelectorAll(".pads");
+  const [ariaChecked, setAriaChecked] = useState("");
+
+  const draw = () => {
+    let drawNote = lastNoteDrawn;
+    let currentTime = audioCtx.currentTime;
+
+    while (notesInQueue.length && notesInQueue[0].time < currentTime) {
+        drawNote = notesInQueue[0].note;
+        notesInQueue.splice(0,1);   // remove note from queue
+    }
+
+    // We only need to draw if the note has moved.
+    if (lastNoteDrawn !== drawNote) {
+        pads.forEach(function(element, i) {
+            element.children[lastNoteDrawn].style.borderColor = 'hsla(0, 0%, 10%, 1)';
+            element.children[drawNote].style.borderColor = 'hsla(49, 99%, 50%, 1)';
+        });
+
+        lastNoteDrawn = drawNote;
+    }
+    // set up to draw again
+    requestAnimationFrame(draw);
+  }
+
+  const play = () => {
+    !ariaChecked ? setAriaChecked(true) : setAriaChecked(false);
+    console.log("play some sound")
+    console.log("ariaChecked: "+ariaChecked);
+  }
+
     
   return (
     <div className="text-3xl text-center bg-blue-400">
@@ -129,45 +165,9 @@ function DrumMachine() {
         <span id="bpmval">{bpm}</span>
         <button class="ml-10" data-playing="false">Play</button>
       </section>
-          <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume} setPad={setPad}/>
-          <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume} setPad={setPad}/>
-      <br/>
-      <hr/>
-      <br/>
-      Drum Machine - All Clips and Random features
-      <div className="flex">
-      {audioClips.map(clip => (
-        <Pad key={clip.id} clip={clip} volume={volume} setRecording={setRecording}/>
-      ))}</div>
-      <br/>
-      <h4>Volume</h4>
-        <input 
-        type="range" 
-        step="0.01" 
-        onChange={(e) => setVolume(e.target.value)}
-        value={volume} 
-        max="1" 
-        min="0"/> 
-      <h3>{recording}</h3>
-      {/* check if recording is not empty, if so show buttons*/}
-      {recording && (
-        <>
-        <button onClick={playRecording} class="bg-green-500 rounded-full p-2 text-base text-white mt-5 hover:rounded-lg ">
-          Play</button>
-        <button onClick={() => setRecording("")} class="bg-red-500 rounded-full p-2 text-base text-white hover:rounded-lg">
-          Clear</button>
-          <br/>
-          <h4 class="mt-5">Speed</h4>
-        <input 
-          type="range" 
-          step="0.01" 
-          onChange={(e) => setSpeed(e.target.value)}
-          value={speed} 
-          max="1.2" 
-          min="0.1"/> 
-        </>
-      )}
-    </div> 
+        <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume} setPad={setPad}/>
+        <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume} setPad={setPad}/>
+    </div>
   );
 }
 
