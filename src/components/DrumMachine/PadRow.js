@@ -8,7 +8,11 @@ function PadRow(props){
     const padArray = []
     const loopPad = () => {
       for(let i=0; i<8;i++){
-        padArray.push(<li><Pad key={padToFind.id} clip={padToFind} volume={props.volume} setPad={props.setPad}/></li>)
+        padArray.push(<li>
+          <Pad 
+          key={padToFind.id} 
+          clip={padToFind}
+          play={props.play} /></li>)
       };
     };
     loopPad();
@@ -17,7 +21,7 @@ function PadRow(props){
         <section>
             <ul class="grid grid-cols-10">
                 <li class="mt-7">{props.padClip}</li>
-        {padArray}
+            {padArray}
         </ul>
         </section>
     );
