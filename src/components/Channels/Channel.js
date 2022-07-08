@@ -155,7 +155,7 @@ function Channel(props) {
   },[props.masterRate])
 
   useEffect(()=>{
-    console.log("MasterPlay: " + props.masterPlay);
+    //console.log("MasterPlay: " + props.masterPlay);
     props.masterPlay ? playAudio() : pauseAudio();
   },[props.masterPlay])
 

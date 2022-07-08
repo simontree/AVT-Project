@@ -19,17 +19,26 @@ function Master(props) {
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
+    setButtonTxt("All Pause");
   }, []);
+
+  useEffect(()=>{
+    playPauseClicked();
+  }, [props.masterPlayMidi])
 
   const playPauseClicked = () =>{
     props.masterPlayPause();
     playBtnTxt();
   }
   const playBtnTxt = () =>{
+    var updated;
     setButtonTxt((old)=>{
-      var updated = old == "All Pause" ? "All Play" : "All Pause";
+      console.log(old)
+      updated = old == "All Pause" ? "All Play" : "All Pause";
+      console.log(updated)
       return updated;
     })
+    
   }
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;

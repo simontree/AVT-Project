@@ -81,8 +81,9 @@ function App() {
   const [channels, setChannels] = useState([]);
   const [nextID, setNextID] = useState(5);
   const [masterRate, setMasterRate] = useState(1);
-  const [masterPlay, setMasterPlay] = useState(false);
+  const [masterPlay, setMasterPlay] = useState(true);
   const [masterVolume, setMasterVolume] = useState(5/100);
+  const [masterPlayMidi, setMasterPlayMidi] = useState(false);
 
   const addChannelHandler = (channel) => {
     setChannels(prevChannels => {
@@ -211,17 +212,21 @@ function onMidiMessage(event) {
   let btnID = event.data[1];
   let value = event.data[2];
   let channel = getChannel(cmd, btnID, value);
-  console.log("_________________________________________")
-  console.log("\n" +
-  "New Event (on Channel: "+channel+")==> Type: "+ cmd +
-  ", Origin: "+btnID +
-  ", Value: "+value);
+  // console.log("_________________________________________")
+  // console.log("\n" +
+  // "New Event (on Channel: "+channel+")==> Type: "+ cmd +
+  // ", Origin: "+btnID +
+  // ", Value: "+value);
 }
 
 const getChannel = (type, btnID, value) =>{
   if(btnID <52 && btnID >47){
 
      return btnID%4 + 1;
+  }
+  if((type == 9) && btnID == 18){
+    setMasterPlayMidi(old => !old)
+    return 0;
   }
   if(btnID > 17 && btnID <= 21){ 
 
@@ -232,13 +237,9 @@ const getChannel = (type, btnID, value) =>{
     const mapped = (value/1.27)
     masterOutputNode.gain.value = mapped/100;
     document.getElementById("masterVolumeText").textContent = Math.ceil(mapped);
-    console.log(value);
     return 0;
   }
-  if((type == 8 || type == 9) && btnID == 18){
-
-    return 0;
-  }
+  
 }
 
 const updateMasterVolume = (updated)=>{
@@ -279,6 +280,8 @@ const updateMasterVolume = (updated)=>{
       masterRate = {masterRate}
       masterPlayPause = {masterPlayPause}
       updateMasterVolume = {updateMasterVolume}
+      masterPlay = {masterPlay}
+      masterPlayMidi ={masterPlayMidi}
       >
       </Master>
     </div>
