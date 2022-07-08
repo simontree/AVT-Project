@@ -200,6 +200,64 @@ function App() {
     setMasterPlay((old) => !old)
   }
 
+  useEffect(()=>{
+    initMidi();
+  },[])
+
+  function initMidi() {
+
+    console.log(window.isSecureContext)
+    if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(
+            midiSuccess,
+            midiFailure
+        );
+    } else {
+        midiFailure();
+    }
+}
+
+let midiAccess;
+function midiSuccess(midi) {
+  console.log('Midi is working!');
+
+  midiAccess = midi;
+  console.log(midi.inputs)
+  var inputs = midi.inputs;
+  for (var input of inputs.values()) {
+      input.onmidimessage = onMidiMessage;
+  }
+}
+
+function midiFailure() {
+  console.log('Failure: Midi is not working!');
+}
+
+function onMidiMessage(event) {
+  let cmd = event.data[0] >> 4;
+  let btnID = event.data[1];
+  let value = event.data[2];
+  let channel = getChannel(cmd, btnID);
+  console.log("_________________________________________")
+  console.log("\n" +
+  "New Event (on Channel: "+channel+")==> Type: "+ cmd +
+  ", Origin: "+btnID +
+  ", Value: "+value);
+}
+
+const getChannel = (type, btnID) =>{
+  if(btnID <52 && btnID >47){
+     return btnID%4 + 1;
+  }
+  if(btnID > 17 && btnID <= 21){
+    return (btnID-2)%4 +1;
+  }
+  if((type == 11 && btnID == 64)||
+      ((type == 8 || type == 9) && btnID == 18)){
+     return 0;
+  }
+}
+
   return (
     <div>
       <NewChannel
