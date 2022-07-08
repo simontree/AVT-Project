@@ -84,6 +84,7 @@ function App() {
   const [masterPlay, setMasterPlay] = useState(true);
   const [masterVolume, setMasterVolume] = useState(5/100);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
+  var [midiIsUpdated, setMidiIsUpdated] = useState(false);
 
   const addChannelHandler = (channel) => {
     setChannels(prevChannels => {
@@ -99,31 +100,46 @@ function App() {
     return radioButtons;
   };
   const requestNumberOfChannels = () => {return channels.length;}
-
-  var [midiIsUpdated, setMidiIsUpdated] = useState(false);
-
   const testChannelModification = (number, radioID) =>{
-    console.log(radioID);
     var radios = Array.from(document.querySelectorAll("input[type='radio']"))
       .filter((element) => {return element.checked});
     setChannels((prev)=>{
         radios.forEach(element => {
             if(element.id != radioID && element.value == number && number!="0"){
-              element.checked = false;              
+              element.checked = false;         
             }
           });
         setRadioButtons();
         return prev;
       })
-    setMidiIsUpdated(prev => !prev);
+      radios = Array.from(document.querySelectorAll("input[type='radio']"))
+      .filter((element) => {return element.checked});
+    setMidiIsUpdated((prev) => {
+      console.log(radios)
+      //console.log(radios[0].id[2]) //To get Channel ID and Midi channel selected
+      let midiChannel;
+      let channel;
+      radios.forEach(element => {
+        midiChannel = element.id[1];
+        channel = document.getElementById(element.id[2]);
+        // console.log("Channel:")
+        // console.log(channel);
+        // console.log("At:")
+        // console.log(midiChannel);
+    //TODO: Map "App channels" to "Midi channels" UseState?
+    //And modify values like master. 
+      });
+
+      return !prev
+    });
   }
   const setRadioButtons = () =>{
     var numberOfChannels = channels.length;
     var radios;
     var checked;
-    for(var i = 0; i < numberOfChannels; i++){
+    for(var i = 5; i < numberOfChannels+5; i++){
       try{
-        radios = Array.from(document.getElementById("radioButtons" + i).children)
+        radios = Array.from(document.getElementById("radioButtons" + i).getElementsByTagName("input"))
         .filter((element) => {
           return element.localName === 'input';
         });
@@ -132,8 +148,7 @@ function App() {
           radios[4].checked = true;
         }
       }catch(error){
-        console.log("Channel number: " + i);
-        //console.log(error);
+        console.log(error);
       }
     }
   }

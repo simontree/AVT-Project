@@ -12,53 +12,55 @@ function Master(props) {
   const [color, setColor] = useState(props.backgroundColor);
 
   const [allPlaying, setAllPlaying] = useState(false);
-  const [buttonTxt, setButtonTxt] = useState("All Play")
+  const [buttonTxt, setButtonTxt] = useState("All Play");
+  //Initialization
   useEffect(() => {
-    
     masterOutputNode = audioContext.createGain();
-    masterOutputNode.gain.value=0.35;
+    masterOutputNode.gain.value = 0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
     setButtonTxt("All Pause");
   }, []);
-
-  useEffect(()=>{
+  //Midi Play Pause pressed
+  useEffect(() => {
     playPauseClicked();
-  }, [props.masterPlayMidi])
+  }, [props.masterPlayMidi]);
 
-  const playPauseClicked = () =>{
+  const playPauseClicked = () => {
     props.masterPlayPause();
     playBtnTxt();
-  }
-  const playBtnTxt = () =>{
+  };
+
+  const playBtnTxt = () => {
     var updated;
-    setButtonTxt((old)=>{
-      console.log(old)
+    setButtonTxt((old) => {
+      console.log(old);
       updated = old == "All Pause" ? "All Play" : "All Pause";
-      console.log(updated)
-      return updated;
-    })
-    
-  }
+      console.log(updated);
+       return updated;
+    });
+  };
+
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;
     setVolume(() => {
-      masterOutputNode.gain.value = updatedVolume/100;
-      return updatedVolume;
+      masterOutputNode.gain.value = updatedVolume / 100;
+       return updatedVolume;
     });
     props.updateMasterVolume(updatedVolume);
   };
-  const speedSliderChange = (event) =>{
+
+  const speedSliderChange = (event) => {
     const updatedRate = event.target.value;
     props.updateMasterRate(updatedRate);
-  }
-
+  };
 
   return (
     <div
       className="channel"
       id={channelID}
-      style={{ backgroundColor: `${color}` }}>
+      style={{ backgroundColor: `${color}` }}
+    >
       <div className="channelPlay">
         <button className="playButton" onClick={playPauseClicked}>
           {buttonTxt}
@@ -105,8 +107,6 @@ function Master(props) {
           <label>{props.masterRate}</label>
         </div>
       </div>
-
-
     </div>
   );
 }
