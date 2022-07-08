@@ -99,10 +99,6 @@ function DrumMachine() {
   // Create a queue for the notes that are to be played, with the current time that we want them to play:
   const notesInQueue = [];
 
-  const [pad, setPad] = useState("");
-
-  // console.log("pad: "+pad[0]);
-
   let soundSample;
 
   const scheduleNote = (beatNumber, time) => {
@@ -113,7 +109,7 @@ function DrumMachine() {
     }
   }
 
-  let lastNoteDrawn = 7;
+  var lastNoteDrawn = 7;
 
   const pads = document.querySelectorAll(".pads");
   const [ariaChecked, setAriaChecked] = useState("");
@@ -163,11 +159,17 @@ function DrumMachine() {
   // Loading ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // fetch the audio file and decode the data
   async function getFile(audioContext, filepath) {
-    const response = await fetch(filepath);
-    const arrayBuffer = await response.arrayBuffer();
-    // ! A callback has been added here as a second param for Safari only !
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
-    return audioBuffer;
+    try {
+      const response = await fetch(filepath);
+      console.log("response: "+response)
+      const arrayBuffer = await response.arrayBuffer();
+      console.log("arrayBuffer.byteLength: "+arrayBuffer.byteLength)
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
+      console.log("audioBuffer: "+audioBuffer)
+      return audioBuffer;
+    } catch (error) {
+      return error;
+    }
   }
 
   let isPlaying = false;
