@@ -5,6 +5,7 @@ import NewChannel from './components/Channels/NewChannel';
 import { toBeChecked } from '@testing-library/jest-dom/dist/matchers';
 import Channel from './components/Channels/Channel';
 import Master from './components/Master/Master';
+import { masterOutputNode } from './components/Master/Master';
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -81,6 +82,7 @@ function App() {
   const [nextID, setNextID] = useState(5);
   const [masterRate, setMasterRate] = useState(1);
   const [masterPlay, setMasterPlay] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(5/100);
 
   const addChannelHandler = (channel) => {
     setChannels(prevChannels => {
@@ -148,35 +150,6 @@ function App() {
 
   const  destroyChannel = (element) =>{
     document.getElementById("channelsContainer").childNodes[0].removeChild(element)
-    // const currentChannelElements = Array.from(document.getElementsByClassName("channel"));
-    // const currentChannels = currentChannelElements.map((element) => {
-    //   var i=0;
-    //   var elementid = element.id;
-    //   var elementsSelectedMidi = Array.from(element.childNodes[5].childNodes[1].childNodes).filter((element) =>{
-    //     i = i+1;
-    //     if(i%2===0){
-    //       return false;
-    //     }
-    //     return true;
-    //   }).filter((element) => {return element.checked})[0].value;
-    //   var elementVolume = element.childNodes[3].childNodes[1].childNodes[0].value;
-    //   var elementRate = element.childNodes[4].childNodes[1].childNodes[0].value;
-    //   var isElementEnabled = element.childNodes[1].childNodes[0].childNodes[0].childNodes[0].checked;
-    //   var isElementPlaying = !element.childNodes[0].paused;
-    //   var elementAudioURL = element.childNodes[0].currentSrc;
-      
-    //   return {
-    //     id: elementid,
-    //     selectedMidi: elementsSelectedMidi,
-    //     volume: elementVolume,
-    //     rate: elementRate,
-    //     isEnabled: isElementEnabled,
-    //     isPlaying: isElementPlaying,
-    //     audioURL: elementAudioURL
-    //   }
-      
-    // })
-    // console.log(currentChannelElements)
   }
 
   const defineRandomColor = () =>{
@@ -237,7 +210,7 @@ function onMidiMessage(event) {
   let cmd = event.data[0] >> 4;
   let btnID = event.data[1];
   let value = event.data[2];
-  let channel = getChannel(cmd, btnID);
+  let channel = getChannel(cmd, btnID, value);
   console.log("_________________________________________")
   console.log("\n" +
   "New Event (on Channel: "+channel+")==> Type: "+ cmd +
@@ -245,17 +218,31 @@ function onMidiMessage(event) {
   ", Value: "+value);
 }
 
-const getChannel = (type, btnID) =>{
+const getChannel = (type, btnID, value) =>{
   if(btnID <52 && btnID >47){
+
      return btnID%4 + 1;
   }
-  if(btnID > 17 && btnID <= 21){
+  if(btnID > 17 && btnID <= 21){ 
+
     return (btnID-2)%4 +1;
   }
-  if((type == 11 && btnID == 64)||
-      ((type == 8 || type == 9) && btnID == 18)){
-     return 0;
+  if(type == 11 && btnID == 64){
+    setMasterVolume(old => value);
+    const mapped = (value/1.27)
+    masterOutputNode.gain.value = mapped/100;
+    document.getElementById("masterVolumeText").textContent = Math.ceil(mapped);
+    console.log(value);
+    return 0;
   }
+  if((type == 8 || type == 9) && btnID == 18){
+
+    return 0;
+  }
+}
+
+const updateMasterVolume = (updated)=>{
+  setMasterVolume(old => updated)
 }
 
   return (
@@ -284,13 +271,14 @@ const getChannel = (type, btnID) =>{
       ></Channels>
       <Master
       id={"master"}
-      volume={defaultVolume}
+      volume={masterVolume}
       rate={defaultRate}
       color={"#000000"}
       isPlaying={defaultIsPlaying}
       updateMasterRate = {updateMasterRate}
       masterRate = {masterRate}
       masterPlayPause = {masterPlayPause}
+      updateMasterVolume = {updateMasterVolume}
       >
       </Master>
     </div>

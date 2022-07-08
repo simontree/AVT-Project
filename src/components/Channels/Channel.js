@@ -327,7 +327,7 @@ function Channel(props) {
             type={"range"}
             min="0"
             max="3"
-            step="0.25"
+            step="0.1"
             onChange={speedSliderChange}
             onMouseUp={speedSliderChange}
             className="sSlider"

@@ -32,11 +32,12 @@ function Master(props) {
     })
   }
   const volSliderChange = (event) => {
+    const updatedVolume = event.target.value;
     setVolume(() => {
-      const updatedVolume = event.target.value;
       masterOutputNode.gain.value = updatedVolume/100;
       return updatedVolume;
     });
+    props.updateMasterVolume(updatedVolume);
   };
   const speedSliderChange = (event) =>{
     const updatedRate = event.target.value;
@@ -66,11 +67,11 @@ function Master(props) {
             onChange={volSliderChange}
             className="vSlider"
             id="olRange"
-            value={volume}
+            value={props.volume}
           ></input>
         </div>
         <div className="volValue">
-          <label>{volume}</label>
+          <label id="masterVolumeText">{volume}</label>
         </div>
       </div>
 
@@ -83,7 +84,7 @@ function Master(props) {
             type={"range"}
             min="0"
             max="3"
-            step="0.25"
+            step="0.1"
             onChange={speedSliderChange}
             onMouseUp={speedSliderChange}
             className="sSlider"
