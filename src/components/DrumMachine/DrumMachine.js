@@ -72,9 +72,19 @@ function DrumMachine() {
   //for sequencer
   const lookahead = 25.0;         // How frequently to call scheduling function (in milliseconds)
   const scheduleAheadTime = 0.1;  // How far ahead to schedule audio (sec)
-
   let currentNote = 0;
   let nextNoteTime = 0.0; // when the next note is due.
+  let timerID;
+
+  const scheduler = () => {
+    // while there are notes that will need to play before the next interval,
+    // schedule them and advance the pointer.
+    while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime ) {
+        scheduleNote(currentNote, nextNoteTime);
+        nextNote();
+    }
+    timerID = window.setTimeout(scheduler, lookahead);
+  }
 
   const nextNote = () => {
       const secondsPerBeat = 60.0 / bpm;
@@ -93,24 +103,14 @@ function DrumMachine() {
 
   // console.log("pad: "+pad[0]);
 
+  let soundSample;
+
   const scheduleNote = (beatNumber, time) => {
     notesInQueue.push({note: beatNumber, time: time});
     if(document.getElementById("Kick").querySelectorAll("button")[beatNumber].getAttribute("aria-checked") === "true"){
       console.log("play kick")
+      play(audioCtx, soundSample, time)
     }
-  }
-
-  let timerID;
-
-  const scheduler = () => {
-    // while there are notes that will need to play before the next interval,
-    // schedule them and advance the pointer.
-
-    while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime ) {
-        scheduleNote(currentNote, nextNoteTime);
-        nextNote();
-    }
-    timerID = window.setTimeout(scheduler, lookahead);
   }
 
   let lastNoteDrawn = 7;
@@ -129,7 +129,8 @@ function DrumMachine() {
 
     // We only need to draw if the note has moved.
     if (lastNoteDrawn !== drawNote) {
-        pads.forEach(function(element, i) {
+        pads.forEach(element => {
+            console.log("element: "+element)
             element.children[lastNoteDrawn].style.borderColor = 'hsla(0, 0%, 10%, 1)';
             element.children[drawNote].style.borderColor = 'hsla(49, 99%, 50%, 1)';
         });
@@ -140,16 +141,66 @@ function DrumMachine() {
     requestAnimationFrame(draw);
   }
 
-  const play = () => {
-    !ariaChecked ? setAriaChecked(true) : setAriaChecked(false);
-    console.log("play some sound")
-    console.log("ariaChecked: "+ariaChecked);
+  const play = (audioContext, audioBuffer, time) => {
+    // console.log("play some sound")
+    // const clipToFind = audioClips.find((clip) => clip.id === 'Kick');
+    // console.log("clipToFind: "+clipToFind)
+
+    const sampleSource = audioContext.createBufferSource();
+    sampleSource.buffer = audioBuffer;
+    sampleSource.connect(audioContext.destination)
+    sampleSource.start(time);
+    return sampleSource;
   }
 
+  async function setupSample() {
+    // const clipToFind = audioClips.find((clip) => clip.id === 'Kick').url;
+    const clipToFind = 'kick.mp3';
+    const sample = await getFile(audioCtx, clipToFind);
+    return sample;
+  }
+
+  // Loading ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // fetch the audio file and decode the data
+  async function getFile(audioContext, filepath) {
+    const response = await fetch(filepath);
+    const arrayBuffer = await response.arrayBuffer();
+    // ! A callback has been added here as a second param for Safari only !
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
+    return audioBuffer;
+  }
+
+  let isPlaying = false;
+
+  const playButtonHandler = (e) => {
+    e.preventDefault();
+
+    setupSample()
+    .then((sample) => {
+
+      soundSample = sample;
+
+      isPlaying = !isPlaying; //toggle between playing and stopping
+
+      if(isPlaying){ //start to play
+        if(audioCtx.state === 'suspended'){
+          audioCtx.resume();
+        }
+        currentNote = 0;
+        nextNoteTime = audioCtx.currentTime;
+        scheduler();
+        requestAnimationFrame(draw);
+        e.target.dataset.playing = 'true';
+      } else {
+        window.clearTimeout(timerID);
+        e.target.dataset.playing = 'false';
+      }
+    })
+  }
     
   return (
     <div className="text-3xl text-center bg-blue-400">
-      Drum Machine - Final
+      Drum Machine
       <br/>
       <section class="controls-main">
         <label for="bpm">BPM</label>
@@ -163,10 +214,23 @@ function DrumMachine() {
         value={bpm} 
         step="1" />
         <span id="bpmval">{bpm}</span>
-        <button class="ml-10" data-playing="false">Play</button>
+        <button 
+        class="ml-10 bg-white rounded-lg" 
+        data-playing="false" 
+        onClick={playButtonHandler}>Play</button>
       </section>
-        <PadRow audioClips={audioClips} padClip={"Kick"} volume={volume} setPad={setPad}/>
-        <PadRow audioClips={audioClips} padClip={"Clap"} volume={volume} setPad={setPad}/>
+      <div id="Kick">
+        <PadRow
+        audioClips={audioClips} 
+        padClip={"Kick"}
+        // play={play} 
+        />
+      </div>
+      <div id="Clap">
+        <PadRow
+        audioClips={audioClips} 
+        padClip={"Clap"}/>
+      </div>
     </div>
   );
 }
