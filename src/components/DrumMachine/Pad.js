@@ -22,7 +22,8 @@ function Pad(props){
         <audio 
         className="clip" 
         id={props.clip.keyTrigger} 
-        src={props.clip.url}/>
+        src={props.clip.url}
+        />
         {props.clip.keyTrigger}
         </button>
       </div>

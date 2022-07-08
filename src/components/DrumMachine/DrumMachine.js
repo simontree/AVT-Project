@@ -99,14 +99,29 @@ function DrumMachine() {
   // Create a queue for the notes that are to be played, with the current time that we want them to play:
   const notesInQueue = [];
 
-  let soundSample;
+  var soundSample;
 
   const scheduleNote = (beatNumber, time) => {
     notesInQueue.push({note: beatNumber, time: time});
-    if(document.getElementById("Kick").querySelectorAll("button")[beatNumber].getAttribute("aria-checked") === "true"){
+    if(document
+      .getElementById("Kick")
+      .querySelectorAll("button")[beatNumber]
+      .getAttribute("aria-checked") === "true"){
       console.log("play kick")
-      play(audioCtx, soundSample, time)
+      playSample(audioCtx, time)
     }
+  }
+
+  const playSample = (audioContext, time) => {
+
+    const sampleAudioTag = document.getElementById("Kick").querySelector("button").children[0];
+    const sampleSource = audioContext.createMediaElementSource(sampleAudioTag);
+    // sampleSource.buffer = audioBuffer;
+    sampleSource.connect(audioContext.destination)
+    setTimeout(function(){
+      sampleAudioTag.play();
+    },time)
+    return sampleSource;
   }
 
   var lastNoteDrawn = 7;
@@ -114,45 +129,34 @@ function DrumMachine() {
   const pads = document.querySelectorAll(".pads");
   const [ariaChecked, setAriaChecked] = useState("");
 
-  const draw = () => {
-    let drawNote = lastNoteDrawn;
-    let currentTime = audioCtx.currentTime;
+  // const draw = () => {    // to highlight current Note 
+  //   let drawNote = lastNoteDrawn;
+  //   let currentTime = audioCtx.currentTime;
 
-    while (notesInQueue.length && notesInQueue[0].time < currentTime) {
-        drawNote = notesInQueue[0].note;
-        notesInQueue.splice(0,1);   // remove note from queue
-    }
+  //   while (notesInQueue.length && notesInQueue[0].time < currentTime) {
+  //       drawNote = notesInQueue[0].note;
+  //       notesInQueue.splice(0,1);   // remove note from queue
+  //   }
 
-    // We only need to draw if the note has moved.
-    if (lastNoteDrawn !== drawNote) {
-        pads.forEach(element => {
-            console.log("element: "+element)
-            element.children[lastNoteDrawn].style.borderColor = 'hsla(0, 0%, 10%, 1)';
-            element.children[drawNote].style.borderColor = 'hsla(49, 99%, 50%, 1)';
-        });
+  //   // We only need to draw if the note has moved.
+  //   if (lastNoteDrawn !== drawNote) {
+  //       pads.forEach(element => {
+  //           console.log("element: "+element)
+  //           element.children[lastNoteDrawn].style.borderColor = 'hsla(0, 0%, 10%, 1)';
+  //           element.children[drawNote].style.borderColor = 'hsla(49, 99%, 50%, 1)';
+  //       });
 
-        lastNoteDrawn = drawNote;
-    }
-    // set up to draw again
-    requestAnimationFrame(draw);
-  }
+  //       lastNoteDrawn = drawNote;
+  //   }
+  //   // set up to draw again
+  //   requestAnimationFrame(draw);
+  // }
 
-  const play = (audioContext, audioBuffer, time) => {
-    // console.log("play some sound")
-    // const clipToFind = audioClips.find((clip) => clip.id === 'Kick');
-    // console.log("clipToFind: "+clipToFind)
-
-    const sampleSource = audioContext.createBufferSource();
-    sampleSource.buffer = audioBuffer;
-    sampleSource.connect(audioContext.destination)
-    sampleSource.start(time);
-    return sampleSource;
-  }
-
-  async function setupSample() {
+  async function setupSample() {  
     // const clipToFind = audioClips.find((clip) => clip.id === 'Kick').url;
-    const clipToFind = 'kick.mp3';
+    const clipToFind = './kick.mp3';
     const sample = await getFile(audioCtx, clipToFind);
+    console.log("sample: "+sample)
     return sample;
   }
 
@@ -160,11 +164,18 @@ function DrumMachine() {
   // fetch the audio file and decode the data
   async function getFile(audioContext, filepath) {
     try {
-      const response = await fetch(filepath);
-      console.log("response: "+response)
+      const response = await fetch(filepath,
+        // {
+        //   mode: 'cors',
+        //   headers : {
+        //     'Access-Control-Allow-Origin': '*'
+        //   }
+        // }
+        );
+      // console.log("response: "+response)
       const arrayBuffer = await response.arrayBuffer();
       console.log("arrayBuffer.byteLength: "+arrayBuffer.byteLength)
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
       console.log("audioBuffer: "+audioBuffer)
       return audioBuffer;
     } catch (error) {
@@ -191,7 +202,7 @@ function DrumMachine() {
         currentNote = 0;
         nextNoteTime = audioCtx.currentTime;
         scheduler();
-        requestAnimationFrame(draw);
+        // requestAnimationFrame(draw);
         e.target.dataset.playing = 'true';
       } else {
         window.clearTimeout(timerID);
@@ -219,7 +230,9 @@ function DrumMachine() {
         <button 
         class="ml-10 bg-white rounded-lg" 
         data-playing="false" 
-        onClick={playButtonHandler}>Play</button>
+        onClick={playButtonHandler}>
+          Play
+          </button>
       </section>
       <div id="Kick">
         <PadRow
