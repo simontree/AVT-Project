@@ -9,6 +9,7 @@ export var masterRate = 1;
 function Master(props) {
   const [channelID] = useState(props.id);
   const [volume, setVolume] = useState(props.volume);
+  const [rate, setRate] = useState(props.masterRate)
   const [color, setColor] = useState(props.backgroundColor);
 
   const [allPlaying, setAllPlaying] = useState(false);
@@ -34,9 +35,7 @@ function Master(props) {
   const playBtnTxt = () => {
     var updated;
     setButtonTxt((old) => {
-      console.log(old);
       updated = old == "All Pause" ? "All Play" : "All Pause";
-      console.log(updated);
        return updated;
     });
   };
@@ -54,6 +53,9 @@ function Master(props) {
     const updatedRate = event.target.value;
     props.updateMasterRate(updatedRate);
   };
+  useEffect(()=>{
+    document.getElementById("masterRateSlider").value=props.masterRate;
+  },[props.masterRate])
 
   return (
     <div
@@ -99,12 +101,12 @@ function Master(props) {
             onChange={speedSliderChange}
             onMouseUp={speedSliderChange}
             className="sSlider"
-            id="masterRange"
-            value={props.masterRate}
+            id="masterRateSlider"
+            value={Math.ceil(props.masterRate*10)/10}
           ></input>
         </div>
         <div className="speedValue">
-          <label>{props.masterRate}</label>
+          <label id="masterSpeedValue">{Math.ceil(props.masterRate*10)/10}</label>
         </div>
       </div>
     </div>

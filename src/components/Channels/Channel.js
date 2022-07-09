@@ -139,9 +139,10 @@ function Channel(props) {
 
   const handleRateChange = (value) => {
     setRate(() => {
-      const updatedRate = value;
-      //console.log(mediaElementSource);
-      //mediaElementSource.mediaElement.playbackRate = updatedRate * props.masterRate;
+      const updatedRate = value == undefined ? 1 : value;
+      //console.log(value);
+      const realRate = value * Math.ceil(props.masterRate*10)/10;
+      console.log(realRate)
       audioPlayer.playbackRate = updatedRate * props.masterRate;
       return updatedRate;
     });
@@ -149,9 +150,6 @@ function Channel(props) {
 
   useEffect(()=>{
     handleRateChange(rate);
-    console.log("Master Rate Changed:");
-    console.log("Rate: " + rate);
-    console.log("Master Rate: " + props.masterRate)
   },[props.masterRate])
 
   useEffect(()=>{
@@ -241,6 +239,7 @@ function Channel(props) {
       lowpassGain.connect(outputNode);
       lowpassFilter.connect(lowpassGain);
       mediaElementSource.connect(lowpassFilter);
+      console.log(mediaElementSource)
       lowpassSet = true;
       toggleOutputConnection();
       lowpassGain.connect(masterOutputNode);

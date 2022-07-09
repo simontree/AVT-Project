@@ -181,7 +181,6 @@ function App() {
   const updateMasterRate = (e) =>{
     setMasterRate((old) =>{
       const updatedMasterRate = e;
-      console.log(updatedMasterRate);
       return updatedMasterRate;
     })
   }
@@ -228,10 +227,10 @@ function onMidiMessage(event) {
   let value = event.data[2];
   let channel = getChannel(cmd, btnID, value);
   // console.log("_________________________________________")
-  // console.log("\n" +
-  // "New Event (on Channel: "+channel+")==> Type: "+ cmd +
-  // ", Origin: "+btnID +
-  // ", Value: "+value);
+  console.log("\n" +
+  "New Event (on Channel: "+channel+")==> Type: "+ cmd +
+  ", Origin: "+btnID +
+  ", Value: "+value);
 }
 
 const getChannel = (type, btnID, value) =>{
@@ -248,11 +247,17 @@ const getChannel = (type, btnID, value) =>{
     return (btnID-2)%4 +1;
   }
   if(type == 11 && btnID == 64){
-    setMasterVolume(old => value);
+    setMasterVolume(old => value/1.27);
     const mapped = (value/1.27)
     masterOutputNode.gain.value = mapped/100;
     document.getElementById("masterVolumeText").textContent = Math.ceil(mapped);
     return 0;
+  }
+  if(type == 11 && btnID == 6){
+    const mapped = (value*3)/127;
+    setMasterRate(old => mapped);
+    updateMasterRate(mapped);
+    document.getElementById("masterSpeedValue").textContent = Math.ceil(mapped*10)/10;
   }
   
 }
@@ -267,7 +272,6 @@ const updateMasterVolume = (updated)=>{
         nextAvailableID={nextID}
         defaultMidi={defaultMidi}
         defaultVolume={defaultVolume}
-        defaultRate={defaultRate}
         defaultState={defaultState}
         defaultIsPlaying={defaultIsPlaying}
         defaultAudioUrl={defaultAudioUrl}
