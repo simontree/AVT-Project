@@ -62,12 +62,7 @@ const audioClips =  [
 function DrumMachine() {
 
   const audioCtx = new AudioContext();
-
   const [bpm, setBpm] = useState(80);
-
-  const [volume, setVolume] = useState(1);
-  const [recording, setRecording] = useState("");
-
 
   //for sequencer
   const lookahead = 25.0;         // How frequently to call scheduling function (in milliseconds)
@@ -86,20 +81,10 @@ function DrumMachine() {
     timerID = window.setTimeout(scheduler, lookahead);
   }
 
-  const nextNote = () => {
-      const secondsPerBeat = 60.0 / bpm;
-      nextNoteTime += secondsPerBeat; // Add beat length to last beat time
-      // Advance the beat number, wrap to zero
-      currentNote++;
-      if (currentNote === 8) {
-              currentNote = 0;
-      }
-  }
-
   // Create a queue for the notes that are to be played, with the current time that we want them to play:
   const notesInQueue = [];
 
-  var soundSample;
+  let soundSample;
 
   const scheduleNote = (beatNumber, time) => {
     notesInQueue.push({note: beatNumber, time: time});
@@ -108,20 +93,51 @@ function DrumMachine() {
       .querySelectorAll("button")[beatNumber]
       .getAttribute("aria-checked") === "true"){
       console.log("play kick")
-      playSample(audioCtx, time)
+      playSample(audioCtx, soundSample, time)
     }
   }
 
-  const playSample = (audioContext, time) => {
+  const nextNote = () => {
+    const secondsPerBeat = 60.0 / bpm;
+    nextNoteTime += secondsPerBeat; // Add beat length to last beat time
+    // Advance the beat number, wrap to zero
+    currentNote++;
+    if (currentNote === 8) {
+            currentNote = 0;
+    }
+  }
 
-    const sampleAudioTag = document.getElementById("Kick").querySelector("button").children[0];
-    const sampleSource = audioContext.createMediaElementSource(sampleAudioTag);
-    // sampleSource.buffer = audioBuffer;
-    sampleSource.connect(audioContext.destination)
-    setTimeout(function(){
-      sampleAudioTag.play();
-    },time)
+  const playSample = (audioContext, audioBuffer, time) => {
+    // const sampleAudioTag = document.getElementById("Kick").querySelector("button").children[0];
+    const sampleSource = audioContext.createBufferSource();
+    sampleSource.buffer = audioBuffer;
+    sampleSource.connect(audioContext.destination);
+    sampleSource.start(time);
+    console.log("sampleSource: "+sampleSource);
     return sampleSource;
+  }
+
+  async function setupSample() {  
+    // const clipToFind = audioClips.find((clip) => clip.id === 'Kick').url;
+    const clipToFind = 'kick.mp3';
+    const sample = await getFile(audioCtx, clipToFind);
+    console.log("sample: "+sample)
+    return sample;
+  }
+
+  // Loading ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // fetch the audio file and decode the data
+  async function getFile(audioContext, filepath) {
+    try {
+      const response = await fetch(filepath);
+      const arrayBuffer = await response.arrayBuffer();
+      console.log("arrayBuffer.byteLength: "+arrayBuffer.byteLength)
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
+      console.log("audioBuffer: "+audioBuffer)
+      return audioBuffer;
+    } catch (error) {
+      return error;
+    }
   }
 
   var lastNoteDrawn = 7;
@@ -152,46 +168,18 @@ function DrumMachine() {
   //   requestAnimationFrame(draw);
   // }
 
-  async function setupSample() {  
-    // const clipToFind = audioClips.find((clip) => clip.id === 'Kick').url;
-    const clipToFind = './kick.mp3';
-    const sample = await getFile(audioCtx, clipToFind);
-    console.log("sample: "+sample)
-    return sample;
-  }
-
-  // Loading ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // fetch the audio file and decode the data
-  async function getFile(audioContext, filepath) {
-    try {
-      const response = await fetch(filepath,
-        // {
-        //   mode: 'cors',
-        //   headers : {
-        //     'Access-Control-Allow-Origin': '*'
-        //   }
-        // }
-        );
-      // console.log("response: "+response)
-      const arrayBuffer = await response.arrayBuffer();
-      console.log("arrayBuffer.byteLength: "+arrayBuffer.byteLength)
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      console.log("audioBuffer: "+audioBuffer)
-      return audioBuffer;
-    } catch (error) {
-      return error;
-    }
-  }
-
   let isPlaying = false;
+
+  setupSample()
+  .then((sample) => {
+    soundSample = sample;
+    console.log("soundSample: "+soundSample)
+  });
 
   const playButtonHandler = (e) => {
     e.preventDefault();
 
-    setupSample()
-    .then((sample) => {
-
-      soundSample = sample;
+    
 
       isPlaying = !isPlaying; //toggle between playing and stopping
 
@@ -208,7 +196,6 @@ function DrumMachine() {
         window.clearTimeout(timerID);
         e.target.dataset.playing = 'false';
       }
-    })
   }
     
   return (
