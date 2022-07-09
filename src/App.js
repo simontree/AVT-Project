@@ -79,7 +79,7 @@ const defaultAudioType = "audio/mp3"
 function App() {
 
   const [channels, setChannels] = useState([]);
-  const [nextID, setNextID] = useState(5);
+  const [nextID, setNextID] = useState(0);
   const [masterRate, setMasterRate] = useState(1);
   const [masterPlay, setMasterPlay] = useState(true);
   const [masterVolume, setMasterVolume] = useState(5/100);
@@ -88,19 +88,10 @@ function App() {
 
   const addChannelHandler = (channel) => {
     setChannels(prevChannels => {
-      return [...channels,channel];
+       return [...channels,channel];
     });
   };
-
-  const requestRadioButtons = () => {
-    const radioButtons = channels.map((channel) => ({
-      id: channel.id,
-      selectedMidi: channel.selectedMidi,
-    }));
-    return radioButtons;
-  };
-  const requestNumberOfChannels = () => {return channels.length;}
-  const testChannelModification = (number, radioID) =>{
+  const handleMidiChannelOrganization = (number, radioID) =>{
     var radios = Array.from(document.querySelectorAll("input[type='radio']"))
       .filter((element) => {return element.checked});
     setChannels((prev)=>{
@@ -137,7 +128,7 @@ function App() {
     var numberOfChannels = channels.length;
     var radios;
     var checked;
-    for(var i = 5; i < numberOfChannels+5; i++){
+    for(var i = 0; i < numberOfChannels; i++){
       try{
         radios = Array.from(document.getElementById("radioButtons" + i).getElementsByTagName("input"))
         .filter((element) => {
@@ -282,9 +273,7 @@ const updateMasterVolume = (updated)=>{
       />
       <Channels 
         channels={channels}
-        requestRadioButtons={requestRadioButtons}
-        requestNumberOfChannels={requestNumberOfChannels}
-        testChannelModification={testChannelModification}
+        handleMidiChannelOrganization={handleMidiChannelOrganization}
         handleDestroyChannel={destroyChannel}
         masterRate = {masterRate}
         masterPlay = {masterPlay}

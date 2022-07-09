@@ -11,7 +11,6 @@ function Master(props) {
   const [volume, setVolume] = useState(props.volume);
   const [rate, setRate] = useState(props.masterRate)
   const [color, setColor] = useState(props.backgroundColor);
-
   const [allPlaying, setAllPlaying] = useState(false);
   const [buttonTxt, setButtonTxt] = useState("All Play");
   //Initialization

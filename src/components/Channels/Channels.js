@@ -11,15 +11,14 @@ const Channels = (props) =>{
     },[props.channels])
     let channelsContent = <p>No Channels started</p>;
 
-    const changeMidi = (num, radioID) => {
-        props.testChannelModification(num, radioID);
+    const changeMidiChannel = (num, radioID) => {
+        props.handleMidiChannelOrganization(num, radioID);
     }
     const handleDestroyChannel = (element) => {
         props.handleDestroyChannel(element);
     }
     const mapChannels = () => {
         if(channels.length > 0){
-            //console.log(channels)
             channelsContent = channels.map((channel) =>(
                 <Channel
                  id={channel.id}
@@ -29,10 +28,8 @@ const Channels = (props) =>{
                  isEnabled={channel.isEnabled}
                  isPlaying={channel.isPlaying}
                  audioURL={channel.audioURL}
-                 requestNumberOfChannels={props.requestNumberOfChannels}
-                 requestRadioButtons={props.requestRadioButtons}
                  backgroundColor={channel.color}
-                 changeMidi={changeMidi}
+                 changeMidiChannel={changeMidiChannel}
                  destroyChannel={handleDestroyChannel}
                  audioType = {channel.audioType}
                  masterRate = {props.masterRate}
@@ -40,7 +37,6 @@ const Channels = (props) =>{
                 />
             ))
         }
-        //console.log(channels);
     }
     mapChannels();
 

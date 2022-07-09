@@ -11,27 +11,24 @@ import Filters from "./Filters/Filters";
 
 const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
-//Audio - (Filter-FilterGain)* - outputNode - PrimaryGain
 var mediaElementSource = [];
 
 function Channel(props) {
   const [channelID] = useState(props.id);
-  const [audioPlayerID, setAudioPlayerID] = useState("base");
-  const [volume, setVolume] = useState(props.volume);
-  const [isEnabled, setIsEnabled] = useState(props.isEnabled);
-  const [selectedMidi, setSelectedMidi] = useState(props.selectedMidi);
-  const [color, setColor] = useState(props.backgroundColor);
-
+  const [isChannelEnabled, setIsEnabled] = useState(props.isEnabled);
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
-  const [rate, setRate] = useState(props.rate);
+  const [audioPlayerID, setAudioPlayerID] = useState("base");
   const [audioSourceURL, setAudioSourceURL] = useState(props.audioURL);
   const [type, setType] = useState(props.audioType);
+  const [volume, setVolume] = useState(props.volume);
+  const [rate, setRate] = useState(props.rate);
+  const [selectedMidi, setSelectedMidi] = useState(props.selectedMidi);
+  const [color, setColor] = useState(props.backgroundColor);
+  const [playBtnTxt, setplayBtnTxt] = useState("Play");
   const [filterGain, setFilterGain] = useState(0);
-  var thisMediaES;
-  //if in public folder, use process.env.PUBLIC_URL +  first for URL
+
   var audioPlayer;
   var currentMidiChannel;
-
   var outputNode = audioContext.createGain();
 
   //Create lowpass filter and its gain node
@@ -39,11 +36,9 @@ function Channel(props) {
   const lowpassGain = audioContext.createGain();
   let lowpassSet = false;
 
-  var [playBtnTxt, setplayBtnTxt] = useState("Play");
-
-  var [filters, setFilters] = useState([]);
-  const [nextFilterID, setNextFilterID] = useState(0);
-  var biquadFilters = []
+  // var [filters, setFilters] = useState([]);
+  // const [nextFilterID, setNextFilterID] = useState(0);
+  // var biquadFilters = []
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
@@ -54,8 +49,8 @@ function Channel(props) {
     return filter
   }
 
+  //Initialization
   useEffect(() => {
-    //console.log(audioSourceURL)
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
@@ -74,30 +69,24 @@ function Channel(props) {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
     setSelectedMidi(props.selectedMidi);
-    //applyFilters(filters);
   });
 
   const playAudio = () => {
-    if (!isEnabled) return;
+    if (!isChannelEnabled) return;
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
-
-    //mediaElementSource[channelID].connect(outputNode);
-    //outputNode.connect(masterOutputNode);
-
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
   };
 
   const pauseAudio = () => {
-    //mediaElementSource[channelID].disconnect();
-    //outputNode.disconnect();
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
   };
+
   const playPauseClicked = () => {
     isPlaying ? pauseAudio() : playAudio();
   };
@@ -138,7 +127,6 @@ function Channel(props) {
   const handleRateChange = (value) => {
     setRate(() => {
       const updatedRate = value == undefined ? 1 : value;
-      //console.log(value);
       const realRate = value * Math.ceil(props.masterRate*10)/10;
       console.log(realRate)
       audioPlayer.playbackRate = updatedRate * props.masterRate;
@@ -151,61 +139,60 @@ function Channel(props) {
   },[props.masterRate])
 
   useEffect(()=>{
-    //console.log("MasterPlay: " + props.masterPlay);
     props.masterPlay ? playAudio() : pauseAudio();
   },[props.masterPlay])
 
-  const midiChannelChange = (event) => {
+  const handleMidiChannelChange = (event) => {
     const selectedValue = parseInt(event.target.value);
     const radioButtonID = event.target.id;
-    props.changeMidi(selectedValue, radioButtonID);
+    props.changeMidiChannel(selectedValue, radioButtonID);
   };
 
-  const addFilterEvent = (filter) => {
-    setFilters(prev =>{
-      return [...filters, filter];
-    });
-  };
-  const applyFilters = (filters) =>{
-    //console.log(filters);
-    outputNode.disconnect();
-    mediaElementSource[channelID].disconnect();
+  // const addFilterEvent = (filter) => {
+  //   setFilters(prev =>{
+  //     return [...filters, filter];
+  //   });
+  // };
+  // const applyFilters = (filters) =>{
+  //   //console.log(filters);
+  //   outputNode.disconnect();
+  //   mediaElementSource[channelID].disconnect();
 
-    let i = 0;
-    filters.forEach((filter)=>{
-      if(filter.isFilterEnabled){
-        biquadFilters[i] = audioContext.createBiquadFilter();
-        biquadFilters[i].type = filter.type;
-        switch(filter.type){
-          case "lowpass":
-            biquadFilters[i].frequency.value = 150;
-            break;
-          case "highpass":
-            biquadFilters[i].frequency.value = 8000;
-            break;
-        }
-        biquadFilters[i].gain.value = filter.strength;
-        //console.log(biquadFilters[i])
+  //   let i = 0;
+  //   filters.forEach((filter)=>{
+  //     if(filter.isFilterEnabled){
+  //       biquadFilters[i] = audioContext.createBiquadFilter();
+  //       biquadFilters[i].type = filter.type;
+  //       switch(filter.type){
+  //         case "lowpass":
+  //           biquadFilters[i].frequency.value = 150;
+  //           break;
+  //         case "highpass":
+  //           biquadFilters[i].frequency.value = 8000;
+  //           break;
+  //       }
+  //       biquadFilters[i].gain.value = filter.strength;
+  //       //console.log(biquadFilters[i])
         
 
-        let filterGain = audioContext.createGain();
-        filterGain.gain.value = filter.strength;
+  //       let filterGain = audioContext.createGain();
+  //       filterGain.gain.value = filter.strength;
 
-        filterGain.connect(outputNode);
-        biquadFilters[i].connect(filterGain);
-        mediaElementSource[channelID].connect(biquadFilters[i]);
-        filterGain.connect(masterOutputNode);
-        i++
-      }
-    })
-    if(i==0) //outputNode.connect(masterOutputNode);
-    console.log("filters applied: " + i)
-  }
+  //       filterGain.connect(outputNode);
+  //       biquadFilters[i].connect(filterGain);
+  //       mediaElementSource[channelID].connect(biquadFilters[i]);
+  //       filterGain.connect(masterOutputNode);
+  //       i++
+  //     }
+  //   })
+  //   if(i==0) //outputNode.connect(masterOutputNode);
+  //   console.log("filters applied: " + i)
+  // }
 
-  const getNextFilterID = () => {
-    setNextFilterID(prev => prev+1)
-    return "filter" + channelID + "" + nextFilterID;
-  }
+  // const getNextFilterID = () => {
+  //   setNextFilterID(prev => prev+1)
+  //   return "filter" + channelID + "" + nextFilterID;
+  // }
 
   function toggleOutputConnection () {
     if (!lowpassSet) {
@@ -215,9 +202,7 @@ function Channel(props) {
     }
   }
 
-  const lowpassFilterInput = (e) => {
-    //console.log(document.getElementById("lowpasscheckbox" + channelID).checked);
-    
+  const lowpassFilterInput = (e) => {    
     setFilterGain(() =>{
       var updatedGain = e.target.value;
       lowpassGain.gain.value = updatedGain;
@@ -272,7 +257,7 @@ function Channel(props) {
             <input
               type="checkbox"
               onChange={channelStateChange}
-              checked={isEnabled}
+              checked={isChannelEnabled}
             />
             <span className="slider round"></span>
           </label>
@@ -347,7 +332,7 @@ function Channel(props) {
             id={"m1" + channelID}
             name={"midiChannel" + channelID}
             value="1"
-            onChange={midiChannelChange}
+            onChange={handleMidiChannelChange}
           />
           <label htmlFor={"m1" + channelID}>1</label>
           <input
@@ -355,7 +340,7 @@ function Channel(props) {
             id={"m2" + channelID}
             name={"midiChannel" + channelID}
             value="2"
-            onChange={midiChannelChange}
+            onChange={handleMidiChannelChange}
           />
           <label htmlFor={"m2" + channelID}>2</label>
           <input
@@ -363,7 +348,7 @@ function Channel(props) {
             id={"m3" + channelID}
             name={"midiChannel" + channelID}
             value="3"
-            onChange={midiChannelChange}
+            onChange={handleMidiChannelChange}
           />
           <label htmlFor={"m3" + channelID}>3</label>
           <input
@@ -371,7 +356,7 @@ function Channel(props) {
             id={"m4" + channelID}
             name={"midiChannel" + channelID}
             value="4"
-            onChange={midiChannelChange}
+            onChange={handleMidiChannelChange}
           />
           <label htmlFor={"m4" + channelID}>4</label>
           <input
@@ -379,7 +364,7 @@ function Channel(props) {
             id={"m0" + channelID}
             name={"midiChannel" + channelID}
             value="0"
-            onChange={midiChannelChange}
+            onChange={handleMidiChannelChange}
           />
           <label htmlFor={"mx" + channelID}>X</label>
         </div>
