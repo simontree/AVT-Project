@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import useTimer from './hooks/useTimer';
 import Toolbar from './components/Toolbar';
+import Steps from './components/Steps'
+import TrackList from './components/TrackList'
 
 function DrumMachine() {
 
@@ -40,11 +42,6 @@ function DrumMachine() {
     bpm
   }
 
-  const playHeadProps = {
-    sequenceTime,
-    totalLapsedTime
-  }
-
   const trackListProps = {
     currentStepID
   }
@@ -52,7 +49,11 @@ function DrumMachine() {
   return (
     <div>
     <h1>Drum Machine</h1>
-    <Toolbar/>
+    <Toolbar {...toolBarProps}/>
+      <Steps count={totalSteps}/>
+      <div>
+        <TrackList {...trackListProps}/>
+      </div>
     </div>
   );
 }
