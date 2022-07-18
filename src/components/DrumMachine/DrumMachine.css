@@ -1,6 +1,5 @@
 html {
     font-size: 12px;
-    color: #f5f5f5
   }
   
   .drummachine {
@@ -8,7 +7,7 @@ html {
     margin-right: auto;
     width: 450px;
     visibility: visible;
-    background-color: #81d1ff;
+    background-color: #5bb2e4ec;
     padding: 20px;
   }
   
@@ -33,7 +32,6 @@ html {
     margin-top: 10px;
     margin-bottom: 10px;
     position: relative;
-    transform: translateZ(0);
   }
   
   .clips {
@@ -57,7 +55,7 @@ html {
   }
   
   .clip-playing {
-    background-color: #37e147;
+    background-color: #134f9e;
   }
   
   .note {
@@ -79,7 +77,7 @@ html {
   }
   
   .note.playing {
-    background-color: #37e147;
+    background-color: #134f9e;
   }
   
   
@@ -98,17 +96,12 @@ html {
     font-weight: 800;
     font-size: 0.9rem;
     text-align: center;
-    color: #f5f5f5
   }
   
   .button_play_pause, .button_stop {
     width: 30px;
     padding: 0;
     cursor: pointer;
-  }
-  
-  .button_icon_path {
-    fill: #f5f5f5
   }
   
   .input_bpm {

@@ -36,8 +36,15 @@ const ToolBar = ({
             <button className="form_element button_play_pause" style={{width:"100px"}} onClick={togglePlayback} aria-label="Play / Pause">
                 Play/Pause
             </button> 
-            <input className="form_element input_bpm" id="bpm" type="text" value={BPM} onChange={updateBPM} />
-            <label className="label_bpm" htmlFor="bpm">BPM</label>
+            <input 
+            className="form_element input_bpm" 
+            id="bpm" 
+            type="range" 
+            value={BPM}
+            max={200} 
+            min={60}
+            onChange={updateBPM} />
+            <label className="label_bpm" htmlFor="bpm">{BPM} BPM</label>
         </nav>
     )
 }

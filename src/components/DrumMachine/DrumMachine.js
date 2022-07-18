@@ -21,7 +21,7 @@ function DrumMachine() {
   const [currentClipID, setCurrentClipID] = useState(null);
 
   const sequenceTime = baseBpmOneSecond / BPM * 1000 * totalBeats;
-  const stepTime = sequenceTime / totalSteps
+  const clipTime = sequenceTime / totalSteps
   const isPlaying = startTime
   const playerTime = useTimer(isPlaying)
   const lapsedTime = isPlaying ? Math.max(0, playerTime - startTime) : 0
@@ -29,11 +29,11 @@ function DrumMachine() {
 
   useEffect(() => {
     if(isPlaying){
-      setCurrentClipID(Math.floor(totalLapsedTime / stepTime) % totalSteps)
+      setCurrentClipID(Math.floor(totalLapsedTime / clipTime) % totalSteps)
     } else{
       setCurrentClipID(null)
     }
-  },[isPlaying, stepTime, totalLapsedTime, totalSteps])
+  },[isPlaying, clipTime, totalLapsedTime, totalSteps])
 
   const toolBarProps = {
     setStartTime,
