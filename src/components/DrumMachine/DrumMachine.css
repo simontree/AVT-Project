@@ -1,0 +1,170 @@
+html {
+    font-size: 12px;
+    color: #f5f5f5
+  }
+  
+  .app {
+    margin-left: auto;
+    margin-right: auto;
+    width: 450px;
+    visibility: visible;
+    background-color: #505050;
+    padding: 20px;
+  }
+  
+  @media only screen and (min-width: 820px) {
+    .app {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+  
+  .app_header {
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .app_title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    flex: 1;
+  }
+  
+  .app_content {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    transform: translateZ(0);
+  }
+  
+  .app_footer,
+  .app_footer a {
+    margin-top: 4vh;
+    text-align: center;
+    color: #2e2e2e;
+    background: transparent;
+  }
+  
+  .steps {
+    display: flex;
+    padding-left: 140px;
+    border-top: 1px solid #2e2e2e;
+    border-bottom: 1px solid #2e2e2e;
+  }
+  
+  .step {
+    display: flex;
+    flex: 0 0 30px;
+    min-width: 30px;
+    min-height: 32px;
+    margin-left: 2px;
+    margin-right: 2px;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 1rem;
+  }
+  
+  .step-playing {
+    background-color: #37e147;
+  }
+  
+  .note {
+    flex: 0 0 30px;
+    height: 20px;
+    width: 30px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    cursor: pointer;
+  }
+  
+  .note.on {
+    background-color: #2e2e2e;
+    transition: background-color 120ms 0 ease;
+  }
+  
+  .note.playing {
+    background-color: #37e147;
+  }
+  
+  
+  .toolbar {
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+  }
+  
+  .form_element {
+    background: transparent;
+    border: 1px solid #2e2e2e;
+    margin-left: 5px;
+    height: 30px;
+    box-sizing: border-box;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #f5f5f5
+  }
+  
+  .button_play_pause, .button_stop {
+    width: 30px;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .button_icon_path {
+    fill: #f5f5f5
+  }
+  
+  .input_bpm {
+    width: 45px;
+  }
+  
+  .label_bpm {
+    margin-left: 5px;
+    margin-right: 10px;
+  }
+  
+  .select_sequence {
+    margin-left: 10px;
+    text-transform: uppercase;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+    background-position: 95% 50%;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding: 0 40px 0 10px;
+  }
+  
+  .track {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .track_title {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    align-items: center;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 10px;
+    width: 120px;
+  }
+  
+  .track_notes {
+    display: flex;
+  }
+  

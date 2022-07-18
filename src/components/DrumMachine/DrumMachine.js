@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import useTimer from './hooks/useTimer';
 import Toolbar from './components/Toolbar';
-import Steps from './components/Steps'
+import ClipsHeader from './components/ClipsHeader'
 import TrackList from './components/TrackList'
+import { ProviderOfNoteContext } from './hooks/useNoteContext'
 
 function DrumMachine() {
 
   const baseBpmOneSecond = 60;
   const barSteps = 8;
   const barBeats = 4;
-  const sequenceBars = 2;
+  const sequenceBars = 1;
   const totalSteps = barSteps * sequenceBars;
   const totalBeats = barBeats * sequenceBars;
 
-  const [bpm, setBpm] = useState(80);
+  const [bpm, setBpm] = useState(100);
   const [startTime, setStartTime] = useState(null);
   const [pastLapsedTime, setPastLapsedTime] = useState(0);
   const [currentStepID, setCurrentStepID] = useState(null);
@@ -47,14 +48,16 @@ function DrumMachine() {
   }
   
   return (
+    <ProviderOfNoteContext>
     <div>
     <h1>Drum Machine</h1>
     <Toolbar {...toolBarProps}/>
-      <Steps count={totalSteps}/>
+      <ClipsHeader count={totalSteps} {...trackListProps}/>
       <div>
         <TrackList {...trackListProps}/>
       </div>
     </div>
+    </ProviderOfNoteContext>
   );
 }
 
