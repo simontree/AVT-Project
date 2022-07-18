@@ -3,7 +3,8 @@ import useTimer from './hooks/useTimer';
 import Toolbar from './components/Toolbar';
 import ClipsHeader from './components/ClipsHeader'
 import TrackList from './components/TrackList'
-import { ProviderOfNoteContext } from './hooks/useNoteContext'
+import { Provider } from './hooks/useNoteContext'
+import './DrumMachine.css'
 
 function DrumMachine() {
 
@@ -17,7 +18,7 @@ function DrumMachine() {
   const [bpm, setBpm] = useState(100);
   const [startTime, setStartTime] = useState(null);
   const [pastLapsedTime, setPastLapsedTime] = useState(0);
-  const [currentStepID, setCurrentStepID] = useState(null);
+  const [currentClipID, setCurrentClipID] = useState(null);
 
   const sequenceTime = baseBpmOneSecond / bpm * 1000 * totalBeats;
   const stepTime = sequenceTime / totalSteps;
@@ -28,9 +29,9 @@ function DrumMachine() {
 
   useEffect(() => {
     if(isSequencePlaying){
-      setCurrentStepID(Math.floor(totalLapsedTime / stepTime) % totalSteps)
+      setCurrentClipID(Math.floor(totalLapsedTime / stepTime) % totalSteps)
     } else{
-      setCurrentStepID(null)
+      setCurrentClipID(null)
     }
   },[isSequencePlaying, stepTime, totalLapsedTime, totalSteps])
 
@@ -44,11 +45,11 @@ function DrumMachine() {
   }
 
   const trackListProps = {
-    currentStepID
+    currentClipID
   }
   
   return (
-    <ProviderOfNoteContext>
+    <Provider>
     <div>
     <h1>Drum Machine</h1>
     <Toolbar {...toolBarProps}/>
@@ -57,7 +58,7 @@ function DrumMachine() {
         <TrackList {...trackListProps}/>
       </div>
     </div>
-    </ProviderOfNoteContext>
+    </Provider>
   );
 }
 

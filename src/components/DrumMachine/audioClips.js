@@ -2,7 +2,34 @@ const audioClips =  [
   {
     id: 0,
     title: 'initial state audio',
-    notes: 16,
+    notes: 8,
+    clipList: [
+      {
+        title: 'Kick',
+        soundFile: '/audiofiles/kick.wav',
+        enabledNotes: [0,2,6]
+      },
+      {
+        title: 'Clap',
+        soundFile: '/audiofiles/snare.wav',
+        enabledNotes: [0,2,6]
+      },
+      {
+        title: 'Open-HH',
+        soundFile: '/audiofiles/hh_open.wav',
+        enabledNotes: [0,2,6]
+      },
+      {
+        title: 'Closed-HH',
+        soundFile: '/audiofiles/hh_closed.wav',
+        enabledNotes: [0,2,6]
+      }
+    ]
+  },
+  {
+    id: 1,
+    title: '2nd audio clips',
+    notes: 8,
     clipList: [
       {
         title: 'Kick',
@@ -25,6 +52,7 @@ const audioClips =  [
         enabledNotes: [0,2,6]
       }
     ]
-  }]
+  }
+]
 
-  export default audioClips
+export { audioClips }

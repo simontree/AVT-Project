@@ -1,22 +1,30 @@
 import React, { memo } from 'react'
 import useAudio from '../hooks/useAudio'
 import Note from './Note'
+import '../DrumMachine.css'
 
 const Track = ({
-    currentStepID,
-    soundFilePath,
+    trackID,
+    currentClipID,
+    title,
+    notes,
+    enabledNotes,
+    filePath,
 }) => {
-    const [play] = useAudio(soundFilePath)
+    const [play] = useAudio(filePath)
     
-    const notes = [...Array].map((i) => {
-        const isNoteOnCurrentStep = currentStepID === i
-        const stepID = i
+    const trackNotes = [...Array(notes)].map((el, i) => {
+        const isClipEnabled = enabledNotes.indexOf(i) !== -1
+        const isClipOnCurrentPoint = currentClipID === i
+        const clipID = i
 
         return (
             <Note
                 key={i}
-                stepID={stepID}
-                isNoteOnCurrentStep={isNoteOnCurrentStep}
+                trackID={trackID}
+                clipID={clipID}
+                isClipEnabled={isClipEnabled}
+                isClipOnCurrentPoint={isClipOnCurrentPoint}
                 play={play}
             />
         )
@@ -24,9 +32,9 @@ const Track = ({
 
     return (
         <div className="track">
-            <header className="track_title">{currentStepID}</header>
+            <header className="track_title">{currentClipID}</header>
             <main className="track_notes">
-                {notes}
+                {trackNotes}
             </main>
         </div>
     )

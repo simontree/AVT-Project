@@ -1,19 +1,29 @@
-import React, { useEffect, memo } from 'react'
+import React, { useContext, useEffect, memo } from 'react'
 import classNames from 'classnames'
+import { Context } from '../hooks/useNoteContext'
 
 const Note = ({
-    stepID,
+    trackID,
+    clipID,
+    isClipOnCurrentPoint,
+    isClipEnabled,
     play
 }) => {
 
-    const noteClassNames = classNames('note')
+    const { toggleNote } = useContext(Context)
+    const noteClassNames = classNames('note', {
+        'on': isClipEnabled,
+        'playing': isClipEnabled && isClipOnCurrentPoint
+    })
 
     useEffect(() => {
+        if(isClipEnabled && isClipOnCurrentPoint)
             play()
-    }, [play])
+    }, [isClipEnabled, isClipOnCurrentPoint, play])
 
     const noteClicked = e => {
         e.target.classList.toggle('on')
+        toggleNote({trackID, clipID})
         play()
     }
 
