@@ -12,7 +12,7 @@ const audioClips =  [
       {
         title: 'Clap',
         soundFile: 'snare',
-        enabledNotes: [0,2,6],
+        enabledNotes: [1,3,5],
       },
       {
         title: 'Open-HH',

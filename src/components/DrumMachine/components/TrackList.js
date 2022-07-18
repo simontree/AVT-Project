@@ -9,15 +9,15 @@ const TrackList = ({ currentClipID }) => {
             const { title, enabledNotes, soundFile } = track
             const filePath = soundFiles[soundFile]
             return (
-                <Track
-                    key={title}
-                    trackID={+trackID}
-                    currentClipID={currentClipID}
-                    title={title}
-                    notes={notes}
-                    enabledNotes={enabledNotes}
-                    filePath={filePath}
-                />)})
+            <Track
+                key={title}
+                trackID={+trackID}
+                currentClipID={currentClipID}
+                title={title}
+                notes={notes}
+                enabledNotes={enabledNotes}
+                filePath={filePath}
+            />)})
 
         return(
             <div>

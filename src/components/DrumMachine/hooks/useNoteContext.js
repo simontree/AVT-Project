@@ -30,14 +30,14 @@ const appReducer = (state, action) => {
 
 const Provider = ({ children }) => {
     const [clips, dispatch] = useReducer(appReducer, { ...audioClips[0] }) 
-    const toggleNote = ({ trackID, stepID }) => {
+    const toggleNote = ({ trackID, clipID }) => {
         let newEnabledNotes
         const enabledNotes = clips.clipList[trackID].enabledNotes  
         // index=-1 if note is turned off
-        if (enabledNotes.indexOf(stepID) === -1) {      
-            newEnabledNotes = [...enabledNotes, stepID]
+        if (enabledNotes.indexOf(clipID) === -1) {      
+            newEnabledNotes = [...enabledNotes, clipID]
         } else {
-            newEnabledNotes = enabledNotes.filter(currentStep => currentStep !== stepID)
+            newEnabledNotes = enabledNotes.filter(currentStep => currentStep !== clipID)
         }
         dispatch({    
             type: 'setNotes',
