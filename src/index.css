@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .pads{
-    background-color: grey;
-  }
-  .pads[aria-checked="true"]{
-    background-color: aqua;
-  }
-  .pads[aria-checked="false"]{
-    background-color: grey;
-  }
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

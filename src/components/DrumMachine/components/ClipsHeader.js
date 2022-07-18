@@ -1,10 +1,10 @@
 import React from 'react'
 import '../DrumMachine.css'
 
-const ClipsHeader = ({ count = 0, currentStepID }) => {
+const ClipsHeader = ({ count = 0, currentClipID }) => {
     
     const isPlaying = (index) => {
-        if(index === currentStepID){
+        if(index === currentClipID){
             return true
         }else{
             return false
@@ -12,11 +12,11 @@ const ClipsHeader = ({ count = 0, currentStepID }) => {
     }
 
     let content = [...Array(count)]
-    .map((el, i) => (<div className={isPlaying(i)? 'step step-playing': 'step'} key={i + 1}><button/></div>))
+    .map((el, i) => (<div className={isPlaying(i)? 'clip clip-playing': 'clip'} key={i + 1}><button/></div>))
 
 
     return (
-        <div>
+        <div className='clips'>
             {content}
         </div>
     )

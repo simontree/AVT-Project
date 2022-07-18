@@ -9,8 +9,8 @@ const Context = createContext({
 const appReducer = (state, action) => {
     switch (action.type) {
         case 'setNotes':
-            let newClipList = state.clipList.map((track, clipID) => {
-                if (action.clipID === clipID) {
+            let newClipList = state.clipList.map((track, trackID) => {
+                if (action.trackID === trackID) {
                     return {
                         ...track,
                         enabledNotes: action.value
@@ -29,10 +29,10 @@ const appReducer = (state, action) => {
 }
 
 const Provider = ({ children }) => {
-    const [clips, dispatch] = useReducer(appReducer, { ...audioClips[1] }) 
-    const toggleNote = ({ clipID, stepID }) => {
+    const [clips, dispatch] = useReducer(appReducer, { ...audioClips[0] }) 
+    const toggleNote = ({ trackID, stepID }) => {
         let newEnabledNotes
-        const enabledNotes = clips.clipList[clipID].enabledNotes  
+        const enabledNotes = clips.clipList[trackID].enabledNotes  
         // index=-1 if note is turned off
         if (enabledNotes.indexOf(stepID) === -1) {      
             newEnabledNotes = [...enabledNotes, stepID]
@@ -42,7 +42,7 @@ const Provider = ({ children }) => {
         dispatch({    
             type: 'setNotes',
             value: newEnabledNotes,
-            clipID
+            trackID
         })
     }
 

@@ -15,33 +15,33 @@ function DrumMachine() {
   const totalSteps = barSteps * sequenceBars;
   const totalBeats = barBeats * sequenceBars;
 
-  const [bpm, setBpm] = useState(100);
+  const [BPM, setBPM] = useState(100);
   const [startTime, setStartTime] = useState(null);
   const [pastLapsedTime, setPastLapsedTime] = useState(0);
   const [currentClipID, setCurrentClipID] = useState(null);
 
-  const sequenceTime = baseBpmOneSecond / bpm * 1000 * totalBeats;
-  const stepTime = sequenceTime / totalSteps;
-  const isSequencePlaying = startTime !== null
-  const playerTime = useTimer(isSequencePlaying)
-  const lapsedTime = isSequencePlaying ? Math.max(0, playerTime - startTime) : 0
+  const sequenceTime = baseBpmOneSecond / BPM * 1000 * totalBeats;
+  const stepTime = sequenceTime / totalSteps
+  const isPlaying = startTime
+  const playerTime = useTimer(isPlaying)
+  const lapsedTime = isPlaying ? Math.max(0, playerTime - startTime) : 0
   const totalLapsedTime = pastLapsedTime + lapsedTime
 
   useEffect(() => {
-    if(isSequencePlaying){
+    if(isPlaying){
       setCurrentClipID(Math.floor(totalLapsedTime / stepTime) % totalSteps)
     } else{
       setCurrentClipID(null)
     }
-  },[isSequencePlaying, stepTime, totalLapsedTime, totalSteps])
+  },[isPlaying, stepTime, totalLapsedTime, totalSteps])
 
   const toolBarProps = {
     setStartTime,
     setPastLapsedTime,
-    setBpm,
-    isSequencePlaying,
+    setBPM,
+    isPlaying,
     startTime,
-    bpm
+    BPM
   }
 
   const trackListProps = {
@@ -50,11 +50,13 @@ function DrumMachine() {
   
   return (
     <Provider>
-    <div>
+    <div className='drummachine'>
     <h1>Drum Machine</h1>
-    <Toolbar {...toolBarProps}/>
+      <div className='drummachine_header'>
+        <Toolbar {...toolBarProps}/>
+      </div>
       <ClipsHeader count={totalSteps} {...trackListProps}/>
-      <div>
+      <div className='drummachine_content'>
         <TrackList {...trackListProps}/>
       </div>
     </div>

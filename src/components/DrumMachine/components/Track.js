@@ -32,7 +32,7 @@ const Track = ({
 
     return (
         <div className="track">
-            <header className="track_title">{currentClipID}</header>
+            <header className="track_title">{title}</header>
             <main className="track_notes">
                 {trackNotes}
             </main>

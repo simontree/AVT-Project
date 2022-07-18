@@ -1,5 +1,5 @@
 import React, { useContext, memo } from 'react'
-import { audioClips } from '../audioClips'
+import { soundFiles } from '../audioClips'
 import Track from './Track'
 import { Context } from '../hooks/useNoteContext'
 
@@ -7,16 +7,16 @@ const TrackList = ({ currentClipID }) => {
         const { clips: { clipList, notes }} = useContext(Context)
         const content = clipList.map((track, trackID) => {
             const { title, enabledNotes, soundFile } = track
-            const filePath = audioClips[soundFile]
+            const filePath = soundFiles[soundFile]
             return (
                 <Track
                     key={title}
                     trackID={+trackID}
                     currentClipID={currentClipID}
                     title={title}
-                    noteCount={notes}
+                    notes={notes}
                     enabledNotes={enabledNotes}
-                    soundFilePath={filePath}
+                    filePath={filePath}
                 />)})
 
         return(

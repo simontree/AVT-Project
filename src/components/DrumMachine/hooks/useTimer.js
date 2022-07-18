@@ -1,13 +1,12 @@
-import { useState, useLayoutEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 const useTimer = (running) => {
     const [now, setNow] = useState(null)
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!running) {
             return
         }
-        const id = requestAnimationFrame(() => setNow(performance.now()))
-        return () => cancelAnimationFrame(id)
+        requestAnimationFrame(() => setNow(performance.now()))
     }, [running, now])
     return running ? now : null
 }

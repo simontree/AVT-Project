@@ -2,19 +2,19 @@ class Audio {
 
     constructor(path){
         const AudioContext = window.AudioContext || window.webkitAudioContext || window.MozAudioContext
-        this.audioCtx = new AudioContext()
+        this.audioContext = new AudioContext()
         if(!this.buffer) this.loadAudioFile(path)
     }
 
     async loadAudioFile(path){
-        this.audioNode = this.audioCtx.createGain()
-        this.audioNode.gain.value = 1
+        this.recorderNode = this.audioContext.createGain()
+        this.recorderNode.gain.value = 1
         this.buffer = null
         this.path = path
         const response = await fetch(path)
         const arrayBuffer = await response.arrayBuffer()
         const audioBuffer = await this.decodeAudioDataAsync(
-            this.audioCtx, arrayBuffer
+            this.audioContext, arrayBuffer
         )
         this.buffer = audioBuffer
     }
@@ -30,16 +30,16 @@ class Audio {
     }
 
     play(gainValue = 1, rateValue = 1){
-        this.audioCtx.resume()
-        const gain = this.audioCtx.createGain()
-        const sound = this.audioCtx.createBufferSource()
+        this.audioContext.resume()
+        const gain = this.audioContext.createGain()
+        const audio = this.audioContext.createBufferSource()
         gain.gain.value = gainValue
-        sound.playbackRate.value = rateValue
-        sound.buffer = this.buffer
-        sound.connect(gain)
-        gain.connect(this.audioNode)
-        gain.connect(this.audioCtx.destination)
-        sound.start(0)
+        audio.playbackRate.value = rateValue
+        audio.buffer = this.buffer
+        audio.connect(gain)
+        gain.connect(this.recorderNode)
+        gain.connect(this.audioContext.destination)
+        audio.start(0)
     }
 }
 

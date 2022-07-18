@@ -3,23 +3,16 @@ html {
     color: #f5f5f5
   }
   
-  .app {
+  .drummachine {
     margin-left: auto;
     margin-right: auto;
     width: 450px;
     visibility: visible;
-    background-color: #505050;
+    background-color: #81d1ff;
     padding: 20px;
   }
   
-  @media only screen and (min-width: 820px) {
-    .app {
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-  }
-  
-  .app_header {
+  .drummachine_header {
     display: flex;
     align-items: center;
     justify-content: stretch;
@@ -28,13 +21,13 @@ html {
     margin-right: 10px;
   }
   
-  .app_title {
+  .drummachine_title {
     font-size: 2.2rem;
     font-weight: 900;
     flex: 1;
   }
   
-  .app_content {
+  .drummachine_content {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
@@ -43,22 +36,14 @@ html {
     transform: translateZ(0);
   }
   
-  .app_footer,
-  .app_footer a {
-    margin-top: 4vh;
-    text-align: center;
-    color: #2e2e2e;
-    background: transparent;
-  }
-  
-  .steps {
+  .clips {
     display: flex;
     padding-left: 140px;
     border-top: 1px solid #2e2e2e;
     border-bottom: 1px solid #2e2e2e;
   }
   
-  .step {
+  .clip {
     display: flex;
     flex: 0 0 30px;
     min-width: 30px;
@@ -71,7 +56,7 @@ html {
     font-size: 1rem;
   }
   
-  .step-playing {
+  .clip-playing {
     background-color: #37e147;
   }
   
