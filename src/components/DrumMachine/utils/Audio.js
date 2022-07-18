@@ -10,6 +10,7 @@ class Audio {
         this.audioNode = this.audioCtx.createGain()
         this.audioNode.gain.value = 1
         this.buffer = null
+        this.path = path
         const response = await fetch(path)
         const arrayBuffer = await response.arrayBuffer()
         const audioBuffer = await this.decodeAudioDataAsync(
