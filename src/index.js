@@ -1,10 +1,15 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import DrumMachine from './components/DrumMachine/DrumMachine'
+import './index.css';
+import DragAndDrop from "./components/dragAndDrop/DragAndDrop";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
-  <React.StrictMode>
-    <DrumMachine />
-  </React.StrictMode>
-)
+    <React.StrictMode>
+      <App/>
+    </React.StrictMode>
+
+);

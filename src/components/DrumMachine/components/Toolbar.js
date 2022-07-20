@@ -30,10 +30,18 @@ const ToolBar = ({
 
     return (
         <nav className="toolbar">
-            <button className="form_element button_stop" style={{width:"70px"}} onClick={stopPlayback} aria-label="Stop">
+            <button 
+            className="form_element button_stop" 
+            style={{width:"70px"}} 
+            onClick={stopPlayback} 
+            aria-label="Stop">
                 Stop
             </button>
-            <button className="form_element button_play_pause" style={{width:"100px"}} onClick={togglePlayback} aria-label="Play / Pause">
+            <button 
+            className="form_element button_play_pause" 
+            style={{width:"100px"}} 
+            onClick={togglePlayback} 
+            aria-label="Play / Pause">
                 Play/Pause
             </button> 
             <input 
@@ -44,7 +52,9 @@ const ToolBar = ({
             max={200} 
             min={60}
             onChange={updateBPM} />
-            <label className="label_bpm" htmlFor="bpm">{BPM} BPM</label>
+            <label 
+            className="label_bpm" 
+            htmlFor="bpm">{BPM} BPM</label>
         </nav>
     )
 }
