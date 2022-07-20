@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import '../DrumMachine.css'
-import { Box, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import StopIcon from '@mui/icons-material/Stop'
 import IconButton from '@mui/material/IconButton'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
@@ -35,23 +35,34 @@ const ToolBar = ({
     }
 
     return (
-        <nav className="toolbar">
+        <Grid container
+        justifyContent='center'
+        sx={{marginBottom: '10px'}}>
+            <Grid item>
             <IconButton
-            onClick={stopPlayback}>
+            onClick={stopPlayback}
+            sx={{border: '1px solid #bbdefb', marginRight: 2}}>
                 <StopIcon 
                 fontSize="large"
                 sx={{color: '#bbdefb'}}/>
             </IconButton>
+            </Grid>
+            <Grid item>
             <IconButton
-            onClick={togglePlayback}>
+            onClick={togglePlayback}
+            sx={{border: '1px solid #bbdefb'}}>
                 {(isPlaying) ?
                 <PauseIcon
                 fontSize="large"
-                sx={{color: '#bbdefb'}}/> :
+                sx={{
+                    color: '#bbdefb'
+                }}/> :
                 <PlayArrowIcon 
                 fontSize="large"
                 sx={{color: '#bbdefb'}}/>}
             </IconButton>
+            </Grid>
+            <Grid item>
             <Box width={200} 
                 sx={{marginLeft: 5, textAlign: 'center', color: '#bbdefb'}}>
                 <Slider
@@ -61,6 +72,8 @@ const ToolBar = ({
                 max={200}
                 sx={{color: '#bbdefb'}}/> 
             </Box> 
+            </Grid>
+            <Grid item>
             <Typography 
             variant='h5'
             sx={{
@@ -69,7 +82,8 @@ const ToolBar = ({
             fontWeight: '600'}}>
                 {BPM} BPM
             </Typography>
-        </nav>
+            </Grid>
+        </Grid>
     )
 }
 

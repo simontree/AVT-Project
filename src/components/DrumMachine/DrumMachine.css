@@ -2,12 +2,6 @@ html {
     font-size: 13px;
     color: #bbdefb;
   }
-
-  .toolbar {
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-  }
   
   .drummachine_header {
     display: flex;
@@ -26,7 +20,7 @@ html {
   
   .clips {
     display: flex;
-    padding-left: 212px;
+    padding-left: 192px;
   }
   
   .clip {
