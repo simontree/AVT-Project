@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import useAudio from '../hooks/useAudio'
 import Note from './Note'
 import '../DrumMachine.css'
+import { Grid, Typography } from '@mui/material'
 
 const Track = ({
     trackID,
@@ -31,12 +32,25 @@ const Track = ({
     })
 
     return (
-        <div className="track">
-            <header className="track_title">{title}</header>
-            <main className="track_notes">
-                {trackNotes}
-            </main>
-        </div>
+    <Grid container
+    justifyContent="center">
+        <Grid 
+        item xs={2}>
+        <Typography 
+        variant="h6" 
+        sx={{ 
+            textAlign: 'right',
+            fontWeight: '700', 
+            marginRight: '20px',  
+            transform: 'translateY(50%)',
+            color: '#bbdefb'}}>
+            {title} 
+        </Typography>
+        </Grid>
+        <Grid item xs={8}>
+        {trackNotes}
+        </Grid>
+    </Grid>
     )
 }
 

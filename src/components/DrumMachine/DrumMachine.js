@@ -5,6 +5,7 @@ import ClipsHeader from './components/ClipsHeader'
 import TrackList from './components/TrackList'
 import { Provider } from './hooks/useNoteContext'
 import './DrumMachine.css'
+import { Grid, Container, Typography } from '@mui/material'
 
 function DrumMachine() {
 
@@ -49,16 +50,28 @@ function DrumMachine() {
   
   return (
     <Provider>
-    <div className='drummachine'>
-    <h1>Drum Machine</h1>
-      <div className='drummachine_header'>
-        <Toolbar {...toolBarProps}/>
-      </div>
+      <Container
+      sx={{
+        backgroundColor: '#104976',
+        margin: '20px',
+        width: '820px',
+        padding: '20px',
+        borderRadius: '20px',
+        border: 'solid 1px #3f6d91'
+      }}>
+        <Typography 
+        variant="h4"
+        sx={{textAlign: 'center', marginBottom: 2}}>
+          Drum Machine
+        </Typography>
+        <Grid container justifyContent='center'>
+          <Toolbar {...toolBarProps}/>
+        </Grid>
       <ClipsHeader count={totalSteps} {...trackListProps}/>
       <div className='drummachine_content'>
         <TrackList {...trackListProps}/>
       </div>
-    </div>
+      </Container>
     </Provider>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, memo } from 'react'
-import classNames from 'classnames'
 import { Context } from '../hooks/useNoteContext'
-import { Box, Button } from '@mui/material'
+import { Button } from '@mui/material'
 
 const Note = ({
     trackID,
@@ -12,10 +11,6 @@ const Note = ({
 }) => {
 
     const { toggleNote } = useContext(Context)
-    const noteClassNames = classNames('note', {
-        'on': isClipEnabled,
-        'playing': isClipEnabled && isClipOnCurrentPoint
-    })
 
     useEffect(() => {
         if(isClipEnabled && isClipOnCurrentPoint)
@@ -23,7 +18,6 @@ const Note = ({
     }, [isClipEnabled, isClipOnCurrentPoint, play])
 
     const noteClicked = e => {
-        // e.target.classList.toggle('on')
         toggleNote({trackID, clipID})
         play()
     }
@@ -39,11 +33,9 @@ const Note = ({
                 //disable hover-effect
                 "&.MuiButtonBase-root:hover": {
                     bgcolor: "#1769aa"},
-                border: '1px solid #000'
+                border: '1px solid #104976'
                 }}
-            >
-                
-                </Button> :
+            /> :
             <Button 
             outlined 
             onClick={noteClicked} 
@@ -54,16 +46,9 @@ const Note = ({
                 //disable hover-effect
                 "&.MuiButtonBase-root:hover": {
                     bgcolor: "#4587bb"},
-                border: '1px solid #000'
+                border: '1px solid #104976'
                 }}
-            >
-                
-                </Button>
-        
-        // <div
-        //     className={noteClassNames}
-        //     onClick={noteClicked}
-        // />
+            />
     )
 }
 
