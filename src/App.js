@@ -84,20 +84,36 @@ function App() {
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
   const [midiValues, setMidiValues]= useState([
     {
-      volume: 0,
-      rate: 0
+      volume: 50,
+      rate: 1,
+      play: false,
+      highFilter:0,
+      bandFilter:0,
+      lowFilter:0
     },
     {
-      volume: 0,
-      rate: 0
+      volume: 50,
+      rate: 1,
+      play: false,
+      highFilter:0,
+      bandFilter:0,
+      lowFilter:0
     },
     {
-      volume: 0,
-      rate: 0
+      volume: 50,
+      rate: 1,
+      play: false,
+      highFilter:0,
+      bandFilter:0,
+      lowFilter:0
     },
     {
-      volume: 0,
-      rate: 0
+      volume: 50,
+      rate: 1,
+      play: false,
+      highFilter:0,
+      bandFilter:0,
+      lowFilter:0
     }
   ])
   const [midiChanged, setMidiChanged] = useState(false);
@@ -167,43 +183,92 @@ function App() {
     let cmd = event.data[0] >> 4;
     let btnID = event.data[1];
     let value = event.data[2];
+    console.log(btnID)
     let channel = getChannel(cmd, btnID, value);
-    // console.log("_________________________________________")
-    // console.log(
-    //   "\n" +
-    //     "New Event (on Channel: " +
-    //     channel +
-    //     ")==> Type: " +
-    //     cmd +
-    //     ", Origin: " +
-    //     btnID +
-    //     ", Value: " +
-    //     value
-    // );
+    console.log("_________________________________________")
+    console.log(
+      "\n" +
+        "New Event (on Channel: " +
+        channel +
+        ")==> Type: " +
+        cmd +
+        ", Origin: " +
+        btnID +
+        ", Value: " +
+        value
+    );
   }
 
   const getChannel = (type, btnID, value) => {
     //console.log(channelsOnMidi);
     var index = 0;
     //Channels Volume
-    if (btnID < 52 && btnID > 47) {
-      index = btnID - 48
-      setMidiValues((old) =>{
-        old[index].volume = value/1.27;
+    if (btnID < 52 && btnID > 47 && type == 11) {
+      index = btnID - 48;
+      setMidiValues((old) => {
+        old[index].volume = value / 1.27;
         return old;
-      })
-      setMidiChanged((old) => !old)
+      });
+      setMidiChanged((old) => !old);
       return (btnID % 4) + 1;
     }
+    //Channels Rate
+    if ((btnID > 17 && btnID <= 21) && type==11) {
+      index = btnID - 18;
+      setMidiValues((old) => {
+        old[index].rate = Math.ceil((value*3) /12.7) / 10;
+        return old;
+      });
+      setMidiChanged((old) => !old);
+      return ((btnID - 2) % 4) + 1;
+    }
+    //ChannelsPlay Pause
+    if((btnID > 47 && btnID < 52) && type == 9){
+      index = btnID - 48;
+      setMidiValues((old) => {
+        old[index].play = !old[index].play;
+        return old;
+      });
+      setMidiChanged((old) => !old);
+      return ((btnID) % 4)+1;
+    }
+    //Channels HighFilter
+    if ((btnID > 13 && btnID < 18) && type==11) {
+      index = btnID - 14;
+      setMidiValues((old) => {
+        old[index].highFilter = Math.ceil((value*2) /12.7) / 10;
+        return old;
+      });
+      setMidiChanged((old) => !old);
+      return ((btnID - 2) % 4) + 1;
+    }
+    //Channels LowFilter
+    if ((btnID > 9 && btnID < 14) && type==11) {
+      index = btnID - 10;
+      setMidiValues((old) => {
+        old[index].lowFilter = Math.ceil((value*2) /12.7) / 10;
+        return old;
+      });
+      setMidiChanged((old) => !old);
+      return ((btnID - 2) % 4) + 1;
+    }
+    //Channels BandFilter
+    if ((btnID > 5 && btnID < 10) && type==11) {
+      index = btnID - 6;
+      setMidiValues((old) => {
+        old[index].bandFilter = Math.ceil((value*2) /12.7) / 10;
+        return old;
+      });
+      setMidiChanged((old) => !old);
+      return ((btnID - 2) % 4) + 1;
+    }
+
     //Master Play/Pause
     if (type == 9 && btnID == 18) {
       setMasterPlayMidi((old) => !old);
       return 0;
     }
-    //Channels
-    if (btnID > 17 && btnID <= 21) {
-      return ((btnID - 2) % 4) + 1;
-    }
+
     //Master Volume
     if (type == 11 && btnID == 64) {
       setMasterVolume((old) => value / 1.27);
@@ -214,7 +279,7 @@ function App() {
       return 0;
     }
     //Master Rate
-    if (type == 11 && btnID == 6) {
+    if (type == 11 && btnID == 1) {
       const mapped = (value * 3) / 127;
       updateMasterRate(Math.ceil(mapped * 10) / 10);
       document.getElementById("masterSpeedValue").textContent =

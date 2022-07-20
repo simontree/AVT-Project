@@ -70,12 +70,14 @@ function Channel(props) {
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
+    audioPlayer = document.getElementById(audioPlayerID);
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
   };
 
   const pauseAudio = () => {
+    audioPlayer = document.getElementById(audioPlayerID);
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
@@ -134,6 +136,7 @@ function Channel(props) {
       const realRate = value * Math.ceil(props.masterRate*10)/10;
       console.log(realRate)
       audioPlayer.playbackRate = updatedRate * props.masterRate;
+
       return updatedRate;
     });
   }
@@ -151,25 +154,37 @@ function Channel(props) {
       outputNode.disconnect();
     }
   }
-  const highpassFilterInput = (e) => {    
+
+  const highpassFilterInput = (e) => { 
+    handleHighpassInput(e.target.value);
+  }
+  const handleHighpassInput = (value) => {    
     setFilterHighGain(() =>{
-      var updatedGain = e.target.value;
+      var updatedGain = value;
       highpassGain.gain.value = updatedGain;
       return updatedGain;
     });
     filterCheck(document.getElementById("highpass checkbox" + channelID).checked, "highpass");
   };
-  const lowpassFilterInput = (e) => {    
+
+  const lowpassFilterInput = (e) => { 
+    handleLowpassInput(e.target.value);
+  }
+  const handleLowpassInput = (value) => {    
     setFilterLowGain(() =>{
-      var updatedGain = e.target.value;
+      var updatedGain = value;
       lowpassGain.gain.value = updatedGain;
       return updatedGain;
     });
     filterCheck(document.getElementById("lowpass checkbox" + channelID).checked, "lowpass");
   };
-  const bandpassFilterInput = (e) => {    
+
+  const bandpassFilterInput = (e) => { 
+    handleBandpassInput(e.target.value);
+  }
+  const handleBandpassInput = (value) => {    
     setFilterBandGain(() =>{
-      var updatedGain = e.target.value;
+      var updatedGain = value;
       bandpassGain.gain.value = updatedGain;
       return updatedGain;
     });
@@ -210,6 +225,7 @@ function Channel(props) {
         bandSet = isOn;
         break;
     }
+
     mediaElementSource[channelID].disconnect();
 
       if (highSet) {
@@ -275,6 +291,10 @@ function Channel(props) {
         handleRateChange={handleRateChange}
         handleTogglePlay={playPauseClicked}
         channelID={channelID}
+        midiTogglePlay = {props.midiTogglePlay}
+        handleHighpassInput = {handleHighpassInput}
+        handleLowpassInput = {handleLowpassInput}
+        handleBandpassInput = {handleBandpassInput}
       />
       <audio
         id={audioPlayerID}
@@ -348,7 +368,7 @@ function Channel(props) {
             onMouseUp={rateSliderChange}
             className="sSlider"
             id="sRange"
-            value={props.rate}
+            value={rate}
           ></input>
         </div>
         <div className="speedValue">
