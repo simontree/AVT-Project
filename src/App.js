@@ -83,7 +83,24 @@ function App() {
   const [masterVolume, setMasterVolume] = useState(5 / 100);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
   const [midiIsUpdated, setMidiIsUpdated] = useState(false);
-
+  const [midiValues, setMidiValues] = useState(
+    [ {
+        volume: 0,
+        rate: 0
+      },
+      {
+        volume: 0,
+        rate: 0
+      },
+      {
+        volume: 0,
+        rate: 0
+      },
+      {
+        volume: 0,
+        rate: 0
+      }
+    ])
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
       return [...channels, channel];
@@ -229,6 +246,15 @@ function App() {
     setMasterPlay((old) => !old);
   };
 
+  const updateMidiRate = (index, value) =>{
+    setMidiValues((old) =>{
+      var updated = old;
+      updated[index].rate = value;
+      //console.log(updated);
+      return updated;
+    })
+  }
+
   useEffect(() => {
     initMidi();
   }, []);
@@ -264,27 +290,31 @@ function App() {
     let value = event.data[2];
     let channel = getChannel(cmd, btnID, value);
     // console.log("_________________________________________")
-    console.log(
-      "\n" +
-        "New Event (on Channel: " +
-        channel +
-        ")==> Type: " +
-        cmd +
-        ", Origin: " +
-        btnID +
-        ", Value: " +
-        value
-    );
+    // console.log(
+    //   "\n" +
+    //     "New Event (on Channel: " +
+    //     channel +
+    //     ")==> Type: " +
+    //     cmd +
+    //     ", Origin: " +
+    //     btnID +
+    //     ", Value: " +
+    //     value
+    // );
   }
 
   const getChannel = (type, btnID, value) => {
     const channelsOnMidi = requestChannelsOnMidi();
     //console.log(channelsOnMidi);
     var index = 0;
-    //Channels
+    //Channels Volume
     if (btnID < 52 && btnID > 47) {
       index = btnID - 48;
-      console.log(channelsOnMidi)
+      var channel = channelsOnMidi[index];
+      var val = Math.ceil(value/127 * 3 * 10) / 10;
+      channel.children[4].children[1].children[0].value = val;
+      channel.children[4].children[2].children[0].textContent = val;
+      updateMidiRate(index, val );
       return (btnID % 4) + 1;
     }
     //Master Play/Pause
@@ -308,8 +338,7 @@ function App() {
     //Master Rate
     if (type == 11 && btnID == 6) {
       const mapped = (value * 3) / 127;
-      setMasterRate((old) => mapped);
-      updateMasterRate(mapped);
+      updateMasterRate(Math.ceil(mapped * 10) / 10);
       document.getElementById("masterSpeedValue").textContent =
         Math.ceil(mapped * 10) / 10;
     }
@@ -339,6 +368,7 @@ function App() {
         handleDestroyChannel={destroyChannel}
         masterRate={masterRate}
         masterPlay={masterPlay}
+        midiValues={midiValues}
       ></Channels>
       <Master
         id={"master"}

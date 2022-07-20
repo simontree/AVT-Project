@@ -9,8 +9,6 @@ import Filter from "./Filters/Filter";
 import NewFilter from "./Filters/NewFilter";
 import Filters from "./Filters/Filters";
 
-const defaultFilterStrength = 0.05;
-const defaultFilterType = "lowpass";
 var mediaElementSource = [];
 
 function Channel(props) {
@@ -25,20 +23,26 @@ function Channel(props) {
   const [selectedMidi, setSelectedMidi] = useState(props.selectedMidi);
   const [color, setColor] = useState(props.backgroundColor);
   const [playBtnTxt, setplayBtnTxt] = useState("Play");
-  const [filterGain, setFilterGain] = useState(0);
+  const [filterHighGain, setFilterHighGain] = useState(0);
+  const [filterLowGain, setFilterLowGain] = useState(0);
+  const [filterBandGain, setFilterBandGain] = useState(0);
 
   var audioPlayer;
   var currentMidiChannel;
   var outputNode = audioContext.createGain();
 
+  //Create highpass filter and its gain node
+  const highpassFilter = createFilter(audioContext, 'highpass', 8000);
+  const highpassGain = audioContext.createGain();
+  const [highpassSet, setHighpassSet] = useState(false);
   //Create lowpass filter and its gain node
-  const lowpassFilter = createFilter(audioContext, 'highpass', 8000);
+  const lowpassFilter = createFilter(audioContext, 'lowpass', 150);
   const lowpassGain = audioContext.createGain();
-  let lowpassSet = false;
-
-  // var [filters, setFilters] = useState([]);
-  // const [nextFilterID, setNextFilterID] = useState(0);
-  // var biquadFilters = []
+  const [lowpassSet, setLowpassSet] = useState(false);
+  //Create bandpass filter and its gain node
+  const bandpassFilter = createFilter(audioContext, 'bandpass', 400);
+  const bandpassGain = audioContext.createGain();
+  const [bandpassSet, setbandpassSet] = useState(false);
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
@@ -91,19 +95,19 @@ function Channel(props) {
     isPlaying ? pauseAudio() : playAudio();
   };
 
+  useEffect(()=>{
+    props.masterPlay ? playAudio() : pauseAudio();
+  },[props.masterPlay])
+
   const channelStateChange = (event) => {
     const isSliderOn = event.target.checked;
     setIsEnabled(() => {
       if (!isSliderOn) {
         pauseAudio();
         document.querySelector("#m0" + channelID).checked = true;
-        //Block Buttons and sliders?
       }
       return isSliderOn;
     });
-    /*console.log(
-      "Channel " + channelID + " is " + (isSliderOn ? "enabled." : "disabled.")
-    );*/
   };
 
   const destroyChannel = () => {
@@ -119,7 +123,7 @@ function Channel(props) {
     });
   };
 
-  const speedSliderChange = (event) => {
+  const rateSliderChange = (event) => {
     const updatedRate = event.target.value;
     handleRateChange(updatedRate)
   };
@@ -138,101 +142,128 @@ function Channel(props) {
     handleRateChange(rate);
   },[props.masterRate])
 
-  useEffect(()=>{
-    props.masterPlay ? playAudio() : pauseAudio();
-  },[props.masterPlay])
-
   const handleMidiChannelChange = (event) => {
     const selectedValue = parseInt(event.target.value);
     const radioButtonID = event.target.id;
     props.changeMidiChannel(selectedValue, radioButtonID);
   };
 
-  // const addFilterEvent = (filter) => {
-  //   setFilters(prev =>{
-  //     return [...filters, filter];
-  //   });
-  // };
-  // const applyFilters = (filters) =>{
-  //   //console.log(filters);
-  //   outputNode.disconnect();
-  //   mediaElementSource[channelID].disconnect();
-
-  //   let i = 0;
-  //   filters.forEach((filter)=>{
-  //     if(filter.isFilterEnabled){
-  //       biquadFilters[i] = audioContext.createBiquadFilter();
-  //       biquadFilters[i].type = filter.type;
-  //       switch(filter.type){
-  //         case "lowpass":
-  //           biquadFilters[i].frequency.value = 150;
-  //           break;
-  //         case "highpass":
-  //           biquadFilters[i].frequency.value = 8000;
-  //           break;
-  //       }
-  //       biquadFilters[i].gain.value = filter.strength;
-  //       //console.log(biquadFilters[i])
-        
-
-  //       let filterGain = audioContext.createGain();
-  //       filterGain.gain.value = filter.strength;
-
-  //       filterGain.connect(outputNode);
-  //       biquadFilters[i].connect(filterGain);
-  //       mediaElementSource[channelID].connect(biquadFilters[i]);
-  //       filterGain.connect(masterOutputNode);
-  //       i++
-  //     }
-  //   })
-  //   if(i==0) //outputNode.connect(masterOutputNode);
-  //   console.log("filters applied: " + i)
-  // }
-
-  // const getNextFilterID = () => {
-  //   setNextFilterID(prev => prev+1)
-  //   return "filter" + channelID + "" + nextFilterID;
-  // }
-
+  //Disconnect output node if a filter is activated
   function toggleOutputConnection () {
-    if (!lowpassSet) {
+    if (!highpassSet || !lowpassSet || !bandpassSet) {
       outputNode.connect(masterOutputNode);
     } else {
       outputNode.disconnect();
     }
   }
-
+  const highpassFilterInput = (e) => {    
+    setFilterHighGain(() =>{
+      var updatedGain = e.target.value;
+      highpassGain.gain.value = updatedGain;
+      return updatedGain;
+    });
+    filterCheck(document.getElementById("highpass checkbox" + channelID).checked, "highpass");
+  };
   const lowpassFilterInput = (e) => {    
-    setFilterGain(() =>{
+    setFilterLowGain(() =>{
       var updatedGain = e.target.value;
       lowpassGain.gain.value = updatedGain;
       return updatedGain;
     });
-    filterCheck(!document.getElementById("lowpasscheckbox" + channelID).checked);
-    filterCheck(document.getElementById("lowpasscheckbox" + channelID).checked);
+    filterCheck(document.getElementById("lowpass checkbox" + channelID).checked, "lowpass");
+  };
+  const bandpassFilterInput = (e) => {    
+    setFilterBandGain(() =>{
+      var updatedGain = e.target.value;
+      bandpassGain.gain.value = updatedGain;
+      return updatedGain;
+    });
+    filterCheck(document.getElementById("bandpass checkbox" + channelID).checked, "bandpass");
   };
 
-  const lowpassFilterClick = (e) => {
-    filterCheck(e.currentTarget.checked);
+
+  //Manage filters, when a filter checkbox is clicked
+  const filterClick = (e) => {
+    var id = e.target.id;
+    var filterType = id.split(" ");
+    console.log(filterType[0]);
+    filterCheck(e.currentTarget.checked, filterType[0]);
+    
   };
-  const filterCheck = (isOn) =>{
-    if (isOn) {
-      lowpassGain.gain.value = filterGain;
-      mediaElementSource[channelID].disconnect();
-      lowpassGain.connect(outputNode);
-      lowpassFilter.connect(lowpassGain);
-      mediaElementSource[channelID].connect(lowpassFilter);
-      console.log(mediaElementSource[channelID])
-      lowpassSet = true;
-      toggleOutputConnection();
-      lowpassGain.connect(masterOutputNode);
-    } else {
-      lowpassSet = false;
-      lowpassGain.disconnect();
-      lowpassFilter.disconnect();
-      mediaElementSource[channelID].connect(outputNode);
-      toggleOutputConnection();
+  //Connect filters as needed when called
+  const filterCheck = (isOn, filterType) =>{
+    var highSet;
+    var lowSet;
+    var bandSet;
+    switch(filterType){
+      case "highpass":
+        setHighpassSet(isOn);
+        highSet = isOn;
+        lowSet = lowpassSet;
+        bandSet = bandpassSet;
+        break;
+      case "lowpass":
+        setLowpassSet(isOn);
+        highSet = highpassSet;
+        lowSet = isOn;
+        bandSet = bandpassSet;
+        break;
+      case "bandpass":
+        setbandpassSet(isOn);
+        highSet = highpassSet;
+        lowSet = lowpassSet;
+        bandSet = isOn;
+        break;
     }
+    mediaElementSource[channelID].disconnect();
+
+      if (highSet) {
+        console.log("highpass on")
+        highpassGain.gain.value = filterHighGain;
+        highpassGain.connect(outputNode);
+        highpassFilter.connect(highpassGain);
+        mediaElementSource[channelID].connect(highpassFilter);
+        highpassGain.connect(masterOutputNode);
+      } else {
+        console.log("highpass off")
+        highpassGain.disconnect();
+        highpassFilter.disconnect();
+      }
+
+      if (lowSet) {
+        console.log("lowpass on")
+        lowpassGain.gain.value = filterLowGain;
+        lowpassGain.connect(outputNode);
+        lowpassFilter.connect(lowpassGain);
+        mediaElementSource[channelID].connect(lowpassFilter);
+        lowpassGain.connect(masterOutputNode);
+      } else {
+        console.log("lowpass off")
+        lowpassGain.disconnect();
+        lowpassFilter.disconnect();
+      }
+
+
+      if (bandSet) {
+        console.log("bandpass on")
+        bandpassGain.gain.value = filterBandGain;
+        bandpassGain.connect(outputNode);
+        bandpassFilter.connect(bandpassGain);
+        mediaElementSource[channelID].connect(bandpassFilter);
+        bandpassGain.connect(masterOutputNode);
+      } else {
+        console.log("bandpass off")
+        bandpassGain.disconnect();
+        bandpassFilter.disconnect();
+      }
+
+
+
+    if(!highSet&&!lowSet&&!bandSet){
+      console.log("all off")
+      mediaElementSource[channelID].connect(outputNode);
+    }
+    toggleOutputConnection();
   }
 
 
@@ -310,11 +341,11 @@ function Channel(props) {
             min="0"
             max="3"
             step="0.1"
-            onChange={speedSliderChange}
-            onMouseUp={speedSliderChange}
+            onChange={rateSliderChange}
+            onMouseUp={rateSliderChange}
             className="sSlider"
             id="sRange"
-            value={rate}
+            value={props.rate}
           ></input>
         </div>
         <div className="speedValue">
@@ -376,12 +407,69 @@ function Channel(props) {
         <label className="filterTitle">Filters (*￣3￣)╭</label>
       </div>
       <div id={"filtercontainer" + channelID}>
-        <input className="ml-6 focus: ring-red-0/0" id={"lowpasscheckbox"+channelID} type="checkbox" onChange={lowpassFilterClick}/>
-          <label className="font-bold"  htmlFor="lowpass">
-            Highpass Filter
-          </label>
-          <br></br>
-            <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" value={filterGain} onInput={lowpassFilterInput}/>
+        <input
+          className="ml-6 focus: ring-red-0/0"
+          id={"highpass checkbox" + channelID}
+          type="checkbox"
+          onChange={filterClick}
+        />
+        <label className="font-bold" htmlFor="highpass">
+          Highpass Filter
+        </label>
+        <br></br>
+        <input
+          className="mt-0.5 ml-11"
+          id={"highpass" + channelID}
+          type="range"
+          min="0"
+          max="2"
+          step="0.01"
+          value={filterHighGain}
+          onInput={highpassFilterInput}
+        />
+        <br></br>
+        <input
+          className="ml-6 focus: ring-red-0/0"
+          id={"lowpass checkbox" + channelID}
+          type="checkbox"
+          onChange={filterClick}
+        />
+        <label className="font-bold" htmlFor="lowpass">
+          Lowpass Filter
+        </label>
+        <br></br>
+        <input
+          className="mt-0.5 ml-11"
+          id={"lowpass" + channelID}
+          type="range"
+          min="0"
+          max="2"
+          step="0.01"
+          value={filterLowGain}
+          onInput={lowpassFilterInput}
+        />
+        <br></br>
+
+        <input
+          className="ml-6 focus: ring-red-0/0"
+          id={"bandpass checkbox" + channelID}
+          type="checkbox"
+          onChange={filterClick}
+        />
+        <label className="font-bold" htmlFor="bandpass">
+          bandpass Filter
+        </label>
+        <br></br>
+        <input
+          className="mt-0.5 ml-11"
+          id={"bandpass" + channelID}
+          type="range"
+          min="0"
+          max="2"
+          step="0.01"
+          value={filterBandGain}
+          onInput={bandpassFilterInput}
+        />
       </div>
     </div>
   );
