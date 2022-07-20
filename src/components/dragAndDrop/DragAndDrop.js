@@ -31,6 +31,9 @@ class DragAndDrop extends React.Component {
                     window.alert("Files of type: \"" + file.type + "\" are currently not supported. Please use a supported file type!");
                 }
             }
+            event.stopImmediatePropagation()
+            prevents(event)
+            inactive()
         }
         this.dndRef.current.addEventListener("drop", handleDrop);
 
