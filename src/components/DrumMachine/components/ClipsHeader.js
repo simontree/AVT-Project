@@ -12,7 +12,8 @@ const ClipsHeader = ({ count = 0, currentClipID }) => {
     }
 
     let content = [...Array(count)]
-    .map((el, i) => (<div className={isPlaying(i)? 'clip clip-playing': 'clip'} key={i + 1}><button/></div>))
+    .map((el, i) => 
+    (<div className={isPlaying(i)? 'clip clip-playing': 'clip'} key={i + 1}><button/></div>))
 
     return (
         <div className='clips'>

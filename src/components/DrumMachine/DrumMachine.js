@@ -52,7 +52,7 @@ function DrumMachine() {
     <Provider>
       <Container
       sx={{
-        backgroundColor: '#104976',
+        backgroundColor: 'rgb(2, 40, 79)',
         margin: '20px',
         width: '820px',
         padding: '20px',
@@ -61,16 +61,17 @@ function DrumMachine() {
       }}>
         <Typography 
         variant="h4"
-        sx={{textAlign: 'center', marginBottom: 2}}>
+        sx={{
+          textAlign: 'center', 
+          marginBottom: 2,
+          color: '#e3f2fd'}}>
           Drum Machine
         </Typography>
         <Grid container justifyContent='center'>
           <Toolbar {...toolBarProps}/>
         </Grid>
       <ClipsHeader count={totalSteps} {...trackListProps}/>
-      <div className='drummachine_content'>
         <TrackList {...trackListProps}/>
-      </div>
       </Container>
     </Provider>
   );

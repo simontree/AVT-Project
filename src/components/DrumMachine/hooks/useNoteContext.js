@@ -3,7 +3,7 @@ import { audioClips } from '../audioClips'
 
 const Context = createContext({
     clips: {},
-    toggleNote: () => {}
+    toggleNote: () => {},
 })
 
 const appReducer = (state, action) => {
@@ -30,6 +30,7 @@ const appReducer = (state, action) => {
 
 const Provider = ({ children }) => {
     const [clips, dispatch] = useReducer(appReducer, { ...audioClips[0] }) 
+
     const toggleNote = ({ trackID, clipID }) => {
         let newEnabledNotes
         const enabledNotes = clips.clipList[trackID].enabledNotes  

@@ -2,22 +2,7 @@ html {
     font-size: 13px;
     color: #bbdefb;
   }
-  
-  .drummachine_header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    margin-left: 200px;
-  }
-  
-  .drummachine_content {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    position: relative;
-  }
-  
+
   .clips {
     display: flex;
     padding-left: 192px;
