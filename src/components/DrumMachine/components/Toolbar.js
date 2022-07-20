@@ -1,5 +1,11 @@
 import React, { memo } from 'react'
 import '../DrumMachine.css'
+import { Box } from '@mui/material'
+import StopIcon from '@mui/icons-material/Stop'
+import IconButton from '@mui/material/IconButton'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import PauseIcon from '@mui/icons-material/Pause'
+import Slider from '@mui/material/Slider'
 
 const ToolBar = ({
     setStartTime,
@@ -30,21 +36,30 @@ const ToolBar = ({
 
     return (
         <nav className="toolbar">
-            <button 
+            <IconButton 
             className="form_element button_stop" 
-            style={{width:"70px"}} 
-            onClick={stopPlayback} 
-            aria-label="Stop">
-                Stop
-            </button>
-            <button 
+            onClick={stopPlayback}
+            >
+                <StopIcon/>
+            </IconButton>
+            <IconButton 
             className="form_element button_play_pause" 
-            style={{width:"100px"}} 
-            onClick={togglePlayback} 
-            aria-label="Play / Pause">
-                Play/Pause
-            </button> 
-            <input 
+            onClick={togglePlayback}
+            >
+                {(isPlaying) ?
+                <PauseIcon/> :
+                <PlayArrowIcon/>}
+            </IconButton>
+            <Box width={200} sx={{marginLeft: 5, textAlign: 'center'}}>
+                {BPM} BPM
+                <Slider
+                value={BPM}
+                onChange={updateBPM}
+                min={60}
+                max={200}
+                 /> 
+            </Box> 
+            {/* <input 
             className="form_element input_bpm" 
             id="bpm" 
             type="range" 
@@ -54,7 +69,7 @@ const ToolBar = ({
             onChange={updateBPM} />
             <label 
             className="label_bpm" 
-            htmlFor="bpm">{BPM} BPM</label>
+            htmlFor="bpm">{BPM} BPM</label> */}
         </nav>
     )
 }
