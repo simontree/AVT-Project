@@ -24,6 +24,7 @@ function DrumMachine() {
   const clipTime = sequenceTime / totalSteps
   const isPlaying = startTime
   const playerTime = useTimer(isPlaying)
+  console.log(playerTime)
   const lapsedTime = isPlaying ? Math.max(0, playerTime - startTime) : 0
   const totalLapsedTime = pastLapsedTime + lapsedTime
 

@@ -4,7 +4,7 @@ const useTimer = (running) => {
     const [now, setNow] = useState(null)
     useEffect(() => {
         if (!running) {
-            return
+            return  //returns null
         }
         requestAnimationFrame(() => setNow(performance.now()))
     }, [running, now])
