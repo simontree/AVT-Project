@@ -57,6 +57,7 @@ const Channels = (props) =>{
                     masterRate = {props.masterRate}
                     masterPlay = {props.masterPlay}
                     midiValues = {props.midiValues}
+                    midiChanged = {props.midiChanged}
                 />
             }
         }

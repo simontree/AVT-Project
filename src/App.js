@@ -82,143 +82,31 @@ function App() {
   const [masterPlay, setMasterPlay] = useState(true);
   const [masterVolume, setMasterVolume] = useState(5 / 100);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
-  const [midiIsUpdated, setMidiIsUpdated] = useState(false);
-  const [midiValues, setMidiValues] = useState(
-    [ {
-        volume: 0,
-        rate: 0
-      },
-      {
-        volume: 0,
-        rate: 0
-      },
-      {
-        volume: 0,
-        rate: 0
-      },
-      {
-        volume: 0,
-        rate: 0
-      }
-    ])
+  const [midiValues, setMidiValues]= useState([
+    {
+      volume: 0,
+      rate: 0
+    },
+    {
+      volume: 0,
+      rate: 0
+    },
+    {
+      volume: 0,
+      rate: 0
+    },
+    {
+      volume: 0,
+      rate: 0
+    }
+  ])
+  const [midiChanged, setMidiChanged] = useState(false);
+
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
       return [...channels, channel];
     });
   };
-
-  const handleMidiChannelOrganization = (number, radioID) => {
-    //Make an array of selected radio buttons
-    var radios = Array.from(
-      document.querySelectorAll("input[type='radio']")
-    ).filter((element) => {
-      return element.checked;
-    });
-    //Deselect values of other channels if they are the same as the one just selected
-    //Except if it´s the X
-    setChannels((prev) => {
-      radios.forEach((element) => {
-        if (element.id != radioID && element.value == number && number != "0") {
-          element.checked = false;
-        }
-      });
-      setRadioButtons();
-      return prev;
-    });
-    setMidiIsUpdated(!midiIsUpdated);
-    requestChannelsOnMidi();
-//------------------------------------------------------------
-
-  };
-
-  const requestChannelsOnMidi = () =>{
-    let channelsOnMidi = [];
-    //Updated array of selected radio buttons
-    const radios = Array.from(
-      document.querySelectorAll("input[type='radio']")
-    ).filter((element) => {
-      return element.checked;
-    });
-      
-    // Array of channels and their respective midi channel (The index)
-    const channelsFromRadios = radios.
-        filter((radio) =>{
-          return radio.id[1]!=0
-        }).
-        map(radio => document.getElementById(radio.id[2]));
-
-    let temp = [];
-    let selected=[];
-    let reorganized =[];
-    channelsFromRadios.forEach(channel => {
-      temp = [];
-
-      var radiosOfChannel = channel.children[5].children[1]
-      for(var i = 0; i <radiosOfChannel.childElementCount; i += 2 ){
-        temp.push(radiosOfChannel.children[i])
-      }
-
-      temp.forEach((element)=>{
-        if(element.checked){
-          selected.push(element);
-        }
-      })
-      
-    });
-
-    selected.forEach(element => {
-      reorganized[element.id[1]-1] = element;
-    });
-    // console.log("Reorganized:");
-    // console.log(reorganized);
-    channelsOnMidi = reorganized.map(radio => document.getElementById(radio.id[2]))
-    // console.log("Selected Channels:")
-    // console.log(channelsOnMidi);
-
-    return channelsOnMidi;
-  }
-
-
-  const setRadioButtons = () => {
-    var numberOfChannels = channels.length;
-    var radios;
-    var checked;
-    for (var i = 0; i < numberOfChannels; i++) {
-      try {
-        radios = Array.from(
-          document
-            .getElementById("radioButtons" + i)
-            .getElementsByTagName("input")
-        ).filter((element) => {
-          return element.localName === "input";
-        });
-        checked = radios.filter((element) => {
-          return element.checked;
-        });
-        if (checked.length == 0) {
-          radios[4].checked = true;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    
-    try {
-      var radios = Array.from(
-        document.querySelectorAll("input[type='radio']")
-      ).filter((element) => {
-        return element.checked;
-      });
-      for (var i = 0; i < channels.length; i++) {
-        channels[i].selectedMidi = parseInt(radios[i].value);
-      }
-    } catch (error) {
-      //console.log(error);
-    }
-  };
-  useEffect(() => {
-
-  }, [midiIsUpdated]);
 
   const destroyChannel = (element) => {
     document
@@ -245,15 +133,6 @@ function App() {
   const masterPlayPause = () => {
     setMasterPlay((old) => !old);
   };
-
-  const updateMidiRate = (index, value) =>{
-    setMidiValues((old) =>{
-      var updated = old;
-      updated[index].rate = value;
-      //console.log(updated);
-      return updated;
-    })
-  }
 
   useEffect(() => {
     initMidi();
@@ -304,17 +183,16 @@ function App() {
   }
 
   const getChannel = (type, btnID, value) => {
-    const channelsOnMidi = requestChannelsOnMidi();
     //console.log(channelsOnMidi);
     var index = 0;
     //Channels Volume
     if (btnID < 52 && btnID > 47) {
-      index = btnID - 48;
-      var channel = channelsOnMidi[index];
-      var val = Math.ceil(value/127 * 3 * 10) / 10;
-      channel.children[4].children[1].children[0].value = val;
-      channel.children[4].children[2].children[0].textContent = val;
-      updateMidiRate(index, val );
+      index = btnID - 48
+      setMidiValues((old) =>{
+        old[index].volume = value/1.27;
+        return old;
+      })
+      setMidiChanged((old) => !old)
       return (btnID % 4) + 1;
     }
     //Master Play/Pause
@@ -359,16 +237,16 @@ function App() {
         defaultAudioUrl={defaultAudioUrl}
         defaultAudioType={defaultAudioType}
         color={defineRandomColor}
-        addChannelHandler={addChannelHandler}
         setNextID={setNextID}
+        addChannelHandler={addChannelHandler}
       />
       <Channels
         channels={channels}
-        handleMidiChannelOrganization={handleMidiChannelOrganization}
         handleDestroyChannel={destroyChannel}
         masterRate={masterRate}
         masterPlay={masterPlay}
         midiValues={midiValues}
+        midiChanged={midiChanged}
       ></Channels>
       <Master
         id={"master"}

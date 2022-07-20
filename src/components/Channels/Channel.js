@@ -4,10 +4,7 @@ import "./ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
 import { masterOutputNode, masterRate } from "../Master/Master";
-import { element } from "prop-types";
-import Filter from "./Filters/Filter";
-import NewFilter from "./Filters/NewFilter";
-import Filters from "./Filters/Filters";
+import MidiChannel from "./MidiChannel/MidiChannel";
 
 var mediaElementSource = [];
 
@@ -20,7 +17,6 @@ function Channel(props) {
   const [type, setType] = useState(props.audioType);
   const [volume, setVolume] = useState(props.volume);
   const [rate, setRate] = useState(props.rate);
-  const [selectedMidi, setSelectedMidi] = useState(props.selectedMidi);
   const [color, setColor] = useState(props.backgroundColor);
   const [playBtnTxt, setplayBtnTxt] = useState("Play");
   const [filterHighGain, setFilterHighGain] = useState(0);
@@ -28,7 +24,6 @@ function Channel(props) {
   const [filterBandGain, setFilterBandGain] = useState(0);
 
   var audioPlayer;
-  var currentMidiChannel;
   var outputNode = audioContext.createGain();
 
   //Create highpass filter and its gain node
@@ -61,10 +56,6 @@ function Channel(props) {
     audioPlayer = document.querySelector("#" + audioPlayerID);
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource[channelID].connect(outputNode);
-    currentMidiChannel = document.querySelector(
-      "#m" + selectedMidi + "" + channelID
-    );
-    currentMidiChannel.checked = true;
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
   }, []);
@@ -72,7 +63,6 @@ function Channel(props) {
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
-    setSelectedMidi(props.selectedMidi);
   });
 
   const playAudio = () => {
@@ -104,7 +94,6 @@ function Channel(props) {
     setIsEnabled(() => {
       if (!isSliderOn) {
         pauseAudio();
-        document.querySelector("#m0" + channelID).checked = true;
       }
       return isSliderOn;
     });
@@ -116,12 +105,23 @@ function Channel(props) {
   };
 
   const volSliderChange = (event) => {
+    handleVolumeChange(event)
+  };
+
+  const handleVolumeChange = (event) =>{
     setVolume(() => {
       const updatedVolume = event.target.value;
       audioPlayer.volume = updatedVolume / 100;
       return updatedVolume;
     });
-  };
+  }
+  const handleVolumeChangeFromMidi = (value) =>{
+    setVolume(() => {
+      const updatedVolume = Math.ceil(value);
+      audioPlayer.volume = updatedVolume / 100;
+      return updatedVolume;
+    });
+  }
 
   const rateSliderChange = (event) => {
     const updatedRate = event.target.value;
@@ -142,11 +142,6 @@ function Channel(props) {
     handleRateChange(rate);
   },[props.masterRate])
 
-  const handleMidiChannelChange = (event) => {
-    const selectedValue = parseInt(event.target.value);
-    const radioButtonID = event.target.id;
-    props.changeMidiChannel(selectedValue, radioButtonID);
-  };
 
   //Disconnect output node if a filter is activated
   function toggleOutputConnection () {
@@ -188,8 +183,8 @@ function Channel(props) {
     var filterType = id.split(" ");
     console.log(filterType[0]);
     filterCheck(e.currentTarget.checked, filterType[0]);
-    
   };
+
   //Connect filters as needed when called
   const filterCheck = (isOn, filterType) =>{
     var highSet;
@@ -273,6 +268,14 @@ function Channel(props) {
       id={channelID}
       style={{ backgroundColor: `${color}` }}
     >
+      <MidiChannel
+        midiValues={props.midiValues}
+        midiChanged = {props.midiChanged}
+        handleVolumeChange={handleVolumeChangeFromMidi}
+        handleRateChange={handleRateChange}
+        handleTogglePlay={playPauseClicked}
+        channelID={channelID}
+      />
       <audio
         id={audioPlayerID}
         className="channelAudio"
@@ -350,54 +353,6 @@ function Channel(props) {
         </div>
         <div className="speedValue">
           <label>{rate}</label>
-        </div>
-      </div>
-
-      <div className="midiChannelContainer">
-        <div className="midiLabel">
-          <label>Midi Channel</label>
-        </div>
-        <div className="midiChannels" id={"radioButtons" + channelID}>
-          <input
-            type="radio"
-            id={"m1" + channelID}
-            name={"midiChannel" + channelID}
-            value="1"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m1" + channelID}>1</label>
-          <input
-            type="radio"
-            id={"m2" + channelID}
-            name={"midiChannel" + channelID}
-            value="2"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m2" + channelID}>2</label>
-          <input
-            type="radio"
-            id={"m3" + channelID}
-            name={"midiChannel" + channelID}
-            value="3"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m3" + channelID}>3</label>
-          <input
-            type="radio"
-            id={"m4" + channelID}
-            name={"midiChannel" + channelID}
-            value="4"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m4" + channelID}>4</label>
-          <input
-            type="radio"
-            id={"m0" + channelID}
-            name={"midiChannel" + channelID}
-            value="0"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"mx" + channelID}>X</label>
         </div>
       </div>
 
