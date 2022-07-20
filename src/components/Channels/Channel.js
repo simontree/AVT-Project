@@ -8,6 +8,7 @@ import { element } from "prop-types";
 import Filter from "./Filters/Filter";
 import NewFilter from "./Filters/NewFilter";
 import Filters from "./Filters/Filters";
+import {Grid, Container, Typography} from '@mui/material'
 
 const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
@@ -57,10 +58,10 @@ function Channel(props) {
     audioPlayer = document.querySelector("#" + audioPlayerID);
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource[channelID].connect(outputNode);
-    currentMidiChannel = document.querySelector(
-      "#m" + selectedMidi + "" + channelID
-    );
-    currentMidiChannel.checked = true;
+    // currentMidiChannel = document.querySelector(
+    //   "#m" + selectedMidi + "" + channelID
+    // );
+    // currentMidiChannel.checked = true;
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
   }, []);
@@ -300,7 +301,7 @@ function Channel(props) {
         </div>
       </div>
 
-      <div className="speedControl">
+     <div className="speedControl">
         <div className="speedIcon">
           <label>Sp</label>
         </div>
@@ -382,7 +383,7 @@ function Channel(props) {
           </label>
           <br></br>
             <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" value={filterGain} onInput={lowpassFilterInput}/>
-      </div>
+      </div> 
     </div>
   );
 }

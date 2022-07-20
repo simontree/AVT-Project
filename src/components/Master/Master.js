@@ -3,6 +3,7 @@ import "../Channels/ChannelCss/Switch.css";
 import "../Channels/ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
+import { Box, Grid, Container, Slider, Typography} from '@mui/material'
 
 export var masterOutputNode;
 export var masterRate = 1;
@@ -48,67 +49,79 @@ function Master(props) {
     props.updateMasterVolume(updatedVolume);
   };
 
-  const speedSliderChange = (event) => {
-    const updatedRate = event.target.value;
-    props.updateMasterRate(updatedRate);
-  };
+  const speedSliderChange = (e) => {
+    props.updateMasterRate(e.target.value)
+  }
+
   useEffect(()=>{
     document.getElementById("masterRateSlider").value=props.masterRate;
   },[props.masterRate])
 
   return (
-    <div
-      className="channel"
-      id={channelID}
-      style={{ backgroundColor: `${color}` }}
-    >
-      <div className="channelPlay">
-        <button className="playButton" onClick={playPauseClicked}>
-          {buttonTxt}
-        </button>
-      </div>
-      <div className="volumeControl">
-        <div className="volIcon">
-          <label>Vol</label>
-        </div>
-        <div className="volSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="100"
-            onChange={volSliderChange}
-            className="vSlider"
-            id="olRange"
-            value={props.volume}
-          ></input>
-        </div>
-        <div className="volValue">
-          <label id="masterVolumeText">{volume}</label>
-        </div>
-      </div>
 
-      <div className="speedControl">
-        <div className="speedIcon">
-          <label>Sp</label>
-        </div>
-        <div className="speedSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="3"
-            step="0.1"
-            onChange={speedSliderChange}
-            onMouseUp={speedSliderChange}
-            className="sSlider"
-            id="masterRateSlider"
-            value={Math.ceil(props.masterRate*10)/10}
-          ></input>
-        </div>
-        <div className="speedValue">
-          <label id="masterSpeedValue">{Math.ceil(props.masterRate*10)/10}</label>
-        </div>
-      </div>
-    </div>
+    <Container
+    sx={{
+      backgroundColor: 'rgb(2, 40, 79)',
+      margin: '20px',
+      width: '300px',
+      padding: '20px',
+      borderRadius: '20px',
+      border: 'solid 1px #3f6d91'
+    }}>
+      <Box width={200}>
+        <Slider
+        value={Math.ceil(props.masterRate*10)/10}
+        id="masterRateSlider"
+        min="0"
+        max="3"
+        step="0.1"
+        onChange={speedSliderChange}
+        onMouseUp={speedSliderChange}
+        >
+        </Slider>
+      </Box>
+    </Container>
+
+    // <div
+    //   className="channel"
+    //   id={channelID}
+    //   style={{ backgroundColor: `${color}` }}
+    // >
+    //   <div className="channelPlay">
+    //     <button className="playButton" onClick={playPauseClicked}>
+    //       {buttonTxt}
+    //     </button>
+    //   </div>
+    //   <div className="volumeControl">
+    //     <div className="volIcon">
+    //       <label>Vol</label>
+    //     </div>
+    //     <div className="volSlider">
+    //       <input
+    //         type={"range"}
+    //         min="0"
+    //         max="100"
+    //         onChange={volSliderChange}
+    //         className="vSlider"
+    //         id="olRange"
+    //         value={props.volume}
+    //       ></input>
+    //     </div>
+    //     <div className="volValue">
+    //       <label id="masterVolumeText">{volume}</label>
+    //     </div>
+    //   </div>
+
+    //   <div className="speedControl">
+    //     <div className="speedIcon">
+    //       <label>Sp</label>
+    //     </div>
+        
+    //     <div className="speedValue">
+    //       <label id="masterSpeedValue">{Math.ceil(props.masterRate*10)/10}</label>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 export default Master;
