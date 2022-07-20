@@ -7,7 +7,6 @@ const useAudio = (audioFilePath) =>{
     useEffect(() => {
         setAudio(new Audio(audioFilePath))
     }, [audioFilePath])
-
     return [play]
 }
 

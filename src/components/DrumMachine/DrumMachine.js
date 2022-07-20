@@ -8,7 +8,7 @@ import './DrumMachine.css'
 
 function DrumMachine() {
 
-  const [BPM, setBPM] = useState(100);
+  const [BPM, setBPM] = useState(128);
   const [startTime, setStartTime] = useState(null);
   const [pastLapsedTime, setPastLapsedTime] = useState(0);
   const [currentClipID, setCurrentClipID] = useState(null);
