@@ -8,23 +8,21 @@ import './DrumMachine.css'
 
 function DrumMachine() {
 
+  const [BPM, setBPM] = useState(100);
+  const [startTime, setStartTime] = useState(null);
+  const [pastLapsedTime, setPastLapsedTime] = useState(0);
+  const [currentClipID, setCurrentClipID] = useState(null);
+
   const baseBpmOneSecond = 60;
   const barSteps = 8;
   const barBeats = 4;
   const sequenceBars = 1;
   const totalSteps = barSteps * sequenceBars;
   const totalBeats = barBeats * sequenceBars;
-
-  const [BPM, setBPM] = useState(100);
-  const [startTime, setStartTime] = useState(null);
-  const [pastLapsedTime, setPastLapsedTime] = useState(0);
-  const [currentClipID, setCurrentClipID] = useState(null);
-
   const sequenceTime = baseBpmOneSecond / BPM * 1000 * totalBeats;
   const clipTime = sequenceTime / totalSteps
   const isPlaying = startTime
   const playerTime = useTimer(isPlaying)
-  console.log(playerTime)
   const lapsedTime = isPlaying ? Math.max(0, playerTime - startTime) : 0
   const totalLapsedTime = pastLapsedTime + lapsedTime
 

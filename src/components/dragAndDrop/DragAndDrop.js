@@ -53,8 +53,8 @@ class DragAndDrop extends React.Component {
     render() {
         return (
             <div>
-                <section className="droparea" ref={this.dndRef} >
-                    <p>Drag and Drop Area</p>
+                <section className="droparea" ref={this.dndRef} style={{textAlign:'center'}}>
+                    <p>Drag and Drop Area <br/>Place your sound file here to create a new channel</p>
                 </section>
             </div>
         )

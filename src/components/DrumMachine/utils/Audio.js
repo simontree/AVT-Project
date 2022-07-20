@@ -1,20 +1,21 @@
+import { audioContext } from '../../../App'
+import { masterOutputNode } from '../../Master/Master'
+
 class Audio {
 
     constructor(path){
-        const AudioContext = window.AudioContext || window.webkitAudioContext || window.MozAudioContext
-        this.audioContext = new AudioContext()
         if(!this.buffer) this.loadAudioFile(path)
     }
 
     async loadAudioFile(path){
-        this.recorderNode = this.audioContext.createGain()
+        this.recorderNode = audioContext.createGain()
         this.recorderNode.gain.value = 1
         this.buffer = null
         this.path = path
         const response = await fetch(path)
         const arrayBuffer = await response.arrayBuffer()
         const audioBuffer = await this.decodeAudioDataAsync(
-            this.audioContext, arrayBuffer
+            audioContext, arrayBuffer
         )
         this.buffer = audioBuffer
     }
@@ -29,16 +30,17 @@ class Audio {
         })
     }
 
+    // function to be called via useAudio hook
     play(gainValue = 1, rateValue = 1){
-        this.audioContext.resume()
-        const gain = this.audioContext.createGain()
-        const audio = this.audioContext.createBufferSource()
+        audioContext.resume()
+        const gain = audioContext.createGain()
+        const audio = audioContext.createBufferSource()
         gain.gain.value = gainValue
         audio.playbackRate.value = rateValue
         audio.buffer = this.buffer
         audio.connect(gain)
         gain.connect(this.recorderNode)
-        gain.connect(this.audioContext.destination)
+        gain.connect(masterOutputNode)
         audio.start(0)
     }
 }

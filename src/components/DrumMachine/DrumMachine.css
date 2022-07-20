@@ -7,7 +7,6 @@ html {
     margin-right: auto;
     width: 450px;
     visibility: visible;
-    background-color: #5bb2e4ec;
     padding: 20px;
   }
   
@@ -36,7 +35,7 @@ html {
   
   .clips {
     display: flex;
-    padding-left: 140px;
+    padding-left: 120px;
     border-top: 1px solid #2e2e2e;
     border-bottom: 1px solid #2e2e2e;
   }
@@ -79,7 +78,6 @@ html {
   .note.playing {
     background-color: #134f9e;
   }
-  
   
   .toolbar {
     font-weight: 800;

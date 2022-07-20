@@ -6,6 +6,7 @@ import { toBeChecked } from "@testing-library/jest-dom/dist/matchers";
 import Channel from "./components/Channels/Channel";
 import Master from "./components/Master/Master";
 import { masterOutputNode } from "./components/Master/Master";
+import DrumMachine from "./components/DrumMachine/DrumMachine";
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -353,6 +354,9 @@ function App() {
         masterPlay={masterPlay}
         masterPlayMidi={masterPlayMidi}
       ></Master>
+      <div>
+        <DrumMachine/>
+      </div>
     </div>
   );
 }
