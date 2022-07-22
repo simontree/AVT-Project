@@ -40,7 +40,6 @@ function Channel(props) {
   const [filterHighGain, setFilterHighGain] = useState(0);
   const [filterLowGain, setFilterLowGain] = useState(0);
   const [filterBandGain, setFilterBandGain] = useState(0);
-  const [source, setSource] = useState(null);
 
   var audioPlayer;
   var outputNode = audioContext.createGain();
@@ -71,34 +70,27 @@ function Channel(props) {
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
     audioPlayer = document.getElementById(audioPlayerID)
-    //document.querySelector("#" + audioPlayerID);
-    // mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
-    // mediaElementSource[channelID].connect(outputNode);
-    const src = audioContext.createMediaElementSource(audioPlayer);
-    setSource(src);
+    mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
+    mediaElementSource[channelID].connect(outputNode);
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
   }, []);
 
-  // useEffect(() => {
-  //   setAudioPlayerID("audio" + channelID);
-  //   audioPlayer = new Audio(audioSourceURL);
-  // });
+  useEffect(() => {
+    audioPlayer = document.getElementById(audioPlayerID);
+  });
 
   const playAudio = () => {
     if (!isChannelEnabled) return;
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
-    console.log(audioPlayer);
-    //audioPlayer = new Audio(audioSourceURL);
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
   };
 
   const pauseAudio = () => {
-    //audioPlayer = new Audio(audioSourceURL);
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
@@ -113,7 +105,6 @@ function Channel(props) {
   },[props.masterPlay])
 
   const stopPlayback = () => {
-    audioPlayer = document.getElementById(audioPlayerID)
     audioPlayer.pause()
     audioPlayer.currentTime = 0
     setIsPlaying(false)
@@ -259,15 +250,14 @@ function Channel(props) {
 
     console.log("ChannelID: " + channelID);
     console.log("MES: " )
-    console.log(source)
 
-    source.disconnect();
+    mediaElementSource[channelID].disconnect();
       if (highSet) {
         console.log("highpass on")
         highpassGain.gain.value = filterHighGain;
         highpassGain.connect(outputNode);
         highpassFilter.connect(highpassGain);
-        source.connect(highpassFilter);
+        mediaElementSource[channelID].connect(highpassFilter);
         highpassGain.connect(masterOutputNode);
       } else {
         console.log("highpass off")
@@ -280,7 +270,7 @@ function Channel(props) {
         lowpassGain.gain.value = filterLowGain;
         lowpassGain.connect(outputNode);
         lowpassFilter.connect(lowpassGain);
-        source.connect(lowpassFilter);
+        mediaElementSource[channelID].connect(lowpassFilter);
         lowpassGain.connect(masterOutputNode);
       } else {
         console.log("lowpass off")
@@ -294,7 +284,7 @@ function Channel(props) {
         bandpassGain.gain.value = filterBandGain;
         bandpassGain.connect(outputNode);
         bandpassFilter.connect(bandpassGain);
-        source.connect(bandpassFilter);
+        mediaElementSource[channelID].connect(bandpassFilter);
         bandpassGain.connect(masterOutputNode);
       } else {
         console.log("bandpass off")
@@ -304,7 +294,7 @@ function Channel(props) {
 
     if(!highSet&&!lowSet&&!bandSet){
       console.log("all off")
-      source.connect(outputNode);
+      mediaElementSource[channelID].connect(outputNode);
     }
     toggleOutputConnection();
   }
