@@ -1,6 +1,6 @@
 import './dndCSS/DragAndDrop.css'
 import React from "react";
-
+import {Box, Grid} from '@mui/material'
 
 class DragAndDrop extends React.Component {
     constructor(props) {
@@ -55,11 +55,12 @@ class DragAndDrop extends React.Component {
 
     render() {
         return (
-            <div>
-                <section className="droparea" ref={this.dndRef} style={{textAlign:'center'}}>
-                    <p>Drag and Drop Area <br/>Place your sound file here to create a new channel</p>
-                </section>
-            </div>
+            <Grid item>
+                <Box className="droparea" ref={this.dndRef} style={{textAlign:'center'}}>
+                    <p>Drag and Drop Area 
+                        <br/><br/>Place your sound file here <br/> to create a new channel</p>
+                </Box>
+            </Grid>
         )
     }
 }

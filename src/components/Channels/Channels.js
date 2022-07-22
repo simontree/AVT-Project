@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Card from "../UI/Card";
 import Channel from "./Channel";
+import {Grid} from '@mui/material'
 
 const Channels = (props) =>{
 
@@ -20,6 +21,7 @@ const Channels = (props) =>{
     const mapChannels = () => {
         if(channels.length > 0){
             channelsContent = channels.map((channel) =>(
+                <Grid item>
                 <Channel
                     key={channel.id}
                     id={channel.id}
@@ -36,19 +38,16 @@ const Channels = (props) =>{
                     masterRate = {props.masterRate}
                     masterPlay = {props.masterPlay}
                     />
+                </Grid>
             ))
         }
     }
     mapChannels();
 
-
-
     return(
-        <div id="channelsContainer">
-            <Card className="channels" >
-            {channelsContent}
-            </Card>
-        </div>
+        <Grid container direction='row' id="channelsContainer" className="channels" >
+        {channelsContent}
+        </Grid>
     )
 }
 

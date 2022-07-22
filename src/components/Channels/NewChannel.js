@@ -1,6 +1,5 @@
 import React from "react";
 import DragAndDrop from "../dragAndDrop/DragAndDrop";
-import { Grid } from '@mui/material'
 
 const NewChannel = (props) =>{
 
@@ -21,9 +20,7 @@ const NewChannel = (props) =>{
         props.setNextID(prev => prev + 1)
     }
     return(
-        <Grid item>
-            <DragAndDrop createNewChannel={createNewChannel} />
-        </Grid>
+    <DragAndDrop createNewChannel={createNewChannel} />
     )
 }
 

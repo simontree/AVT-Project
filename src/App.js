@@ -353,7 +353,7 @@ function App() {
     masterPlayMidi,
     id:'master',
     color:'#000000',
-    addChannelHandler,  //added for design purpose
+    addChannelHandler,  
     defaultAudioUrl,    //added for design purpose
     defaultColor        //added for design purpose
   }
@@ -363,8 +363,14 @@ function App() {
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
         <Box gridColumn="span 8">
           <Grid container direction='row'>
-          <Channels {...channelProps}/>
-          <NewChannel {...newChannelprops}/>
+            <Grid container direction='row'>
+              <Grid item>
+              <Channels {...channelProps}/>
+              </Grid>
+              <Grid item>
+              <NewChannel {...newChannelprops}/>
+              </Grid>
+            </Grid>
           </Grid>
         </Box>
         <Box gridColumn="span 4">
