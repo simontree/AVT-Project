@@ -471,7 +471,7 @@ function Channel(props) {
       </Divider>
       <Grid container
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-evenly"
       direction='row'
       spacing={1}>
         <Grid item sx={{marginRight: '15px'}}>
@@ -505,7 +505,7 @@ function Channel(props) {
       </Grid>
       <Grid container
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-evenly"
       direction='row'
       spacing={1}>
         <Grid item sx={{marginRight: '15px'}}>
@@ -539,7 +539,7 @@ function Channel(props) {
       </Grid>
       <Grid container
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-evenly"
       direction='row'
       spacing={1}>
         <Grid item sx={{marginRight: '15px'}}>
