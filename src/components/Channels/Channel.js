@@ -25,6 +25,7 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import { AntSwitch } from "./Filters/AntSwitch";
+import { FilterSection } from "./Filters/FilterSection";
 
 const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
@@ -315,13 +316,28 @@ function Channel(props) {
     return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
   }
 
+  const filterProps = {
+    channelID,
+    filterHighGain,
+    highpassFilterInput,
+    highpassSet,
+    filterClick,
+    filterBandGain,
+    bandpassFilterInput,
+    bandpassSet,
+    filterClick,
+    filterLowGain,
+    lowpassFilterInput,
+    lowpassSet
+  }
+
   return (
     <Container
     id={channelID}
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
       margin: '20px',
-      width: '300px',
+      width: '320px',
       padding: '20px',
       borderRadius: '20px',
       border: 'solid 1px #3f6d91'
@@ -435,114 +451,10 @@ function Channel(props) {
             />
           </Grid>
         </Grid>
-        
       </Grid>
-      <Divider sx={{ "&::before, &::after": {borderColor: "#bbdefb",}, marginTop: '5px' }}> 
-        <Typography variant="h6">Filter</Typography> 
-      </Divider>
-      <Grid container
-      alignItems="center"
-      justifyContent="space-evenly"
-      direction='row'
-      spacing={1}
-      sx={{marginTop: '5px'}}>
-        <Grid item sx={{marginRight: '15px'}}>
-          <Typography variant='body1'>
-              Highpass
-          </Typography>
-        </Grid>
-        <Grid item width={90}>
-          <Slider
-            size="small"
-            min={0}
-            max={2}
-            step={0.01}
-            value={filterHighGain}
-            id={"highpass" + channelID}
-            onChange={highpassFilterInput}
-            valueLabelDisplay="auto"
-            sx={{color: '#bbdefb', height: 4}}
-            />
-        </Grid>
-        <Grid item>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Off</Typography>
-              <AntSwitch 
-              checked={highpassSet}
-              id={"highpass checkbox" + channelID}
-              onChange={filterClick} />
-            <Typography>On</Typography>
-          </Stack>
-        </Grid>
-      </Grid>
-      <Grid container
-      alignItems="center"
-      justifyContent="space-evenly"
-      direction='row'
-      spacing={1}>
-        <Grid item sx={{marginRight: '15px'}}>
-          <Typography variant='body1'>
-              Bandpass
-          </Typography>
-        </Grid>
-        <Grid item width={90}>
-          <Slider
-            size="small"
-            min={0}
-            max={2}
-            step={0.01}
-            value={filterBandGain}
-            id={"bandpass" + channelID}
-            onChange={bandpassFilterInput}
-            valueLabelDisplay="auto"
-            sx={{color: '#bbdefb', height: 4}}
-            />
-        </Grid>
-        <Grid item>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Off</Typography>
-              <AntSwitch 
-              checked={bandpassSet}
-              id={"bandpass checkbox" + channelID}
-              onChange={filterClick} />
-            <Typography>On</Typography>
-          </Stack>
-        </Grid>
-      </Grid>
-      <Grid container
-      alignItems="center"
-      justifyContent="space-evenly"
-      direction='row'
-      spacing={1}>
-        <Grid item sx={{marginRight: '15px'}}>
-          <Typography variant='body1'>
-              Lowpass
-          </Typography>
-        </Grid>
-        <Grid item width={90}>
-          <Slider
-            size="small"
-            min={0}
-            max={2}
-            step={0.01}
-            value={filterLowGain}
-            id={"lowpass" + channelID}
-            onChange={lowpassFilterInput}
-            valueLabelDisplay="auto"
-            sx={{color: '#bbdefb', height: 4}}
-            />
-        </Grid>
-        <Grid item>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Off</Typography>
-              <AntSwitch 
-              checked={lowpassSet}
-              id={"lowpass checkbox" + channelID}
-              onChange={filterClick} />
-            <Typography>On</Typography>
-          </Stack>
-        </Grid>
-      </Grid>
+
+      <FilterSection {...filterProps}/>
+
       <audio
         id={audioPlayerID}
         className="channelAudio"
