@@ -341,7 +341,7 @@ function App() {
         masterRate={masterRate}
         masterPlay={masterPlay}
       ></Channels>
-      <Master
+     <Master
         id={"master"}
         volume={masterVolume}
         rate={defaultRate}
@@ -353,6 +353,9 @@ function App() {
         updateMasterVolume={updateMasterVolume}
         masterPlay={masterPlay}
         masterPlayMidi={masterPlayMidi}
+        addDummyChannel={addChannelHandler} //added for desing purpose
+        dummyURL={defaultAudioUrl}  //added for desing purpose
+        dummyColor={defaultColor} //added for desing purpose
       ></Master>
       <div>
         <DrumMachine/>

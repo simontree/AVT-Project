@@ -8,7 +8,14 @@ import { element } from "prop-types";
 import Filter from "./Filters/Filter";
 import NewFilter from "./Filters/NewFilter";
 import Filters from "./Filters/Filters";
-import {Grid, Container, Typography} from '@mui/material'
+
+import {Box, Grid, Container, Typography} from '@mui/material'
+import StopIcon from '@mui/icons-material/Stop'
+import IconButton from '@mui/material/IconButton'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import PauseIcon from '@mui/icons-material/Pause'
+import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
 
 const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
@@ -236,155 +243,257 @@ function Channel(props) {
     }
   }
 
+  const TinyText = styled(Typography)({
+    fontSize: '0.75rem',
+    opacity: 0.38,
+    fontWeight: 500,
+    letterSpacing: 0.2,
+  });  
+
+  const [position, setPosition] = useState(32);
+  const duration = 200; // seconds
+
+  function formatDuration(value) {
+    const minute = Math.floor(value / 60);
+    const secondLeft = value - minute * 60;
+    return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
+  }
 
   return (
-    <div
-      className="channel"
-      id={channelID}
-      style={{ backgroundColor: `${color}` }}
-    >
+    <Container
+    sx={{
+      backgroundColor: 'rgb(2, 40, 79)',
+      margin: '20px',
+      width: '300px',
+      padding: '20px',
+      borderRadius: '20px',
+      border: 'solid 1px #3f6d91'
+    }}>
+      <Grid container
+      direction="column"
+      alignItems="center">
+        <Grid item width={250}>
+        <Slider
+          aria-label="time-indicator"
+          size="small"
+          value={position}
+          min={0}
+          step={1}
+          max={duration}
+          onChange={(_, value) => setPosition(value)}
+          sx={{
+            color: '#fff',
+            height: 4,
+            '& .MuiSlider-thumb': {
+              width: 8,
+              height: 8,
+              transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
+              '&:before': {
+                boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
+              },
+              '&:hover, &.Mui-focusVisible': {
+                boxShadow: `0px 0px 0px 8px 'rgb(255 255 255 / 16%)'
+                }`,
+              },
+              '&.Mui-active': {
+                width: 20,
+                height: 20,
+              },
+            },
+            '& .MuiSlider-rail': {
+              opacity: 0.28,
+            },
+          }}
+        />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mt: -2,
+          }}
+        >
+          <TinyText>{formatDuration(position)}</TinyText>
+          <TinyText>-{formatDuration(duration - position)}</TinyText>
+        </Box>
+        </Grid>
+        <Grid item>
+            <IconButton
+            // onClick={togglePlayback}
+            sx={{border: '1px solid #bbdefb', marginRight: '15px'}}>
+                {/* {(isPlaying) ?
+                <PauseIcon
+                fontSize="large"
+                sx={{
+                    color: '#bbdefb'
+                }}/> : */}
+                <PlayArrowIcon 
+                fontSize="large"
+                sx={{color: '#bbdefb'}}
+                />
+                {/* } */}
+            </IconButton>
+            <IconButton
+            // onClick={stopPlayback}
+            sx={{border: '1px solid #bbdefb', marginRight: 2}}>
+                <StopIcon 
+                fontSize="large"
+                sx={{color: '#bbdefb'}}/>
+            </IconButton>
+            </Grid>
+        </Grid>
+
       <audio
         id={audioPlayerID}
         className="channelAudio"
+        class="invisible"
         controls={true}
         autoPlay={false}
         onEnded={pauseAudio}
       >
         <source type={type} src={audioSourceURL} />
       </audio>
-      <div className="channelTop">
-        <div className="switchContainer">
-          <label className="switch">
-            <input
-              type="checkbox"
-              onChange={channelStateChange}
-              checked={isChannelEnabled}
-            />
-            <span className="slider round"></span>
-          </label>
-        </div>
+    </Container>
 
-        <div className="fileTitle">
-          <label>{"Placeholder" + channelID}</label>
-        </div>
+    // <div
+    //   className="channel"
+    //   id={channelID}
+    //   style={{ backgroundColor: `${color}` }}
+    // >
+      
+    //   <div className="channelTop">
+    //     <div className="switchContainer">
+    //       <label className="switch">
+    //         <input
+    //           type="checkbox"
+    //           onChange={channelStateChange}
+    //           checked={isChannelEnabled}
+    //         />
+    //         <span className="slider round"></span>
+    //       </label>
+    //     </div>
 
-        <div className="channelContext">
-          <button value={"..."} onClick={destroyChannel}>
-            X
-          </button>
-        </div>
-      </div>
+    //     <div className="fileTitle">
+    //       <label>{"Placeholder" + channelID}</label>
+    //     </div>
 
-      <div className="channelPlay">
-        <button className="playButton" onClick={playPauseClicked}>
-          {playBtnTxt}
-        </button>
-      </div>
+    //     <div className="channelContext">
+    //       <button value={"..."} onClick={destroyChannel}>
+    //         X
+    //       </button>
+    //     </div>
+    //   </div>
 
-      <div className="volumeControl">
-        <div className="volIcon">
-          <label>Vol</label>
-        </div>
-        <div className="volSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="100"
-            onChange={volSliderChange}
-            className="vSlider"
-            id="volRange"
-            value={volume}
-          ></input>
-        </div>
-        <div className="volValue">
-          <label>{volume}</label>
-        </div>
-      </div>
+    //   <div className="channelPlay">
+    //     <button className="playButton" onClick={playPauseClicked}>
+    //       {playBtnTxt}
+    //     </button>
+    //   </div>
 
-     <div className="speedControl">
-        <div className="speedIcon">
-          <label>Sp</label>
-        </div>
-        <div className="speedSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="3"
-            step="0.1"
-            onChange={speedSliderChange}
-            onMouseUp={speedSliderChange}
-            className="sSlider"
-            id="sRange"
-            value={rate}
-          ></input>
-        </div>
-        <div className="speedValue">
-          <label>{rate}</label>
-        </div>
-      </div>
+    //   <div className="volumeControl">
+    //     <div className="volIcon">
+    //       <label>Vol</label>
+    //     </div>
+    //     <div className="volSlider">
+    //       <input
+    //         type={"range"}
+    //         min="0"
+    //         max="100"
+    //         onChange={volSliderChange}
+    //         className="vSlider"
+    //         id="volRange"
+    //         value={volume}
+    //       ></input>
+    //     </div>
+    //     <div className="volValue">
+    //       <label>{volume}</label>
+    //     </div>
+    //   </div>
 
-      <div className="midiChannelContainer">
-        <div className="midiLabel">
-          <label>Midi Channel</label>
-        </div>
-        <div className="midiChannels" id={"radioButtons" + channelID}>
-          <input
-            type="radio"
-            id={"m1" + channelID}
-            name={"midiChannel" + channelID}
-            value="1"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m1" + channelID}>1</label>
-          <input
-            type="radio"
-            id={"m2" + channelID}
-            name={"midiChannel" + channelID}
-            value="2"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m2" + channelID}>2</label>
-          <input
-            type="radio"
-            id={"m3" + channelID}
-            name={"midiChannel" + channelID}
-            value="3"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m3" + channelID}>3</label>
-          <input
-            type="radio"
-            id={"m4" + channelID}
-            name={"midiChannel" + channelID}
-            value="4"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"m4" + channelID}>4</label>
-          <input
-            type="radio"
-            id={"m0" + channelID}
-            name={"midiChannel" + channelID}
-            value="0"
-            onChange={handleMidiChannelChange}
-          />
-          <label htmlFor={"mx" + channelID}>X</label>
-        </div>
-      </div>
+    //  <div className="speedControl">
+    //     <div className="speedIcon">
+    //       <label>Sp</label>
+    //     </div>
+    //     <div className="speedSlider">
+    //       <input
+    //         type={"range"}
+    //         min="0"
+    //         max="3"
+    //         step="0.1"
+    //         onChange={speedSliderChange}
+    //         onMouseUp={speedSliderChange}
+    //         className="sSlider"
+    //         id="sRange"
+    //         value={rate}
+    //       ></input>
+    //     </div>
+    //     <div className="speedValue">
+    //       <label>{rate}</label>
+    //     </div>
+    //   </div>
 
-      <hr className="breakLine"></hr>
+    //   <div className="midiChannelContainer">
+    //     <div className="midiLabel">
+    //       <label>Midi Channel</label>
+    //     </div>
+    //     <div className="midiChannels" id={"radioButtons" + channelID}>
+    //       <input
+    //         type="radio"
+    //         id={"m1" + channelID}
+    //         name={"midiChannel" + channelID}
+    //         value="1"
+    //         onChange={handleMidiChannelChange}
+    //       />
+    //       <label htmlFor={"m1" + channelID}>1</label>
+    //       <input
+    //         type="radio"
+    //         id={"m2" + channelID}
+    //         name={"midiChannel" + channelID}
+    //         value="2"
+    //         onChange={handleMidiChannelChange}
+    //       />
+    //       <label htmlFor={"m2" + channelID}>2</label>
+    //       <input
+    //         type="radio"
+    //         id={"m3" + channelID}
+    //         name={"midiChannel" + channelID}
+    //         value="3"
+    //         onChange={handleMidiChannelChange}
+    //       />
+    //       <label htmlFor={"m3" + channelID}>3</label>
+    //       <input
+    //         type="radio"
+    //         id={"m4" + channelID}
+    //         name={"midiChannel" + channelID}
+    //         value="4"
+    //         onChange={handleMidiChannelChange}
+    //       />
+    //       <label htmlFor={"m4" + channelID}>4</label>
+    //       <input
+    //         type="radio"
+    //         id={"m0" + channelID}
+    //         name={"midiChannel" + channelID}
+    //         value="0"
+    //         onChange={handleMidiChannelChange}
+    //       />
+    //       <label htmlFor={"mx" + channelID}>X</label>
+    //     </div>
+    //   </div>
 
-      <div className="filterSection">
-        <label className="filterTitle">Filters (*￣3￣)╭</label>
-      </div>
-      <div id={"filtercontainer" + channelID}>
-        <input className="ml-6 focus: ring-red-0/0" id={"lowpasscheckbox"+channelID} type="checkbox" onChange={lowpassFilterClick}/>
-          <label className="font-bold"  htmlFor="lowpass">
-            Highpass Filter
-          </label>
-          <br></br>
-            <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" value={filterGain} onInput={lowpassFilterInput}/>
-      </div> 
-    </div>
-  );
+    //   <hr className="breakLine"></hr>
+
+    //   <div className="filterSection">
+    //     <label className="filterTitle">Filters (*￣3￣)╭</label>
+    //   </div>
+    //   <div id={"filtercontainer" + channelID}>
+    //     <input className="ml-6 focus: ring-red-0/0" id={"lowpasscheckbox"+channelID} type="checkbox" onChange={lowpassFilterClick}/>
+    //       <label className="font-bold"  htmlFor="lowpass">
+    //         Highpass Filter
+    //       </label>
+    //       <br></br>
+    //         <input className="mt-0.5 ml-11" id={ "lowpass" + channelID} type="range" min="0" max="2" step="0.01" value={filterGain} onInput={lowpassFilterInput}/>
+    //   </div> 
+    // </div>
+  )
 }
 export default Channel;

@@ -19,6 +19,19 @@ function Master(props) {
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
     setButtonTxt("All Pause");
+
+    //added for design purpose
+    props.addDummyChannel({
+      id: 0,
+      selectedMidi: 0,
+      volume: 50,
+      rate: 1,
+      isEnabled: true,
+      isPlaying: false,
+      audioURL: props.dummyURL,
+      color: props.dummyColor,
+    });
+
   }, []);
   //Midi Play Pause pressed
   useEffect(() => {
@@ -85,9 +98,10 @@ function Master(props) {
       <Box width={250}>
         <Typography gutterBottom>Speed</Typography>
         <Slider
-        defaultValue={1}
+        // defaultValue={1.0}
         min={0}
         max={3}
+        step={0.1}
         value={props.masterRate}
         id="masterRateSlider"
         onChange={speedSliderChange}
