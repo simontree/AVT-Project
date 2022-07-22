@@ -5,7 +5,6 @@ const NewChannel = (props) =>{
 
     const [channelCount, setChannelCount] = useState(0)
     const createNewChannel = (source, type, name) =>{
-        //console.log(source + " " + type);
         var channelData = 
         {   id: props.nextID,
             selectedMidi: props.defaultMidi,

@@ -44,6 +44,7 @@ function Master(props) {
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;
     masterOutputNode.gain.value = updatedVolume / 100;
+    console.log("master volume changed")
     props.updateMasterVolume(updatedVolume);
   };
 

@@ -143,10 +143,15 @@ function Channel(props) {
   const handleVolumeChangeFromMidi = (value) =>{
     setVolume(() => {
       const updatedVolume = Math.ceil(value);
-      audioPlayer.volume = updatedVolume / 100;
+      audioPlayer.volume = Math.ceil((updatedVolume/100)*(props.masterVolume/100)*10)/10;
       return updatedVolume;
     });
   }
+
+  useEffect(()=>{
+    console.log("Master volume changed:" + props.masterVolume/100)
+    handleVolumeChangeFromMidi(volume);
+  },[props.masterVolume])
 
   const rateSliderChange = (event) => {
     const updatedRate = event.target.value;
@@ -155,10 +160,9 @@ function Channel(props) {
 
   const handleRateChange = (value) => {
     setRate(() => {
-      const updatedRate = value == undefined ? 1 : value;
-      const realRate = value * Math.ceil(props.masterRate*10)/10;
-      audioPlayer.playbackRate = updatedRate * props.masterRate;
-
+      const updatedRate = value === undefined ? 1 : value;
+      const realRate =  Math.ceil(updatedRate *props.masterRate*10)/10;
+      audioPlayer.playbackRate = realRate;
       return updatedRate;
     });
   }
@@ -204,12 +208,14 @@ function Channel(props) {
   const bandpassFilterInput = (e) => { 
     handleBandpassInput(e.target.value);
   }
-  const handleBandpassInput = (value) => {    
+  const handleBandpassInput = (value) => {  
+    console.log(value)
     setFilterBandGain(() =>{
       var updatedGain = value;
       bandpassGain.gain.value = updatedGain;
       return updatedGain;
     });
+    console.log(document.getElementById("bandpass checkbox" + channelID))
     filterCheck(document.getElementById("bandpass checkbox" + channelID).checked, "bandpass");
   };
 
@@ -249,7 +255,6 @@ function Channel(props) {
     }
 
     mediaElementSource[channelID].disconnect();
-
       if (highSet) {
         console.log("highpass on")
         highpassGain.gain.value = filterHighGain;
@@ -322,7 +327,6 @@ function Channel(props) {
     filterBandGain,
     bandpassFilterInput,
     bandpassSet,
-    filterClick,
     filterLowGain,
     lowpassFilterInput,
     lowpassSet
@@ -442,7 +446,7 @@ function Channel(props) {
             max={3}
             step={0.1}
             value={rate}
-            id="sSlider"
+            id={"sSlider"+channelID}
             onChange={rateSliderChange}
             valueLabelDisplay="auto"
             sx={{color: '#bbdefb', height: 4}}

@@ -82,8 +82,8 @@ function App() {
   const [nextID, setNextID] = useState(0);
   const [masterRate, setMasterRate] = useState(1);
   const [masterPlay, setMasterPlay] = useState(false);
-  const [masterVolume, setMasterVolume] = useState(40);
-  const [masterPlayMidi, setMasterPlayMidi] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(10);
+  const [masterPlayMidi, setMasterPlayMidi] = useState(0);
   const [midiValues, setMidiValues]= useState([
     {
       volume: 50,
@@ -118,7 +118,7 @@ function App() {
       lowFilter:0
     }
   ])
-  const [midiChanged, setMidiChanged] = useState(false);
+  const [midiChanged, setMidiChanged] = useState(0);
 
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
@@ -130,9 +130,6 @@ function App() {
     document
       .getElementById("channelsContainer")
       .childNodes[0].removeChild(element);
-    console.log("destroyChannel: "+document
-    .getElementById("channelsContainer")
-    .childNodes[0].removeChild(element))
   };
 
   const defineRandomColor = () => {
@@ -188,20 +185,20 @@ function App() {
     let cmd = event.data[0] >> 4;
     let btnID = event.data[1];
     let value = event.data[2];
-    console.log(btnID)
+    //console.log(btnID)
     let channel = getChannel(cmd, btnID, value);
-    console.log("_________________________________________")
-    console.log(
-      "\n" +
-        "New Event (on Channel: " +
-        channel +
-        ")==> Type: " +
-        cmd +
-        ", Origin: " +
-        btnID +
-        ", Value: " +
-        value
-    );
+    // console.log("_________________________________________")
+    // console.log(
+    //   "\n" +
+    //     "New Event (on Channel: " +
+    //     channel +
+    //     ")==> Type: " +
+    //     cmd +
+    //     ", Origin: " +
+    //     btnID +
+    //     ", Value: " +
+    //     value
+    // );
   }
 
   const getChannel = (type, btnID, value) => {
@@ -214,7 +211,7 @@ function App() {
         old[index].volume = value / 1.27;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return (btnID % 4) + 1;
     }
     //Channels Rate
@@ -224,7 +221,7 @@ function App() {
         old[index].rate = Math.ceil((value*3) /12.7) / 10;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return ((btnID - 2) % 4) + 1;
     }
     //ChannelsPlay Pause
@@ -234,7 +231,7 @@ function App() {
         old[index].play = !old[index].play;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return ((btnID) % 4)+1;
     }
     //Channels HighFilter
@@ -244,7 +241,7 @@ function App() {
         old[index].highFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return ((btnID - 2) % 4) + 1;
     }
     //Channels LowFilter
@@ -254,7 +251,7 @@ function App() {
         old[index].lowFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return ((btnID - 2) % 4) + 1;
     }
     //Channels BandFilter
@@ -264,31 +261,27 @@ function App() {
         old[index].bandFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
-      setMidiChanged((old) => !old);
+      setMidiChanged((old) => ++old);
       return ((btnID - 2) % 4) + 1;
     }
 
     //Master Play/Pause
     if (type == 9 && btnID == 18) {
-      setMasterPlayMidi((old) => !old);
+      setMasterPlayMidi((old) => ++old);
       return 0;
     }
 
     //Master Volume
     if (type == 11 && btnID == 64) {
-      setMasterVolume((old) => value / 1.27);
-      const mapped = value / 1.27;
-      masterOutputNode.gain.value = mapped / 100;
-      document.getElementById("masterVolumeText").textContent =
-        Math.ceil(mapped);
+      setMasterVolume((old) => {
+        return value / 1.27
+      });
       return 0;
     }
     //Master Rate
     if (type == 11 && btnID == 1) {
       const mapped = (value * 3) / 127;
       updateMasterRate(Math.ceil(mapped * 10) / 10);
-      document.getElementById("masterSpeedValue").textContent =
-        Math.ceil(mapped * 10) / 10;
     }
   };
 
@@ -303,6 +296,7 @@ function App() {
     defaultState,
     defaultIsPlaying,
     defaultAudioUrl,
+    defaultRate,
     defineRandomColor,
     addChannelHandler,
     setNextID
@@ -313,6 +307,7 @@ function App() {
     destroyChannel,
     masterRate,
     masterPlay,
+    masterVolume,
     midiValues,
     midiChanged
   }
