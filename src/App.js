@@ -209,6 +209,9 @@ function App() {
     document
       .getElementById("channelsContainer")
       .childNodes[0].removeChild(element);
+    console.log("destroyChannel: "+document
+    .getElementById("channelsContainer")
+    .childNodes[0].removeChild(element))
   };
 
   const defineRandomColor = () => {
@@ -359,7 +362,7 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }} margin={'10px'}>
+    <Box sx={{ width: 1 }} margin={'20px'} marginTop={'30px'}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
         <Box gridColumn="span 12">
           <Grid container direction='row'>
@@ -373,7 +376,7 @@ function App() {
             </Grid>
           </Grid>
         </Box>
-        <Box gridColumn="span 4">
+        <Box gridColumn="span 4" sx={{transform: 'translateY(25%)'}}>
           <Box><Master {...masterProps} /></Box>
         </Box>
         <Box gridColumn="span 12">

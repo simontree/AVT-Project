@@ -62,10 +62,8 @@ function Channel(props) {
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
-
     filter.type = filterType;
     filter.frequency.value = filterFrequency;
-    
     return filter
   }
 
@@ -162,9 +160,7 @@ function Channel(props) {
     setRate(() => {
       const updatedRate = value == undefined ? 1 : value;
       const realRate = value * Math.ceil(props.masterRate*10)/10;
-      console.log(realRate)
       audioPlayer.playbackRate = updatedRate * props.masterRate;
-
       return updatedRate;
     });
   }
@@ -339,9 +335,9 @@ function Channel(props) {
     id={channelID}
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
-      margin: '20px',
       width: '320px',
-      padding: '20px',
+      padding: '5px',
+      margin: '5px',
       borderRadius: '20px',
       border: 'solid 1px #3f6d91'
     }}>
@@ -350,7 +346,8 @@ function Channel(props) {
       alignItems="center">
         <Grid container
         justifyContent="space-between"
-        alignItems="center">
+        alignItems="center"
+        sx={{marginTop: '15px'}}>
           <Grid item>
             <Switch 
             onChange={channelStateChange}
