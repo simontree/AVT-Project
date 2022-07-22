@@ -359,8 +359,8 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }}>
-      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+    <Box sx={{ width: 1 }} margin={'10px'}>
+      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
         <Box gridColumn="span 8">
           <Grid container direction='row'>
           <Channels {...channelProps}/>

@@ -1,3 +1,8 @@
+html {
+  font-size: 13px;
+  color: #bbdefb;
+}
+
 .App {
     text-align: center;
   }

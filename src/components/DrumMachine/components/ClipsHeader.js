@@ -1,5 +1,6 @@
 import React from 'react'
 import '../DrumMachine.css'
+import { Grid } from '@mui/material'
 
 const ClipsHeader = ({ count = 0, currentClipID }) => {
     
@@ -16,9 +17,9 @@ const ClipsHeader = ({ count = 0, currentClipID }) => {
     (<div className={isPlaying(i)? 'clip clip-playing': 'clip'} key={i + 1}><button/></div>))
 
     return (
-        <div className='clips'>
+        <Grid container direction='row' sx={{paddingLeft: '225px'}}>
             {content}
-        </div>
+        </Grid>
     )
 }
 

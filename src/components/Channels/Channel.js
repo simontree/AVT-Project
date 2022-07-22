@@ -22,9 +22,6 @@ import Switch from '@mui/material/Switch';
 import ClearIcon from '@mui/icons-material/Clear';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import SpeedIcon from '@mui/icons-material/Speed';
-import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import { AntSwitch } from "./Filters/AntSwitch";
 import { FilterSection } from "./Filters/FilterSection";
 
 const defaultFilterStrength = 0.05;
@@ -462,8 +459,7 @@ function Channel(props) {
 
       <audio
         id={audioPlayerID}
-        className="channelAudio"
-        class="invisible"
+        className="channelAudio invisible"
         controls={true}
         autoPlay={false}
         onEnded={pauseAudio}

@@ -33,15 +33,16 @@ const Track = ({
 
     return (
     <Grid container
-    justifyContent="center">
+    direction="row"
+    justifyContent="space-evenly">
         <Grid 
-        item xs={2}>
+        item xs={1}>
         <Typography 
         variant="h6" 
         sx={{ 
             textAlign: 'right',
-            fontWeight: '700', 
-            marginRight: '20px',  
+            fontWeight: '700',
+            marginRight: '-40px', 
             transform: 'translateY(50%)',
             color: '#bbdefb'}}>
             {title} 

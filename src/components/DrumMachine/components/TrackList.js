@@ -2,6 +2,7 @@ import React, { useContext, memo } from 'react'
 import { soundFiles } from '../audioClips'
 import Track from './Track'
 import { Context } from '../hooks/useNoteContext'
+import { Container } from '@mui/material'
 
 const TrackList = ({ currentClipID }) => {
         const { clips: { clipList, notes }} = useContext(Context)
@@ -20,9 +21,9 @@ const TrackList = ({ currentClipID }) => {
             />)})
 
         return(
-            <div>
+            <Container>
                 {content}
-            </div>
+            </Container>
         )
 }
 

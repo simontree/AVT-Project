@@ -21,20 +21,21 @@ const Channels = (props) =>{
         if(channels.length > 0){
             channelsContent = channels.map((channel) =>(
                 <Channel
-                 id={channel.id}
-                 selectedMidi={channel.selectedMidi}
-                 volume={channel.volume}
-                 rate={channel.rate}
-                 isEnabled={channel.isEnabled}
-                 isPlaying={channel.masterPlayisPlaying}
-                 audioURL={channel.audioURL}
-                 backgroundColor={channel.color}
-                 changeMidiChannel={changeMidiChannel}
-                 destroyChannel={destroyChannel}
-                 audioType = {channel.audioType}
-                 masterRate = {props.masterRate}
-                 masterPlay = {props.masterPlay}
-                />
+                    key={channel.id}
+                    id={channel.id}
+                    selectedMidi={channel.selectedMidi}
+                    volume={channel.volume}
+                    rate={channel.rate}
+                    isEnabled={channel.isEnabled}
+                    isPlaying={channel.masterPlayisPlaying}
+                    audioURL={channel.audioURL}
+                    backgroundColor={channel.color}
+                    changeMidiChannel={changeMidiChannel}
+                    destroyChannel={destroyChannel}
+                    audioType = {channel.audioType}
+                    masterRate = {props.masterRate}
+                    masterPlay = {props.masterPlay}
+                    />
             ))
         }
     }
