@@ -319,9 +319,12 @@ function Channel(props) {
     const minute = Math.floor(value/60)
     const currTime = parseFloat(currentTime).toPrecision(2)
     const secondLeft = parseFloat(Math.abs(currTime - minute * 60) % 60).toPrecision(2)
+    const absoluteValueOfLeftSeconds = Math.abs(currTime - minute * 60) % 60  // try to solve problem with first 5 seconds of each minute -> current minute not changing
     console.log("minute: "+minute)
     console.log("currTime: "+currTime)
     console.log("secLeft: "+secondLeft)
+    console.log("betrag Secs: "+Math.abs(currTime - minute * 60) % 60)
+
     return `${minute}:${secondLeft < 10? 
       `0${secondLeft.slice(0,-2)}` 
       : secondLeft}`;
