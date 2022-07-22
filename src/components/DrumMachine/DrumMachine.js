@@ -53,9 +53,11 @@ function DrumMachine() {
       <Container
       sx={{
         backgroundColor: 'rgb(2, 40, 79)',
-        margin: '20px',
+        marginLeft: '5px',
+        marginTop: '20px',
         width: '900px',
-        padding: '20px',
+        paddingTop: '20px',
+        paddingBottom: '30px',
         borderRadius: '20px',
         border: 'solid 1px #3f6d91'
       }}>

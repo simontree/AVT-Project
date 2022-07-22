@@ -70,7 +70,6 @@ function Master(props) {
     id={channelID}
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
-      margin: '20px',
       width: '300px',
       padding: '20px',
       borderRadius: '20px',
@@ -83,7 +82,7 @@ function Master(props) {
           {buttonTxt}
         </Button>
       </Box>
-      <Box width={250}>
+      <Box width={250} sx={{marginTop: '20px'}}>
         <Typography gutterBottom>Master-Volume</Typography>
         <Slider
         min={0}
