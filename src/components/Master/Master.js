@@ -19,6 +19,23 @@ function Master(props) {
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
+<<<<<<< Updated upstream
+=======
+    setButtonTxt("All Pause");
+
+    //added for design purpose
+    // props.addChannelHandler({
+    //   id: 0,
+    //   selectedMidi: 0,
+    //   volume: 50,
+    //   rate: 1,
+    //   isEnabled: true,
+    //   isPlaying: false,
+    //   audioURL: props.defaultAudioUrl,
+    //   color: props.defaultColor,
+    // });
+
+>>>>>>> Stashed changes
   }, []);
 
   const playPauseClicked = () =>{

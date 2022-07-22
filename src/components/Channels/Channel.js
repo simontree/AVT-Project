@@ -58,7 +58,7 @@ function Channel(props) {
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
-    audioPlayer = document.querySelector("#" + audioPlayerID);
+    audioPlayer = new Audio(audioSourceURL);
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource[channelID].connect(outputNode);
     currentMidiChannel = document.querySelector(
