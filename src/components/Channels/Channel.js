@@ -298,8 +298,6 @@ function Channel(props) {
         bandpassFilter.disconnect();
       }
 
-
-
     if(!highSet&&!lowSet&&!bandSet){
       console.log("all off")
       mediaElementSource[channelID].connect(outputNode);
@@ -465,7 +463,7 @@ function Channel(props) {
       <audio
         id={audioPlayerID}
         className="channelAudio"
-        class="invisible" // for testing purpose hidden
+        class="invisible"
         controls={true}
         autoPlay={false}
         onEnded={pauseAudio}
