@@ -19,7 +19,7 @@ import { styled } from '@mui/material/styles';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
+import ClearIcon from '@mui/icons-material/Clear';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import Divider from '@mui/material/Divider';
@@ -329,6 +329,30 @@ function Channel(props) {
       <Grid container
       direction="column"
       alignItems="center">
+        <Grid container
+        justifyContent="space-between"
+        alignItems="center">
+          <Grid item>
+            <Switch 
+            onChange={channelStateChange}
+            checked={isChannelEnabled} />
+          </Grid>
+          <Grid item>
+            <Typography>
+            {"FileTitle " + channelID}
+            </Typography>
+          </Grid>
+          <Grid item>
+          <IconButton 
+            onClick={destroyChannel}
+            sx={{ 
+              border: '1px solid #ef5350', 
+              marginLeft: '15px', 
+              ':hover': {backgroundColor: 'rgba(239, 83, 80, 0.3)'}}}>
+            <ClearIcon fontSize="small" sx={{color: '#ef5350'}}/>
+          </IconButton> 
+          </Grid>
+        </Grid>
         <Grid item
         width={200}
         justifyContent="space-between"
@@ -355,13 +379,12 @@ function Channel(props) {
         <Grid item sx={{marginBottom: '5px'}}>
           <IconButton
             onClick={playPauseClicked}
-            sx={{border: '1px solid #bbdefb', marginRight: '15px'}}>
+            sx={{border: '1px solid #bbdefb', marginRight: '15px', 
+            ':hover': {backgroundColor: 'rgba(187, 222, 251, 0.2)'}}}>
                 {(isPlaying) ?
                 <PauseIcon
                 fontSize="large"
-                sx={{
-                    color: '#bbdefb'
-                }}/> :
+                sx={{color: '#bbdefb'}}/> :
                 <PlayArrowIcon 
                 fontSize="large"
                 sx={{color: '#bbdefb'}}
@@ -370,27 +393,12 @@ function Channel(props) {
           </IconButton>
           <IconButton
             // onClick={stopPlayback}   // to be implemented
-            sx={{border: '1px solid #bbdefb', marginRight: 2}}>
+            sx={{border: '1px solid #bbdefb', marginRight: 2, 
+            ':hover': {backgroundColor: 'rgba(187, 222, 251, 0.2)'}}}>
                 <StopIcon 
                 fontSize="large"
                 sx={{color: '#bbdefb'}}/>
           </IconButton>
-          <IconButton 
-            onClick={destroyChannel}
-            sx={{ border: '1px solid #ef5350', marginLeft: '15px'}}>
-            <DeleteIcon fontSize="small" sx={{color: '#ef5350'}}/>
-          </IconButton> 
-        </Grid>
-        <Grid item>
-          <FormGroup>
-            <FormControlLabel 
-            control={
-            <Switch 
-            onChange={channelStateChange}
-            checked={isChannelEnabled} />
-          } 
-            label={"FileTitle " + channelID} />
-          </FormGroup>
         </Grid>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
