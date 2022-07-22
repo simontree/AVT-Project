@@ -7,19 +7,19 @@ const Channels = (props) =>{
     var channels = props.channels;
     useEffect(()=>{
         channels = props.channels;
-        mapChannels();
+        console.log("hi")
+        mapChannels2();
     },[props.channels])
-    let channelsContent = <p>No Channels started</p>;
+    let channelsContent = [];
 
-    const changeMidi = (num, radioID) => {
-        props.testChannelModification(num, radioID);
+    const changeMidiChannel = (num, radioID) => {
+        props.handleMidiChannelOrganization(num, radioID);
     }
     const handleDestroyChannel = (element) => {
         props.handleDestroyChannel(element);
     }
     const mapChannels = () => {
         if(channels.length > 0){
-            //console.log(channels)
             channelsContent = channels.map((channel) =>(
                 <Channel
                  id={channel.id}
@@ -29,10 +29,8 @@ const Channels = (props) =>{
                  isEnabled={channel.isEnabled}
                  isPlaying={channel.isPlaying}
                  audioURL={channel.audioURL}
-                 requestNumberOfChannels={props.requestNumberOfChannels}
-                 requestRadioButtons={props.requestRadioButtons}
                  backgroundColor={channel.color}
-                 changeMidi={changeMidi}
+                 changeMidiChannel={changeMidiChannel}
                  destroyChannel={handleDestroyChannel}
                  audioType = {channel.audioType}
                  masterRate = {props.masterRate}
@@ -40,9 +38,31 @@ const Channels = (props) =>{
                 />
             ))
         }
-        //console.log(channels);
     }
-    mapChannels();
+    const mapChannels2 = () =>{
+        if(channels.length > 0) {
+            for(var i = 0; i < channels.length; i++){
+                channelsContent[i] = <Channel
+                    id={props.channels[i].id}
+                    selectedMidi={props.channels[i].selectedMidi}
+                    volume={props.channels[i].volume}
+                    rate={props.channels[i].rate}
+                    isEnabled={props.channels[i].isEnabled}
+                    isPlaying={props.channels[i].isPlaying}
+                    audioURL={props.channels[i].audioURL}
+                    backgroundColor={props.channels[i].color}
+                    changeMidiChannel={changeMidiChannel}
+                    destroyChannel={handleDestroyChannel}
+                    audioType = {props.channels[i].audioType}
+                    masterRate = {props.masterRate}
+                    masterPlay = {props.masterPlay}
+                    midiValues = {props.midiValues}
+                    midiChanged = {props.midiChanged}
+                />
+            }
+        }
+    }
+    mapChannels2();
 
 
 
