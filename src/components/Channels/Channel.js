@@ -58,6 +58,9 @@ function Channel(props) {
   const bandpassFilter = createFilter(audioContext, 'bandpass', 400);
   const bandpassGain = audioContext.createGain();
   const [bandpassSet, setbandpassSet] = useState(false);
+  
+  const [fileDuration, setFileDuration] = useState()
+  const [currentTime, setCurrentTime] = useState()
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
@@ -76,11 +79,15 @@ function Channel(props) {
     mediaElementSource[channelID].connect(outputNode);
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
+    setFileDuration(audioPlayer.duration)
+    setCurrentTime(audioPlayer.currentTime)
   }, []);
 
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
+    console.log("fileDuration-Init: "+fileDuration)
+    console.log("currentTime-Init: "+currentTime)
   });
 
   const playAudio = () => {
@@ -92,6 +99,7 @@ function Channel(props) {
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
+    // console.log("duration-playAudio: "+currentTime)
   };
 
   const pauseAudio = () => {
@@ -99,6 +107,8 @@ function Channel(props) {
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
+    console.log("audio-currenTime: "+audioPlayer.currentTime)
+    // console.log("currentTime: "+currentTime)
   };
 
   const playPauseClicked = () => {
@@ -305,13 +315,22 @@ function Channel(props) {
     letterSpacing: 0.2,
   });  
 
-  const [position, setPosition] = useState(32);
-  const duration = 200; // seconds
+  // const [position, setPosition] = useState(32);
+  // const duration = 200; // seconds
 
   function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
+    console.log("format-value: "+Math.floor(value))
+    const minute = Math.floor(value/60)
+    console.log("minute-format: "+minute)
+    const secondLeft = currentTime - minute * 60;
+    console.log("secLeft: "+secondLeft)
+    console.log("currentTime-formatDur: "+currentTime)
     return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
+  }
+
+  const currentTimeHandler = (e) => {
+    setCurrentTime(e.target.value)
+    console.log("currTimeHandler: "+currentTime)
   }
 
   const filterProps = {
@@ -335,7 +354,7 @@ function Channel(props) {
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
       width: '320px',
-      padding: '5px',
+      padding: '10px',
       margin: '5px',
       borderRadius: '20px',
       border: 'solid 1px #3f6d91'
@@ -374,11 +393,11 @@ function Channel(props) {
         sx={{marginBottom: '10px', marginTop: '10px'}}>
           <Slider
           size="small"
-          value={position}
+          value={currentTime}
           min={0}
-          step={1}
-          max={duration}
-          onChange={(_, value) => setPosition(value)}
+          step={0.1}
+          max={Math.floor(fileDuration)}
+          onChange={currentTimeHandler}
           sx={{color: '#bbdefb', height: 4,}}
           />
           <Box sx={{
@@ -387,8 +406,8 @@ function Channel(props) {
               justifyContent: 'space-between',
               mt: -2,
             }}>
-            <TinyText>{formatDuration(position)}</TinyText>
-            <TinyText>-{formatDuration(duration - position)}</TinyText>
+            <TinyText>{formatDuration(currentTime)}</TinyText>
+            <TinyText>-{formatDuration(fileDuration - currentTime)}</TinyText>
           </Box>
         </Grid>
         <Grid item sx={{marginBottom: '5px'}}>
