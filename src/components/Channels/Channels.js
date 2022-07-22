@@ -14,8 +14,8 @@ const Channels = (props) =>{
     const changeMidiChannel = (num, radioID) => {
         props.handleMidiChannelOrganization(num, radioID);
     }
-    const handleDestroyChannel = (element) => {
-        props.handleDestroyChannel(element);
+    const destroyChannel = (element) => {
+        props.destroyChannel(element);
     }
     const mapChannels = () => {
         if(channels.length > 0){
@@ -30,7 +30,7 @@ const Channels = (props) =>{
                  audioURL={channel.audioURL}
                  backgroundColor={channel.color}
                  changeMidiChannel={changeMidiChannel}
-                 destroyChannel={handleDestroyChannel}
+                 destroyChannel={destroyChannel}
                  audioType = {channel.audioType}
                  masterRate = {props.masterRate}
                  masterPlay = {props.masterPlay}

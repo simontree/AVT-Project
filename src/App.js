@@ -7,6 +7,7 @@ import Channel from "./components/Channels/Channel";
 import Master from "./components/Master/Master";
 import { masterOutputNode } from "./components/Master/Master";
 import DrumMachine from "./components/DrumMachine/DrumMachine";
+import {Box, Grid, Container, Typography} from '@mui/material'
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -320,47 +321,63 @@ function App() {
     setMasterVolume((old) => updated);
   };
 
+  const newChannelprops = {
+    nextID,
+    defaultMidi,
+    defaultVolume,
+    defaultState,
+    defaultIsPlaying,
+    defaultAudioUrl,
+    defineRandomColor,
+    addChannelHandler,
+    setNextID
+  }
+
+  const channelProps = {
+    channels, 
+    handleMidiChannelOrganization,
+    destroyChannel,
+    masterRate,
+    masterPlay
+  }
+
+  const masterProps = {
+    masterVolume,
+    defaultRate,
+    defaultIsPlaying,
+    updateMasterRate,
+    masterRate,
+    masterPlayPause,
+    updateMasterVolume,
+    masterPlay,
+    masterPlayMidi,
+    id:'master',
+    color:'#000000',
+    addChannelHandler,  //added for design purpose
+    defaultAudioUrl,    //added for design purpose
+    defaultColor        //added for design purpose
+  }
+
   return (
-    <div>
-      <NewChannel
-        nextAvailableID={nextID}
-        defaultMidi={defaultMidi}
-        defaultVolume={defaultVolume}
-        defaultState={defaultState}
-        defaultIsPlaying={defaultIsPlaying}
-        defaultAudioUrl={defaultAudioUrl}
-        defaultAudioType={defaultAudioType}
-        color={defineRandomColor}
-        addChannelHandler={addChannelHandler}
-        setNextID={setNextID}
-      />
-      <Channels
-        channels={channels}
-        handleMidiChannelOrganization={handleMidiChannelOrganization}
-        handleDestroyChannel={destroyChannel}
-        masterRate={masterRate}
-        masterPlay={masterPlay}
-      ></Channels>
-     <Master
-        id={"master"}
-        volume={masterVolume}
-        rate={defaultRate}
-        color={"#000000"}
-        isPlaying={defaultIsPlaying}
-        updateMasterRate={updateMasterRate}
-        masterRate={masterRate}
-        masterPlayPause={masterPlayPause}
-        updateMasterVolume={updateMasterVolume}
-        masterPlay={masterPlay}
-        masterPlayMidi={masterPlayMidi}
-        addDummyChannel={addChannelHandler} //added for desing purpose
-        dummyURL={defaultAudioUrl}  //added for desing purpose
-        dummyColor={defaultColor} //added for desing purpose
-      ></Master>
-      <div>
-        <DrumMachine/>
-      </div>
-    </div>
+    <Box sx={{ width: 1 }}>
+      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+        <Box gridColumn="span 8">
+          <Grid container direction='row'>
+          <Channels {...channelProps}/>
+          <NewChannel {...newChannelprops}/>
+          </Grid>
+        </Box>
+        <Box gridColumn="span 4">
+          <Box><Master {...masterProps} /></Box>
+        </Box>
+        <Box gridColumn="span 8">
+          <Box><DrumMachine/></Box>
+        </Box>
+        <Box gridColumn="span 4">
+          <Box>Visualization coming soon..</Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

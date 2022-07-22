@@ -21,15 +21,15 @@ function Master(props) {
     setButtonTxt("All Pause");
 
     //added for design purpose
-    props.addDummyChannel({
+    props.addChannelHandler({
       id: 0,
       selectedMidi: 0,
       volume: 50,
       rate: 1,
       isEnabled: true,
       isPlaying: false,
-      audioURL: props.dummyURL,
-      color: props.dummyColor,
+      audioURL: props.defaultAudioUrl,
+      color: props.defaultColor,
     });
 
   }, []);
@@ -88,7 +88,7 @@ function Master(props) {
         <Slider
         min={0}
         max={100}
-        value={props.volume}
+        value={props.masterVolume}
         id="vSlider"
         onChange={volSliderChange}
         valueLabelDisplay="auto"
