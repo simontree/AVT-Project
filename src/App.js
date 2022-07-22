@@ -321,6 +321,13 @@ function App() {
     setMasterVolume((old) => updated);
   };
 
+  let frame = -1;
+
+  function drawFFT(fftInfo) {
+    frame = requestAnimationFrame(() => drawFFT())
+
+  }
+
   const newChannelprops = {
     nextID,
     defaultMidi,
@@ -380,6 +387,7 @@ function App() {
           <Box><DrumMachine/></Box>
         </Box>
         <Box gridColumn="span 4">
+          <canvas id={"visualizer"} width={512} height={100}></canvas>
           <Box>Visualization coming soon..</Box>
         </Box>
       </Box>

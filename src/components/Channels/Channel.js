@@ -45,6 +45,8 @@ function Channel(props) {
 
   var audioPlayer;
   var outputNode = audioContext.createGain();
+  var fft = audioContext.createAnalyser();
+  fft.fftSize = 512;
 
   //Create highpass filter and its gain node
   const highpassFilter = createFilter(audioContext, 'highpass', 8000);
@@ -72,7 +74,7 @@ function Channel(props) {
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
-    outputNode.connect(masterOutputNode);
+    outputNode.connect(fft).connect(masterOutputNode);
     audioPlayer = document.querySelector("#" + audioPlayerID);
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource[channelID].connect(outputNode);
@@ -176,7 +178,7 @@ function Channel(props) {
   //Disconnect output node if a filter is activated
   function toggleOutputConnection () {
     if (!highpassSet || !lowpassSet || !bandpassSet) {
-      outputNode.connect(masterOutputNode);
+      outputNode.connect(fft).connect(masterOutputNode);
     } else {
       outputNode.disconnect();
     }
@@ -261,7 +263,7 @@ function Channel(props) {
         highpassGain.connect(outputNode);
         highpassFilter.connect(highpassGain);
         mediaElementSource[channelID].connect(highpassFilter);
-        highpassGain.connect(masterOutputNode);
+        highpassGain.connect(fft).connect(masterOutputNode);
       } else {
         console.log("highpass off")
         highpassGain.disconnect();
@@ -274,7 +276,7 @@ function Channel(props) {
         lowpassGain.connect(outputNode);
         lowpassFilter.connect(lowpassGain);
         mediaElementSource[channelID].connect(lowpassFilter);
-        lowpassGain.connect(masterOutputNode);
+        lowpassGain.connect(fft).connect(masterOutputNode);
       } else {
         console.log("lowpass off")
         lowpassGain.disconnect();
@@ -288,7 +290,7 @@ function Channel(props) {
         bandpassGain.connect(outputNode);
         bandpassFilter.connect(bandpassGain);
         mediaElementSource[channelID].connect(bandpassFilter);
-        bandpassGain.connect(masterOutputNode);
+        bandpassGain.connect(fft).connect(masterOutputNode);
       } else {
         console.log("bandpass off")
         bandpassGain.disconnect();
@@ -327,7 +329,7 @@ function Channel(props) {
     filterBandGain,
     bandpassFilterInput,
     bandpassSet,
-    filterClick,
+    //filterClick,
     filterLowGain,
     lowpassFilterInput,
     lowpassSet
