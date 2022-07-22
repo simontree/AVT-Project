@@ -26,7 +26,7 @@ const Channels = (props) =>{
                  volume={channel.volume}
                  rate={channel.rate}
                  isEnabled={channel.isEnabled}
-                 isPlaying={channel.isPlaying}
+                 isPlaying={channel.masterPlayisPlaying}
                  audioURL={channel.audioURL}
                  backgroundColor={channel.color}
                  changeMidiChannel={changeMidiChannel}
