@@ -81,7 +81,7 @@ function App() {
   const [nextID, setNextID] = useState(0);
   const [masterRate, setMasterRate] = useState(1);
   const [masterPlay, setMasterPlay] = useState(true);
-  const [masterVolume, setMasterVolume] = useState(5 / 100);
+  const [masterVolume, setMasterVolume] = useState(40);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
   const [midiIsUpdated, setMidiIsUpdated] = useState(false);
 

@@ -3,7 +3,7 @@ import "../Channels/ChannelCss/Switch.css";
 import "../Channels/ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
-import { Box, Grid, Container, Slider, Typography} from '@mui/material'
+import { Box, Button, Grid, Container, Slider, Typography} from '@mui/material'
 
 export var masterOutputNode;
 export var masterRate = 1;
@@ -42,10 +42,10 @@ function Master(props) {
 
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;
-    setVolume(() => {
+    // setVolume(() => {
       masterOutputNode.gain.value = updatedVolume / 100;
-       return updatedVolume;
-    });
+    //    return updatedVolume;
+    // });
     props.updateMasterVolume(updatedVolume);
   };
 
@@ -58,8 +58,8 @@ function Master(props) {
   },[props.masterRate])
 
   return (
-
     <Container
+    id={channelID}
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
       margin: '20px',
@@ -68,56 +68,39 @@ function Master(props) {
       borderRadius: '20px',
       border: 'solid 1px #3f6d91'
     }}>
-      <Box width={200}>
+      <Box width={250} sx={{textAlign: 'center'}}>
+        <Button 
+        variant="contained"
+        onClick={playPauseClicked}>  
+          {buttonTxt}
+        </Button>
+      </Box>
+      <Box width={250}>
+        <Typography gutterBottom>Volume</Typography>
         <Slider
+        min={0}
+        max={100}
+        value={props.volume}
+        id="vSlider"
+        onChange={volSliderChange}
+        valueLabelDisplay="auto"
+        >
+        </Slider>
+      </Box>
+      <Box width={250}>
+        <Typography gutterBottom>Speed</Typography>
+        <Slider
+        defaultValue={1}
+        min={0}
+        max={3}
         value={props.masterRate}
         id="masterRateSlider"
         onChange={speedSliderChange}
+        valueLabelDisplay="auto"
         >
         </Slider>
       </Box>
     </Container>
-
-    // <div
-    //   className="channel"
-    //   id={channelID}
-    //   style={{ backgroundColor: `${color}` }}
-    // >
-    //   <div className="channelPlay">
-    //     <button className="playButton" onClick={playPauseClicked}>
-    //       {buttonTxt}
-    //     </button>
-    //   </div>
-    //   <div className="volumeControl">
-    //     <div className="volIcon">
-    //       <label>Vol</label>
-    //     </div>
-    //     <div className="volSlider">
-    //       <input
-    //         type={"range"}
-    //         min="0"
-    //         max="100"
-    //         onChange={volSliderChange}
-    //         className="vSlider"
-    //         id="olRange"
-    //         value={props.volume}
-    //       ></input>
-    //     </div>
-    //     <div className="volValue">
-    //       <label id="masterVolumeText">{volume}</label>
-    //     </div>
-    //   </div>
-
-    //   <div className="speedControl">
-    //     <div className="speedIcon">
-    //       <label>Sp</label>
-    //     </div>
-        
-    //     <div className="speedValue">
-    //       <label id="masterSpeedValue">{Math.ceil(props.masterRate*10)/10}</label>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 export default Master;
