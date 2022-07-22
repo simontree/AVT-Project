@@ -30,6 +30,7 @@ var mediaElementSource = [];
 
 function Channel(props) {
   const [channelID] = useState(props.id);
+  const [channelTitle] = useState(props.channelName);
   const [isChannelEnabled, setIsEnabled] = useState(props.isEnabled);
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
   const [audioPlayerID, setAudioPlayerID] = useState("base");
@@ -373,7 +374,7 @@ function Channel(props) {
           </Grid>
           <Grid item>
             <Typography>
-            {"FileTitle " + channelID}
+            {channelTitle}
             </Typography>
           </Grid>
           <Grid item>

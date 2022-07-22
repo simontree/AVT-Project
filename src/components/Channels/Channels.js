@@ -25,6 +25,7 @@ const Channels = (props) =>{
                 <Channel
                     key={channel.id}
                     id={channel.id}
+                    channelName={channel.name}
                     selectedMidi={channel.selectedMidi}
                     volume={channel.volume}
                     rate={channel.rate}
