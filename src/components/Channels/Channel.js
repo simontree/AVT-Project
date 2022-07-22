@@ -28,6 +28,7 @@ const defaultFilterStrength = 0.05;
 const defaultFilterType = "lowpass";
 var mediaElementSource = [];
 
+
 function Channel(props) {
   const [channelID] = useState(props.id);
   const [channelTitle] = useState(props.channelName);
@@ -60,8 +61,8 @@ function Channel(props) {
   const bandpassGain = audioContext.createGain();
   const [bandpassSet, setbandpassSet] = useState(false);
   
-  const [fileDuration, setFileDuration] = useState()
-  const [currentTime, setCurrentTime] = useState()
+  const [fileDuration, setFileDuration] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
@@ -307,11 +308,10 @@ function Channel(props) {
     setIsPlaying(false)
   }
 
-
   const TinyText = styled(Typography)({
-    fontSize: '0.75rem',
-    opacity: 0.38,
-    fontWeight: 500,
+    fontSize: '1rem',
+    opacity: 0.5,
+    fontWeight: 600,
     letterSpacing: 0.2,
   });  
 
@@ -319,11 +319,23 @@ function Channel(props) {
     const minute = Math.floor(value/60)
     const currTime = parseFloat(currentTime).toPrecision(2)
     const secondLeft = parseFloat(Math.abs(currTime - minute * 60) % 60).toPrecision(2)
-    return `${minute}:${secondLeft < 10 ? `0${secondLeft.slice(0,-2)}` : secondLeft}`;
+    console.log("minute: "+minute)
+    console.log("currTime: "+currTime)
+    console.log("secLeft: "+secondLeft)
+    return `${minute}:${secondLeft < 10? 
+      `0${secondLeft.slice(0,-2)}` 
+      : secondLeft}`;
   }
+
+  useEffect(() => {
+    audioPlayer.addEventListener("timeupdate", e => {
+      setCurrentTime(e.target.currentTime)
+    })
+  },[isPlaying])
 
   const currentTimeHandler = (e) => {
     setCurrentTime(e.target.value)
+    audioPlayer.currentTime = e.target.value
   }
 
   const filterProps = {
