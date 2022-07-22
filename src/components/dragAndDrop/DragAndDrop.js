@@ -14,7 +14,7 @@ class DragAndDrop extends React.Component {
         const active = () => this.dndRef.current.classList.add("green-border");
         const inactive = () => this.dndRef.current.classList.remove("green-border");
         const prevents = (event) => event.preventDefault();
-        const handleNewChannel = (source, type) =>{ this.props.createNewChannel(source, type);}
+        const handleNewChannel = (source, type, name) =>{ this.props.createNewChannel(source, type, name);}
         const handleDrop = (event) => {
             const dt = event.dataTransfer;
             const files = dt.files;
@@ -23,7 +23,7 @@ class DragAndDrop extends React.Component {
                     const reader = new FileReader();
                     reader.onload = function (ev) {
                         //console.log(source.src);
-                        handleNewChannel(ev.target.result, file.type);
+                        handleNewChannel(ev.target.result, file.type, file.name);
                     }
                     reader.readAsDataURL(file);
                 }  else {
