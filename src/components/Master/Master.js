@@ -84,7 +84,7 @@ function Master(props) {
         </Button>
       </Box>
       <Box width={250}>
-        <Typography gutterBottom>Volume</Typography>
+        <Typography gutterBottom>Master-Volume</Typography>
         <Slider
         min={0}
         max={100}
@@ -92,11 +92,10 @@ function Master(props) {
         id="vSlider"
         onChange={volSliderChange}
         valueLabelDisplay="auto"
-        >
-        </Slider>
+        />
       </Box>
       <Box width={250}>
-        <Typography gutterBottom>Speed</Typography>
+        <Typography gutterBottom>Master-Tempo</Typography>
         <Slider
         // defaultValue={1.0}
         min={0}
@@ -106,8 +105,7 @@ function Master(props) {
         id="masterRateSlider"
         onChange={speedSliderChange}
         valueLabelDisplay="auto"
-        >
-        </Slider>
+        />
       </Box>
     </Container>
   );
