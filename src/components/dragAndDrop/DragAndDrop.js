@@ -1,6 +1,6 @@
 import './dndCSS/DragAndDrop.css'
 import React from "react";
-
+import {Box, Grid} from '@mui/material'
 
 class DragAndDrop extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class DragAndDrop extends React.Component {
         const active = () => this.dndRef.current.classList.add("green-border");
         const inactive = () => this.dndRef.current.classList.remove("green-border");
         const prevents = (event) => event.preventDefault();
-        const handleNewChannel = (source, type) =>{ this.props.createNewChannel(source, type);}
+        const handleNewChannel = (source, type, name) =>{ this.props.createNewChannel(source, type, name);}
         const handleDrop = (event) => {
             const dt = event.dataTransfer;
             const files = dt.files;
@@ -23,7 +23,7 @@ class DragAndDrop extends React.Component {
                     const reader = new FileReader();
                     reader.onload = function (ev) {
                         //console.log(source.src);
-                        handleNewChannel(ev.target.result, file.type);
+                        handleNewChannel(ev.target.result, file.type, file.name);
                     }
                     reader.readAsDataURL(file);
                 }  else {
@@ -31,6 +31,9 @@ class DragAndDrop extends React.Component {
                     window.alert("Files of type: \"" + file.type + "\" are currently not supported. Please use a supported file type!");
                 }
             }
+            event.stopImmediatePropagation()
+            prevents(event)
+            inactive()
         }
         this.dndRef.current.addEventListener("drop", handleDrop);
 
@@ -52,11 +55,12 @@ class DragAndDrop extends React.Component {
 
     render() {
         return (
-            <div>
-                <section className="droparea" ref={this.dndRef} >
-                    <p>Drag and Drop Area</p>
-                </section>
-            </div>
+            <Grid item>
+                <Box className="droparea" ref={this.dndRef} style={{textAlign:'center'}}>
+                    <p>Drag and Drop Area 
+                        <br/><br/>Place your sound file here <br/> to create a new channel</p>
+                </Box>
+            </Grid>
         )
     }
 }

@@ -1,13 +1,13 @@
 .droparea {
-    margin: 1rem auto;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 384px;
+    width: 200px;
     max-width: 100%;
-    height: 160px;
-    border: 4px dashed grey;
+    height: 420px;
+    border: 4px dashed #bbdefb;
     border-radius: 15px;
 }
 
@@ -18,5 +18,5 @@
 }
 
 .green-border {
-    border-color: green;
+    border-color: #3f6d91;
 }

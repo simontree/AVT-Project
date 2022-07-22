@@ -6,10 +6,28 @@ import { audioContext, primaryGainControl } from "../../App";
 import { masterOutputNode, masterRate } from "../Master/Master";
 import MidiChannel from "./MidiChannel/MidiChannel";
 
+import {Box, Grid, Container, Typography} from '@mui/material'
+import StopIcon from '@mui/icons-material/Stop'
+import IconButton from '@mui/material/IconButton'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import PauseIcon from '@mui/icons-material/Pause'
+import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import ClearIcon from '@mui/icons-material/Clear';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import SpeedIcon from '@mui/icons-material/Speed';
+import { FilterSection } from "./Filters/FilterSection";
+
+const defaultFilterStrength = 0.05;
+const defaultFilterType = "lowpass";
 var mediaElementSource = [];
 
 function Channel(props) {
   const [channelID] = useState(props.id);
+  const [channelTitle] = useState(props.channelName);
   const [isChannelEnabled, setIsEnabled] = useState(props.isEnabled);
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
   const [audioPlayerID, setAudioPlayerID] = useState("base");
@@ -41,10 +59,8 @@ function Channel(props) {
 
   function createFilter(audioContext, filterType, filterFrequency){
     const filter = audioContext.createBiquadFilter();
-
     filter.type = filterType;
     filter.frequency.value = filterFrequency;
-    
     return filter
   }
 
@@ -91,6 +107,13 @@ function Channel(props) {
     props.masterPlay ? playAudio() : pauseAudio();
   },[props.masterPlay])
 
+  const stopPlayback = () => {
+    audioPlayer = document.getElementById(audioPlayerID)
+    audioPlayer.pause()
+    audioPlayer.currentTime = 0
+    setIsPlaying(false)
+  }
+
   const channelStateChange = (event) => {
     const isSliderOn = event.target.checked;
     setIsEnabled(() => {
@@ -134,7 +157,6 @@ function Channel(props) {
     setRate(() => {
       const updatedRate = value == undefined ? 1 : value;
       const realRate = value * Math.ceil(props.masterRate*10)/10;
-      console.log(realRate)
       audioPlayer.playbackRate = updatedRate * props.masterRate;
 
       return updatedRate;
@@ -268,8 +290,6 @@ function Channel(props) {
         bandpassFilter.disconnect();
       }
 
-
-
     if(!highSet&&!lowSet&&!bandSet){
       console.log("all off")
       mediaElementSource[channelID].connect(outputNode);
@@ -277,176 +297,173 @@ function Channel(props) {
     toggleOutputConnection();
   }
 
+  const TinyText = styled(Typography)({
+    fontSize: '0.75rem',
+    opacity: 0.38,
+    fontWeight: 500,
+    letterSpacing: 0.2,
+  });  
+
+  const [position, setPosition] = useState(32);
+  const duration = 200; // seconds
+
+  function formatDuration(value) {
+    const minute = Math.floor(value / 60);
+    const secondLeft = value - minute * 60;
+    return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
+  }
+
+  const filterProps = {
+    channelID,
+    filterHighGain,
+    highpassFilterInput,
+    highpassSet,
+    filterClick,
+    filterBandGain,
+    bandpassFilterInput,
+    bandpassSet,
+    filterClick,
+    filterLowGain,
+    lowpassFilterInput,
+    lowpassSet
+  }
 
   return (
-    <div
-      className="channel"
-      id={channelID}
-      style={{ backgroundColor: `${color}` }}
-    >
-      <MidiChannel
-        midiValues={props.midiValues}
-        midiChanged = {props.midiChanged}
-        handleVolumeChange={handleVolumeChangeFromMidi}
-        handleRateChange={handleRateChange}
-        handleTogglePlay={playPauseClicked}
-        channelID={channelID}
-        midiTogglePlay = {props.midiTogglePlay}
-        handleHighpassInput = {handleHighpassInput}
-        handleLowpassInput = {handleLowpassInput}
-        handleBandpassInput = {handleBandpassInput}
-      />
+    <Container
+    id={channelID}
+    sx={{
+      backgroundColor: 'rgb(2, 40, 79)',
+      width: '320px',
+      padding: '5px',
+      margin: '5px',
+      borderRadius: '20px',
+      border: 'solid 1px #3f6d91'
+    }}>
+      <Grid container
+      direction="column"
+      alignItems="center">
+        <Grid container
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{marginTop: '15px'}}>
+          <Grid item>
+            <Switch 
+            onChange={channelStateChange}
+            checked={isChannelEnabled} />
+          </Grid>
+          <Grid item>
+            <Typography>
+            {channelTitle}
+            </Typography>
+          </Grid>
+          <Grid item>
+          <IconButton 
+            onClick={destroyChannel}
+            sx={{ 
+              border: '1px solid #ef5350', 
+              marginLeft: '15px', 
+              ':hover': {backgroundColor: 'rgba(239, 83, 80, 0.3)'}}}>
+            <ClearIcon fontSize="small" sx={{color: '#ef5350'}}/>
+          </IconButton> 
+          </Grid>
+        </Grid>
+        <Grid item
+        width={200}
+        justifyContent="space-between"
+        sx={{marginBottom: '10px', marginTop: '10px'}}>
+          <Slider
+          size="small"
+          value={position}
+          min={0}
+          step={1}
+          max={duration}
+          onChange={(_, value) => setPosition(value)}
+          sx={{color: '#bbdefb', height: 4,}}
+          />
+          <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: -2,
+            }}>
+            <TinyText>{formatDuration(position)}</TinyText>
+            <TinyText>-{formatDuration(duration - position)}</TinyText>
+          </Box>
+        </Grid>
+        <Grid item sx={{marginBottom: '5px'}}>
+          <IconButton
+            onClick={playPauseClicked}
+            sx={{border: '1px solid #bbdefb', marginRight: '15px', 
+            ':hover': {backgroundColor: 'rgba(187, 222, 251, 0.2)'}}}>
+                {(isPlaying) ?
+                <PauseIcon
+                fontSize="large"
+                sx={{color: '#bbdefb'}}/> :
+                <PlayArrowIcon 
+                fontSize="large"
+                sx={{color: '#bbdefb'}}
+                />
+                }
+          </IconButton>
+          <IconButton
+            onClick={stopPlayback}  
+            sx={{border: '1px solid #bbdefb',  
+            ':hover': {backgroundColor: 'rgba(187, 222, 251, 0.2)'}}}>
+                <StopIcon 
+                fontSize="large"
+                sx={{color: '#bbdefb'}}/>
+          </IconButton>
+        </Grid>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <VolumeUp/>
+          </Grid>
+          <Grid item width={200}>
+            <Slider
+            size="small"
+            min={0}
+            max={100}
+            value={volume}
+            id="volRange"
+            onChange={volSliderChange}
+            valueLabelDisplay="auto"
+            sx={{color: '#bbdefb', height: 4,}}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <SpeedIcon/>
+          </Grid>
+          <Grid item width={200}>
+            <Slider
+            size="small"
+            min={0}
+            max={3}
+            step={0.1}
+            value={rate}
+            id="sSlider"
+            onChange={rateSliderChange}
+            valueLabelDisplay="auto"
+            sx={{color: '#bbdefb', height: 4}}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <FilterSection {...filterProps}/>
+
       <audio
         id={audioPlayerID}
-        className="channelAudio"
+        className="channelAudio invisible"
         controls={true}
         autoPlay={false}
         onEnded={pauseAudio}
       >
         <source type={type} src={audioSourceURL} />
       </audio>
-      <div className="channelTop">
-        <div className="switchContainer">
-          <label className="switch">
-            <input
-              type="checkbox"
-              onChange={channelStateChange}
-              checked={isChannelEnabled}
-            />
-            <span className="slider round"></span>
-          </label>
-        </div>
 
-        <div className="fileTitle">
-          <label>{"Placeholder" + channelID}</label>
-        </div>
-
-        <div className="channelContext">
-          <button value={"..."} onClick={destroyChannel}>
-            X
-          </button>
-        </div>
-      </div>
-
-      <div className="channelPlay">
-        <button className="playButton" onClick={playPauseClicked}>
-          {playBtnTxt}
-        </button>
-      </div>
-
-      <div className="volumeControl">
-        <div className="volIcon">
-          <label>Vol</label>
-        </div>
-        <div className="volSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="100"
-            onChange={volSliderChange}
-            className="vSlider"
-            id="volRange"
-            value={volume}
-          ></input>
-        </div>
-        <div className="volValue">
-          <label>{volume}</label>
-        </div>
-      </div>
-
-      <div className="speedControl">
-        <div className="speedIcon">
-          <label>Sp</label>
-        </div>
-        <div className="speedSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="3"
-            step="0.1"
-            onChange={rateSliderChange}
-            onMouseUp={rateSliderChange}
-            className="sSlider"
-            id="sRange"
-            value={rate}
-          ></input>
-        </div>
-        <div className="speedValue">
-          <label>{rate}</label>
-        </div>
-      </div>
-
-      <hr className="breakLine"></hr>
-
-      <div className="filterSection">
-        <label className="filterTitle">Filters (*￣3￣)╭</label>
-      </div>
-      <div id={"filtercontainer" + channelID}>
-        <input
-          className="ml-6 focus: ring-red-0/0"
-          id={"highpass checkbox" + channelID}
-          type="checkbox"
-          onChange={filterClick}
-        />
-        <label className="font-bold" htmlFor="highpass">
-          Highpass Filter
-        </label>
-        <br></br>
-        <input
-          className="mt-0.5 ml-11"
-          id={"highpass" + channelID}
-          type="range"
-          min="0"
-          max="2"
-          step="0.01"
-          value={filterHighGain}
-          onInput={highpassFilterInput}
-        />
-        <br></br>
-        <input
-          className="ml-6 focus: ring-red-0/0"
-          id={"lowpass checkbox" + channelID}
-          type="checkbox"
-          onChange={filterClick}
-        />
-        <label className="font-bold" htmlFor="lowpass">
-          Lowpass Filter
-        </label>
-        <br></br>
-        <input
-          className="mt-0.5 ml-11"
-          id={"lowpass" + channelID}
-          type="range"
-          min="0"
-          max="2"
-          step="0.01"
-          value={filterLowGain}
-          onInput={lowpassFilterInput}
-        />
-        <br></br>
-
-        <input
-          className="ml-6 focus: ring-red-0/0"
-          id={"bandpass checkbox" + channelID}
-          type="checkbox"
-          onChange={filterClick}
-        />
-        <label className="font-bold" htmlFor="bandpass">
-          bandpass Filter
-        </label>
-        <br></br>
-        <input
-          className="mt-0.5 ml-11"
-          id={"bandpass" + channelID}
-          type="range"
-          min="0"
-          max="2"
-          step="0.01"
-          value={filterBandGain}
-          onInput={bandpassFilterInput}
-        />
-      </div>
-    </div>
-  );
+    </Container>
+  )
 }
 export default Channel;

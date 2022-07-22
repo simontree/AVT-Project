@@ -6,6 +6,8 @@ import { toBeChecked } from "@testing-library/jest-dom/dist/matchers";
 import Channel from "./components/Channels/Channel";
 import Master from "./components/Master/Master";
 import { masterOutputNode } from "./components/Master/Master";
+import DrumMachine from "./components/DrumMachine/DrumMachine";
+import {Box, Grid, Container, Typography} from '@mui/material'
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -79,8 +81,8 @@ function App() {
   const [channels, setChannels] = useState([]);
   const [nextID, setNextID] = useState(0);
   const [masterRate, setMasterRate] = useState(1);
-  const [masterPlay, setMasterPlay] = useState(true);
-  const [masterVolume, setMasterVolume] = useState(5 / 100);
+  const [masterPlay, setMasterPlay] = useState(false);
+  const [masterVolume, setMasterVolume] = useState(40);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
   const [midiValues, setMidiValues]= useState([
     {
@@ -128,6 +130,9 @@ function App() {
     document
       .getElementById("channelsContainer")
       .childNodes[0].removeChild(element);
+    console.log("destroyChannel: "+document
+    .getElementById("channelsContainer")
+    .childNodes[0].removeChild(element))
   };
 
   const defineRandomColor = () => {
@@ -147,7 +152,7 @@ function App() {
     });
   };
   const masterPlayPause = () => {
-    setMasterPlay((old) => !old);
+    setMasterPlay(old => !old);
   };
 
   useEffect(() => {
@@ -291,42 +296,69 @@ function App() {
     setMasterVolume((old) => updated);
   };
 
+  const newChannelprops = {
+    nextID,
+    defaultMidi,
+    defaultVolume,
+    defaultState,
+    defaultIsPlaying,
+    defaultAudioUrl,
+    defineRandomColor,
+    addChannelHandler,
+    setNextID
+  }
+
+  const channelProps = {
+    channels, 
+    handleMidiChannelOrganization,
+    destroyChannel,
+    masterRate,
+    masterPlay
+  }
+
+  const masterProps = {
+    masterVolume,
+    defaultRate,
+    defaultIsPlaying,
+    updateMasterRate,
+    masterRate,
+    masterPlayPause,
+    updateMasterVolume,
+    masterPlay,
+    masterPlayMidi,
+    id:'master',
+    color:'#000000',
+    addChannelHandler,  
+    defaultAudioUrl,    //added for design purpose
+    defaultColor        //added for design purpose
+  }
+
   return (
-    <div>
-      <NewChannel
-        nextAvailableID={nextID}
-        defaultMidi={defaultMidi}
-        defaultVolume={defaultVolume}
-        defaultState={defaultState}
-        defaultIsPlaying={defaultIsPlaying}
-        defaultAudioUrl={defaultAudioUrl}
-        defaultAudioType={defaultAudioType}
-        color={defineRandomColor}
-        setNextID={setNextID}
-        addChannelHandler={addChannelHandler}
-      />
-      <Channels
-        channels={channels}
-        handleDestroyChannel={destroyChannel}
-        masterRate={masterRate}
-        masterPlay={masterPlay}
-        midiValues={midiValues}
-        midiChanged={midiChanged}
-      ></Channels>
-      <Master
-        id={"master"}
-        volume={masterVolume}
-        rate={defaultRate}
-        color={"#000000"}
-        isPlaying={defaultIsPlaying}
-        updateMasterRate={updateMasterRate}
-        masterRate={masterRate}
-        masterPlayPause={masterPlayPause}
-        updateMasterVolume={updateMasterVolume}
-        masterPlay={masterPlay}
-        masterPlayMidi={masterPlayMidi}
-      ></Master>
-    </div>
+    <Box sx={{ width: 1 }} margin={'20px'} marginTop={'30px'}>
+      <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
+        <Box gridColumn="span 12">
+          <Grid container direction='row'>
+            <Grid container direction='row'>
+              <Grid item>
+              <Channels {...channelProps}/>
+              </Grid>
+              <Grid item>
+              <NewChannel {...newChannelprops}/>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        <Box gridColumn="span 4" sx={{transform: 'translateY(25%)'}}>
+          <Box><Master {...masterProps} /></Box>
+        </Box>
+        <Box gridColumn="span 12">
+          <Box><DrumMachine/></Box>
+        </Box>
+        <Box gridColumn="span 4">
+          <Box>Visualization coming soon..</Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

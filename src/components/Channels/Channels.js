@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Card from "../UI/Card";
 import Channel from "./Channel";
+import {Grid} from '@mui/material'
 
 const Channels = (props) =>{
 
@@ -15,27 +16,31 @@ const Channels = (props) =>{
     const changeMidiChannel = (num, radioID) => {
         props.handleMidiChannelOrganization(num, radioID);
     }
-    const handleDestroyChannel = (element) => {
-        props.handleDestroyChannel(element);
+    const destroyChannel = (element) => {
+        props.destroyChannel(element);
     }
     const mapChannels = () => {
         if(channels.length > 0){
             channelsContent = channels.map((channel) =>(
+                <Grid item>
                 <Channel
-                 id={channel.id}
-                 selectedMidi={channel.selectedMidi}
-                 volume={channel.volume}
-                 rate={channel.rate}
-                 isEnabled={channel.isEnabled}
-                 isPlaying={channel.isPlaying}
-                 audioURL={channel.audioURL}
-                 backgroundColor={channel.color}
-                 changeMidiChannel={changeMidiChannel}
-                 destroyChannel={handleDestroyChannel}
-                 audioType = {channel.audioType}
-                 masterRate = {props.masterRate}
-                 masterPlay = {props.masterPlay}
-                />
+                    key={channel.id}
+                    id={channel.id}
+                    channelName={channel.name}
+                    selectedMidi={channel.selectedMidi}
+                    volume={channel.volume}
+                    rate={channel.rate}
+                    isEnabled={channel.isEnabled}
+                    isPlaying={channel.masterPlayisPlaying}
+                    audioURL={channel.audioURL}
+                    backgroundColor={channel.color}
+                    changeMidiChannel={changeMidiChannel}
+                    destroyChannel={destroyChannel}
+                    audioType = {channel.audioType}
+                    masterRate = {props.masterRate}
+                    masterPlay = {props.masterPlay}
+                    />
+                </Grid>
             ))
         }
     }
@@ -64,14 +69,10 @@ const Channels = (props) =>{
     }
     mapChannels2();
 
-
-
     return(
-        <div id="channelsContainer">
-            <Card className="channels" >
-            {channelsContent}
-            </Card>
-        </div>
+        <Grid container direction='row' id="channelsContainer" className="channels" >
+        {channelsContent}
+        </Grid>
     )
 }
 

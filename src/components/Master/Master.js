@@ -3,118 +3,100 @@ import "../Channels/ChannelCss/Switch.css";
 import "../Channels/ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
+import { Box, Button, Container, Slider, Typography} from '@mui/material'
 
 export var masterOutputNode;
 export var masterRate = 1;
+
 function Master(props) {
   const [channelID] = useState(props.id);
-  const [volume, setVolume] = useState(props.volume);
   const [color, setColor] = useState(props.backgroundColor);
-
-  const [allPlaying, setAllPlaying] = useState(false);
-  const [buttonTxt, setButtonTxt] = useState("All Play")
+  const [buttonTxt, setButtonTxt] = useState("All Play");
+  //Initialization
   useEffect(() => {
     
     masterOutputNode = audioContext.createGain();
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
-<<<<<<< Updated upstream
-=======
     setButtonTxt("All Pause");
 
-    //added for design purpose
-    // props.addChannelHandler({
-    //   id: 0,
-    //   selectedMidi: 0,
-    //   volume: 50,
-    //   rate: 1,
-    //   isEnabled: true,
-    //   isPlaying: false,
-    //   audioURL: props.defaultAudioUrl,
-    //   color: props.defaultColor,
-    // });
 
->>>>>>> Stashed changes
   }, []);
+  //Midi Play Pause pressed
+  useEffect(() => {
+    playPauseClicked();
+  }, [props.masterPlayMidi]);
 
   const playPauseClicked = () =>{
     props.masterPlayPause();
     playBtnTxt();
-  }
-  const playBtnTxt = () =>{
-    setButtonTxt((old)=>{
-      var updated = old == "All Pause" ? "All Play" : "All Pause";
-      return updated;
-    })
-  }
-  const volSliderChange = (event) => {
-    setVolume(() => {
-      const updatedVolume = event.target.value;
-      masterOutputNode.gain.value = updatedVolume/100;
-      return updatedVolume;
+  };
+
+  const playBtnTxt = () => {
+    var updated;
+    setButtonTxt((old) => {
+      updated = old == "Play all" ? "Pause all" : "Play all";
+       return updated;
     });
   };
-  const speedSliderChange = (event) =>{
-    const updatedRate = event.target.value;
-    props.updateMasterRate(updatedRate);
+
+  const volSliderChange = (event) => {
+    const updatedVolume = event.target.value;
+    masterOutputNode.gain.value = updatedVolume / 100;
+    props.updateMasterVolume(updatedVolume);
+  };
+
+  const speedSliderChange = (e) => {
+    props.updateMasterRate(e.target.value)
   }
 
+  useEffect(()=>{
+    document.getElementById("masterRateSlider").value=props.masterRate;
+  },[props.masterRate])
 
   return (
-    <div
-      className="channel"
-      id={channelID}
-      style={{ backgroundColor: `${color}` }}>
-      <div className="channelPlay">
-        <button className="playButton" onClick={playPauseClicked}>
+    <Container
+    id={channelID}
+    sx={{
+      backgroundColor: 'rgb(2, 40, 79)',
+      width: '300px',
+      padding: '20px',
+      borderRadius: '20px',
+      border: 'solid 1px #3f6d91'
+    }}>
+      <Box width={250} sx={{textAlign: 'center'}}>
+        <Button 
+        variant="contained"
+        onClick={playPauseClicked}>  
           {buttonTxt}
-        </button>
-      </div>
-      <div className="volumeControl">
-        <div className="volIcon">
-          <label>Vol</label>
-        </div>
-        <div className="volSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="100"
-            onChange={volSliderChange}
-            className="vSlider"
-            id="olRange"
-            value={volume}
-          ></input>
-        </div>
-        <div className="volValue">
-          <label>{volume}</label>
-        </div>
-      </div>
-
-      <div className="speedControl">
-        <div className="speedIcon">
-          <label>Sp</label>
-        </div>
-        <div className="speedSlider">
-          <input
-            type={"range"}
-            min="0"
-            max="3"
-            step="0.25"
-            onChange={speedSliderChange}
-            onMouseUp={speedSliderChange}
-            className="sSlider"
-            id="masterRange"
-            value={props.masterRate}
-          ></input>
-        </div>
-        <div className="speedValue">
-          <label>{props.masterRate}</label>
-        </div>
-      </div>
-
-
-    </div>
+        </Button>
+      </Box>
+      <Box width={250} sx={{marginTop: '20px'}}>
+        <Typography gutterBottom>Master-Volume</Typography>
+        <Slider
+        min={0}
+        max={100}
+        value={props.masterVolume}
+        id="vSlider"
+        onChange={volSliderChange}
+        valueLabelDisplay="auto"
+        />
+      </Box>
+      <Box width={250}>
+        <Typography gutterBottom>Master-Tempo</Typography>
+        <Slider
+        // defaultValue={1.0}
+        min={0}
+        max={3}
+        step={0.1}
+        value={props.masterRate}
+        id="masterRateSlider"
+        onChange={speedSliderChange}
+        valueLabelDisplay="auto"
+        />
+      </Box>
+    </Container>
   );
 }
 export default Master;

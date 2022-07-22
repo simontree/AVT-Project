@@ -1,0 +1,11 @@
+.clip {
+    min-width: 60px;
+    min-height: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.clip-playing {
+  background-color: #1769aa;
+  border-radius: 5px;
+}
