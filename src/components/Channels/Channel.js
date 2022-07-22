@@ -80,52 +80,16 @@ function Channel(props) {
     mediaElementSource[channelID].connect(outputNode);
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
-    setFileDuration(audioPlayer.duration)
-    setCurrentTime(audioPlayer.currentTime)
+    audioPlayer.addEventListener("loadeddata", e => {
+      setFileDuration(e.target.duration)
+      setCurrentTime(e.target.currentTime)
+    })
   }, []);
 
   useEffect(() => {
     setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
-    console.log("fileDuration-Init: "+fileDuration)
-    console.log("currentTime-Init: "+currentTime)
   });
-
-  const playAudio = () => {
-    if (!isChannelEnabled) return;
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-    audioPlayer = document.getElementById(audioPlayerID);
-    audioPlayer.play();
-    setIsPlaying(true);
-    setplayBtnTxt("Pause");
-    // console.log("duration-playAudio: "+currentTime)
-  };
-
-  const pauseAudio = () => {
-    audioPlayer = document.getElementById(audioPlayerID);
-    audioPlayer.pause();
-    setIsPlaying(false);
-    setplayBtnTxt("Play");
-    console.log("audio-currenTime: "+audioPlayer.currentTime)
-    // console.log("currentTime: "+currentTime)
-  };
-
-  const playPauseClicked = () => {
-    isPlaying ? pauseAudio() : playAudio();
-  };
-
-  useEffect(()=>{
-    props.masterPlay ? playAudio() : pauseAudio();
-  },[props.masterPlay])
-
-  const stopPlayback = () => {
-    audioPlayer = document.getElementById(audioPlayerID)
-    audioPlayer.pause()
-    audioPlayer.currentTime = 0
-    setIsPlaying(false)
-  }
 
   const channelStateChange = (event) => {
     const isSliderOn = event.target.checked;
@@ -309,6 +273,41 @@ function Channel(props) {
     toggleOutputConnection();
   }
 
+
+  const playAudio = () => {
+    if (!isChannelEnabled) return;
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+    audioPlayer = document.getElementById(audioPlayerID);
+    audioPlayer.play();
+    setIsPlaying(true);
+    setplayBtnTxt("Pause");
+  };
+
+  const pauseAudio = () => {
+    audioPlayer = document.getElementById(audioPlayerID);
+    audioPlayer.pause();
+    setIsPlaying(false);
+    setplayBtnTxt("Play");
+  };
+
+  const playPauseClicked = () => {
+    isPlaying ? pauseAudio() : playAudio();
+  };
+
+  useEffect(()=>{
+    props.masterPlay ? playAudio() : pauseAudio();
+  },[props.masterPlay])
+
+  const stopPlayback = () => {
+    audioPlayer = document.getElementById(audioPlayerID)
+    audioPlayer.pause()
+    audioPlayer.currentTime = 0
+    setIsPlaying(false)
+  }
+
+
   const TinyText = styled(Typography)({
     fontSize: '0.75rem',
     opacity: 0.38,
@@ -316,22 +315,15 @@ function Channel(props) {
     letterSpacing: 0.2,
   });  
 
-  // const [position, setPosition] = useState(32);
-  // const duration = 200; // seconds
-
   function formatDuration(value) {
-    console.log("format-value: "+Math.floor(value))
     const minute = Math.floor(value/60)
-    console.log("minute-format: "+minute)
-    const secondLeft = currentTime - minute * 60;
-    console.log("secLeft: "+secondLeft)
-    console.log("currentTime-formatDur: "+currentTime)
-    return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
+    const currTime = parseFloat(currentTime).toPrecision(2)
+    const secondLeft = parseFloat(Math.abs(currTime - minute * 60) % 60).toPrecision(2)
+    return `${minute}:${secondLeft < 10 ? `0${secondLeft.slice(0,-2)}` : secondLeft}`;
   }
 
   const currentTimeHandler = (e) => {
     setCurrentTime(e.target.value)
-    console.log("currTimeHandler: "+currentTime)
   }
 
   const filterProps = {
