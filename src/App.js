@@ -360,7 +360,7 @@ function App() {
 
   return (
     <Box sx={{ width: 1 }} margin={'10px'}>
-      <Box display="grid" gridTemplateColumns="repeat(1, 1fr)">
+      <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
         <Box gridColumn="span 12">
           <Grid container direction='row'>
             <Grid container direction='row'>
