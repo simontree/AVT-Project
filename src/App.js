@@ -360,8 +360,8 @@ function App() {
 
   return (
     <Box sx={{ width: 1 }} margin={'10px'}>
-      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
-        <Box gridColumn="span 8">
+      <Box display="grid" gridTemplateColumns="repeat(1, 1fr)">
+        <Box gridColumn="span 12">
           <Grid container direction='row'>
             <Grid container direction='row'>
               <Grid item>
@@ -376,7 +376,7 @@ function App() {
         <Box gridColumn="span 4">
           <Box><Master {...masterProps} /></Box>
         </Box>
-        <Box gridColumn="span 8">
+        <Box gridColumn="span 12">
           <Box><DrumMachine/></Box>
         </Box>
         <Box gridColumn="span 4">
