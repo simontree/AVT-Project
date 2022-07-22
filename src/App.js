@@ -310,10 +310,11 @@ function App() {
 
   const channelProps = {
     channels, 
-    handleMidiChannelOrganization,
     destroyChannel,
     masterRate,
-    masterPlay
+    masterPlay,
+    midiValues,
+    midiChanged
   }
 
   const masterProps = {

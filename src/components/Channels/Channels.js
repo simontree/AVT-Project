@@ -34,7 +34,6 @@ const Channels = (props) =>{
                     isPlaying={channel.masterPlayisPlaying}
                     audioURL={channel.audioURL}
                     backgroundColor={channel.color}
-                    changeMidiChannel={changeMidiChannel}
                     destroyChannel={destroyChannel}
                     audioType = {channel.audioType}
                     masterRate = {props.masterRate}
@@ -57,7 +56,7 @@ const Channels = (props) =>{
                     audioURL={props.channels[i].audioURL}
                     backgroundColor={props.channels[i].color}
                     changeMidiChannel={changeMidiChannel}
-                    destroyChannel={handleDestroyChannel}
+                    destroyChannel={destroyChannel}
                     audioType = {props.channels[i].audioType}
                     masterRate = {props.masterRate}
                     masterPlay = {props.masterPlay}

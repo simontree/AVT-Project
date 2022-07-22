@@ -462,7 +462,19 @@ function Channel(props) {
       >
         <source type={type} src={audioSourceURL} />
       </audio>
+      <MidiChannel
+        midiValues={props.midiValues}
+        midiChanged = {props.midiChanged}
+        handleVolumeChange={handleVolumeChangeFromMidi}
+        handleRateChange={handleRateChange}
+        handleTogglePlay={playPauseClicked}
+        channelID={channelID}
+        midiTogglePlay = {props.midiTogglePlay}
+        handleHighpassInput = {handleHighpassInput}
+        handleLowpassInput = {handleLowpassInput}
+        handleBandpassInput = {handleBandpassInput}
 
+      ></MidiChannel>
     </Container>
   )
 }
