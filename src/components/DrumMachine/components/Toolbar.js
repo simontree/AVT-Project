@@ -36,6 +36,7 @@ const ToolBar = ({
 
     return (
         <Grid container
+        alignItems="center"
         justifyContent='center'
         sx={{marginBottom: '10px'}}>
             <Grid item>

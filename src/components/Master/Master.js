@@ -3,16 +3,14 @@ import "../Channels/ChannelCss/Switch.css";
 import "../Channels/ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
-import { Box, Button, Grid, Container, Slider, Typography} from '@mui/material'
+import { Box, Button, Container, Slider, Typography} from '@mui/material'
 
 export var masterOutputNode;
 export var masterRate = 1;
+
 function Master(props) {
   const [channelID] = useState(props.id);
-  const [volume, setVolume] = useState(props.volume);
-  const [rate, setRate] = useState(props.masterRate)
   const [color, setColor] = useState(props.backgroundColor);
-  const [allPlaying, setAllPlaying] = useState(false);
   const [buttonTxt, setButtonTxt] = useState("All Play");
   //Initialization
   useEffect(() => {
@@ -35,17 +33,14 @@ function Master(props) {
   const playBtnTxt = () => {
     var updated;
     setButtonTxt((old) => {
-      updated = old == "All Pause" ? "All Play" : "All Pause";
+      updated = old == "Pause all" ? "Play all" : "Pause all";
        return updated;
     });
   };
 
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;
-    // setVolume(() => {
-      masterOutputNode.gain.value = updatedVolume / 100;
-    //    return updatedVolume;
-    // });
+    masterOutputNode.gain.value = updatedVolume / 100;
     props.updateMasterVolume(updatedVolume);
   };
 
