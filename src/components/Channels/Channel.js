@@ -40,6 +40,7 @@ function Channel(props) {
   const [filterHighGain, setFilterHighGain] = useState(0);
   const [filterLowGain, setFilterLowGain] = useState(0);
   const [filterBandGain, setFilterBandGain] = useState(0);
+  const [source, setSource] = useState(null);
 
   var audioPlayer;
   var outputNode = audioContext.createGain();
@@ -69,31 +70,35 @@ function Channel(props) {
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
-    audioPlayer = new Audio(audioSourceURL);
-    mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
-    mediaElementSource[channelID].connect(outputNode);
+    audioPlayer = document.getElementById(audioPlayerID)
+    //document.querySelector("#" + audioPlayerID);
+    // mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
+    // mediaElementSource[channelID].connect(outputNode);
+    const src = audioContext.createMediaElementSource(audioPlayer);
+    setSource(src);
     audioPlayer.volume = 5 / 100;
     setColor(props.backgroundColor);
   }, []);
 
-  useEffect(() => {
-    setAudioPlayerID("audio" + channelID);
-    audioPlayer = document.getElementById(audioPlayerID);
-  });
+  // useEffect(() => {
+  //   setAudioPlayerID("audio" + channelID);
+  //   audioPlayer = new Audio(audioSourceURL);
+  // });
 
   const playAudio = () => {
     if (!isChannelEnabled) return;
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
-    audioPlayer = document.getElementById(audioPlayerID);
+    console.log(audioPlayer);
+    //audioPlayer = new Audio(audioSourceURL);
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
   };
 
   const pauseAudio = () => {
-    audioPlayer = document.getElementById(audioPlayerID);
+    //audioPlayer = new Audio(audioSourceURL);
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
@@ -209,13 +214,11 @@ function Channel(props) {
     handleBandpassInput(e.target.value);
   }
   const handleBandpassInput = (value) => {  
-    console.log(value)
     setFilterBandGain(() =>{
       var updatedGain = value;
       bandpassGain.gain.value = updatedGain;
       return updatedGain;
     });
-    console.log(document.getElementById("bandpass checkbox" + channelID))
     filterCheck(document.getElementById("bandpass checkbox" + channelID).checked, "bandpass");
   };
 
@@ -254,13 +257,17 @@ function Channel(props) {
         break;
     }
 
-    mediaElementSource[channelID].disconnect();
+    console.log("ChannelID: " + channelID);
+    console.log("MES: " )
+    console.log(source)
+
+    source.disconnect();
       if (highSet) {
         console.log("highpass on")
         highpassGain.gain.value = filterHighGain;
         highpassGain.connect(outputNode);
         highpassFilter.connect(highpassGain);
-        mediaElementSource[channelID].connect(highpassFilter);
+        source.connect(highpassFilter);
         highpassGain.connect(masterOutputNode);
       } else {
         console.log("highpass off")
@@ -273,7 +280,7 @@ function Channel(props) {
         lowpassGain.gain.value = filterLowGain;
         lowpassGain.connect(outputNode);
         lowpassFilter.connect(lowpassGain);
-        mediaElementSource[channelID].connect(lowpassFilter);
+        source.connect(lowpassFilter);
         lowpassGain.connect(masterOutputNode);
       } else {
         console.log("lowpass off")
@@ -287,7 +294,7 @@ function Channel(props) {
         bandpassGain.gain.value = filterBandGain;
         bandpassGain.connect(outputNode);
         bandpassFilter.connect(bandpassGain);
-        mediaElementSource[channelID].connect(bandpassFilter);
+        source.connect(bandpassFilter);
         bandpassGain.connect(masterOutputNode);
       } else {
         console.log("bandpass off")
@@ -297,7 +304,7 @@ function Channel(props) {
 
     if(!highSet&&!lowSet&&!bandSet){
       console.log("all off")
-      mediaElementSource[channelID].connect(outputNode);
+      source.connect(outputNode);
     }
     toggleOutputConnection();
   }
