@@ -37,7 +37,6 @@ const Note = ({
                 }}
             /> :
             <Button 
-            outlined 
             onClick={noteClicked} 
             sx={{
                 width: '30px',

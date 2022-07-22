@@ -70,13 +70,9 @@ function Master(props) {
     }}>
       <Box width={200}>
         <Slider
-        value={Math.ceil(props.masterRate*10)/10}
+        value={props.masterRate}
         id="masterRateSlider"
-        min="0"
-        max="3"
-        step="0.1"
         onChange={speedSliderChange}
-        onMouseUp={speedSliderChange}
         >
         </Slider>
       </Box>
