@@ -148,7 +148,7 @@ function App() {
           selected.push(element);
         }
       })
-      
+
     });
 
     selected.forEach(element => {
