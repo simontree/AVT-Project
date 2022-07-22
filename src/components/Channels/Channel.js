@@ -114,6 +114,13 @@ function Channel(props) {
     props.masterPlay ? playAudio() : pauseAudio();
   },[props.masterPlay])
 
+  const stopPlayback = () => {
+    audioPlayer = document.getElementById(audioPlayerID)
+    audioPlayer.pause()
+    audioPlayer.currentTime = 0
+    setIsPlaying(false)
+  }
+
   const channelStateChange = (event) => {
     const isSliderOn = event.target.checked;
     setIsEnabled(() => {
@@ -408,8 +415,8 @@ function Channel(props) {
                 }
           </IconButton>
           <IconButton
-            // onClick={stopPlayback}   // to be implemented
-            sx={{border: '1px solid #bbdefb', marginRight: 2, 
+            onClick={stopPlayback}  
+            sx={{border: '1px solid #bbdefb',  
             ':hover': {backgroundColor: 'rgba(187, 222, 251, 0.2)'}}}>
                 <StopIcon 
                 fontSize="large"
