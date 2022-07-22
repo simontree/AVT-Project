@@ -80,7 +80,7 @@ function App() {
   const [channels, setChannels] = useState([]);
   const [nextID, setNextID] = useState(0);
   const [masterRate, setMasterRate] = useState(1);
-  const [masterPlay, setMasterPlay] = useState(true);
+  const [masterPlay, setMasterPlay] = useState(false);
   const [masterVolume, setMasterVolume] = useState(40);
   const [masterPlayMidi, setMasterPlayMidi] = useState(false);
   const [midiIsUpdated, setMidiIsUpdated] = useState(false);
@@ -227,7 +227,7 @@ function App() {
     });
   };
   const masterPlayPause = () => {
-    setMasterPlay((old) => !old);
+    setMasterPlay(old => !old);
   };
 
   useEffect(() => {

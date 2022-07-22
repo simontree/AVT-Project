@@ -46,7 +46,7 @@ function Master(props) {
   const playBtnTxt = () => {
     var updated;
     setButtonTxt((old) => {
-      updated = old == "Pause all" ? "Play all" : "Pause all";
+      updated = old == "Play all" ? "Pause all" : "Play all";
        return updated;
     });
   };
