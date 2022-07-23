@@ -131,6 +131,7 @@ function App() {
     document
       .getElementById("channelsContainer").removeChild(element);
     setChannelCount(channelCount-1)
+    setNextID(prev => prev-1)
   };
 
   // console.log("channelIDToDelete: "+channelIDToDelete)

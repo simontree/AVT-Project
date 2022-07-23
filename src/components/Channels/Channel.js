@@ -39,6 +39,7 @@ function Channel(props) {
   const [filterHighGain, setFilterHighGain] = useState(0);
   const [filterLowGain, setFilterLowGain] = useState(0);
   const [filterBandGain, setFilterBandGain] = useState(0);
+  const [autoplayPrevented, setAutoplayPrevented] = useState(false)
 
   var audioPlayer;
   var outputNode = audioContext.createGain();
@@ -68,6 +69,7 @@ function Channel(props) {
 
   //Initialization
   useEffect(() => {
+    console.log("New channel has been created! ID: " + channelID)
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
@@ -84,7 +86,15 @@ function Channel(props) {
 
   useEffect(() => {
     audioPlayer = document.getElementById(audioPlayerID);
+    console.log("Rerendered Player: " + audioPlayer)
   });
+
+  const handleAutoPlay = (event) =>{
+    if (autoplayPrevented === false) {
+      pauseAudio();
+      setAutoplayPrevented(true);
+    }
+  }
 
   const playAudio = () => {
     if (!isChannelEnabled) return;
@@ -491,8 +501,8 @@ function Channel(props) {
       <audio
         id={audioPlayerID}
         className="channelAudio invisible"
-        controls="true"
-        autoplay="false"
+        controls={true}
+        onPlay={handleAutoPlay}
         onEnded={pauseAudio}
       >
         <source type={type} src={audioSourceURL} />
