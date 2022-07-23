@@ -63,7 +63,7 @@ class DragAndDrop extends React.Component {
 
     render() {
         return (
-            <Grid item>
+            <Grid item style={{paddingTop: 7}}>
                 <Box className="droparea" ref={this.dndRef} style={{textAlign:'center'}}>
                     <p>Drag and Drop Area 
                         <br/><br/>Place your sound file here <br/> to create a new channel</p>

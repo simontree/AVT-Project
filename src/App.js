@@ -85,6 +85,7 @@ function App() {
   const [masterPlay, setMasterPlay] = useState(false);
   const [masterVolume, setMasterVolume] = useState(10);
   const [masterPlayMidi, setMasterPlayMidi] = useState(0);
+  const [masterChangedByChannel, setMasterChangedByChannel] = useState(false)
   const [midiValues, setMidiValues]= useState([
     {
       volume: 50,
@@ -160,8 +161,22 @@ function App() {
     });
   };
   const masterPlayPause = () => {
+    setMasterChangedByChannel(false)
     setMasterPlay(old => !old);
   };
+
+  const channelPlayClicked = () => {
+    setMasterChangedByChannel(true)
+    let index = 0
+    for (index; index < channels.length; index++) {
+      //console.log(document.querySelector('#audio' + index).paused)
+      if (!document.querySelector('#audio' + index).paused) {
+        setMasterPlay(true);
+        return;
+      }
+    }
+    setMasterPlay(false);
+  }
 
   useEffect(() => {
     initMidi();
@@ -333,7 +348,9 @@ function App() {
     midiValues,
     midiChanged,
     setChannelsChanged,
-    getMyNextID
+    getMyNextID,
+    masterChangedByChannel,
+    channelPlayClicked
   }
 
   const masterProps = {

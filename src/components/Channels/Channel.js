@@ -39,7 +39,6 @@ function Channel(props) {
   const [filterHighGain, setFilterHighGain] = useState(0);
   const [filterLowGain, setFilterLowGain] = useState(0);
   const [filterBandGain, setFilterBandGain] = useState(0);
-  const [autoplayPrevented, setAutoplayPrevented] = useState(false)
 
   var audioPlayer;
   var outputNode = audioContext.createGain();
@@ -90,13 +89,6 @@ function Channel(props) {
     audioPlayer = document.getElementById(audioPlayerID);
   });
 
-  const handleAutoPlay = (event) =>{
-    if (autoplayPrevented === false) {
-      pauseAudio();
-      setAutoplayPrevented(true);
-    }
-  }
-
   const playAudio = () => {
     audioPlayer = document.getElementById(audioPlayerID);
     if (!isChannelEnabled) return;
@@ -114,15 +106,23 @@ function Channel(props) {
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
-    props.setChannelsChanged((old) => !old)
+    props.setChannelsChanged((old) => !old);
   };
+
+  const audioEnded = () => {
+    pauseAudio();
+    props.channelPlayClicked();
+  }
 
   const playPauseClicked = () => {
     isPlaying ? pauseAudio() : playAudio();
+    props.channelPlayClicked();
   };
 
   useEffect(()=>{
-    props.masterPlay ? playAudio() : pauseAudio();
+    if (!props.masterChangedByChannel) {
+      props.masterPlay ? playAudio() : pauseAudio();
+    }
   },[props.masterPlay])
 
   const stopPlayback = () => {
@@ -130,6 +130,7 @@ function Channel(props) {
     audioPlayer.currentTime = 0
     setIsPlaying(false)
     props.setChannelsChanged((old) => !old)
+    props.channelPlayClicked()
   }
 
   const channelStateChange = (event) => {
@@ -503,8 +504,7 @@ function Channel(props) {
         id={audioPlayerID}
         className="channelAudio invisible"
         controls={true}
-        onPlay={handleAutoPlay}
-        onEnded={pauseAudio}
+        onEnded={audioEnded}
       >
         <source type={type} src={audioSourceURL} />
       </audio>

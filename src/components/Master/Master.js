@@ -11,30 +11,40 @@ export var masterRate = 1;
 function Master(props) {
   const [channelID] = useState(props.id);
   const [color, setColor] = useState(props.backgroundColor);
-  const [buttonTxt, setButtonTxt] = useState("All Play");
+  const [buttonTxt, setButtonTxt] = useState("Play all");
+  const [initStateChangePrevented, setinitStateChangePrevented] = useState(false)
+
   //Initialization
   useEffect(() => {
     masterOutputNode = audioContext.createGain();
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
-    setButtonTxt("All Pause");
   }, []);
   //Midi Play Pause pressed
   useEffect(() => {
-    playPauseClicked();
+    if (initStateChangePrevented) {
+      playPauseClicked();
+    } else {
+      setinitStateChangePrevented(true)
+    }
   }, [props.masterPlayMidi]);
 
   const playPauseClicked = () =>{
     props.masterPlayPause();
-    playBtnTxt();
   };
 
+  useEffect(() => {
+    playBtnTxt();
+  }, [props.masterPlay])
+
   const playBtnTxt = () => {
-    var updated;
-    setButtonTxt((old) => {
-      updated = old == "Play all" ? "Pause all" : "Play all";
-       return updated;
+    setButtonTxt(() => {
+      if (props.masterPlay) {
+        return "Pause all"
+      } else {
+        return "Play all"
+      }
     });
   };
 

@@ -40,6 +40,8 @@ const Channels = (props) =>{
                     setChannelsChanged = {props.setChannelsChanged}
                     midiID={i}
                     isAChannelPlaying = {props.isAChannelPlaying}
+                    masterChangedByChannel = {props.masterChangedByChannel}
+                    channelPlayClicked = {props.channelPlayClicked}
                 />
             }
         }
