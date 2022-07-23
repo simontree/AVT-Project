@@ -122,12 +122,12 @@ function App() {
 
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
+      console.log("prevChannels: "+prevChannels)
       return [...channels, channel];
     });
   };
 
   const destroyChannel = (element) => {
-    console.log("destroyChannelEl-app.js: "+element)
     document
       .getElementById("channelsContainer").removeChild(element);
     setChannelCount(channelCount-1)
@@ -157,6 +157,7 @@ function App() {
   };
   const masterPlayPause = () => {
     setMasterPlay(old => !old);
+    console.log("masterPlay: "+masterPlay)
   };
 
   useEffect(() => {
@@ -341,7 +342,7 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }} margin={'20px'} marginTop={'30px'}>
+    <Box sx={{ width: 1 }} marginTop={'30px'} marginLeft={'20px'}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
         <Box gridColumn="span 12">
           <Grid container direction='row'>

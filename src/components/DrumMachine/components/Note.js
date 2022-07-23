@@ -12,6 +12,9 @@ const Note = ({
 
     const { toggleNote } = useContext(Context)
 
+    /**
+     * to just play clips that are enabled at current time
+     */
     useEffect(() => {
         if(isClipEnabled && isClipOnCurrentPoint)
             play()
@@ -35,7 +38,7 @@ const Note = ({
                     bgcolor: "#1769aa"},
                 border: '1px solid #104976'
                 }}
-            /> :
+            /> :    //else
             <Button 
             onClick={noteClicked} 
             sx={{

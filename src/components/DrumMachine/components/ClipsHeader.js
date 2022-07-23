@@ -12,6 +12,9 @@ const ClipsHeader = ({ count = 0, currentClipID }) => {
         }
     }
 
+    /**
+     * creates Array to show which notes are being played at a certain time
+     */
     let content = [...Array(count)]
     .map((el, i) => 
     (<div className={isPlaying(i)? 'clip clip-playing': 'clip'} key={i + 1}><button/></div>))

@@ -35,4 +35,7 @@ Dies ist eine Projektarbeit im Rahmen des Kurses "Audio & Videotechnik". Mit Rea
 ## Anleitung zur Nutzung
 
 
+## Empfohlene weitere Schritte
+
+Mit etwas mehr Zeit könnten folgende Features folgen:
 
