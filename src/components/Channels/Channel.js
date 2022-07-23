@@ -330,7 +330,7 @@ function Channel(props) {
    */
   function formatDurationDescending() {
     const minuteRounded = Math.floor((fileDuration - currentTime)/60)
-    const secLeftForCurrentMinute = parseFloat((fileDuration - currentTime) % 60).toPrecision(2)
+    const secLeftForCurrentMinute = ((fileDuration - currentTime) % 60).toFixed()
     return `${minuteRounded}:${secLeftForCurrentMinute < 10? 
       `0${secLeftForCurrentMinute}` 
       : secLeftForCurrentMinute}`;
