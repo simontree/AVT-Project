@@ -130,19 +130,15 @@ function App() {
   };
 
   const destroyChannel = (element) => {
-    console.log("destroyChannelEl-app.js: " + element)
-    document
-      .getElementById("channelsContainer").removeChild(element);
     setChannelCount(channelCount-1)
     setNextID(prev => prev-1)
     setChannels((prevChannels) => {
-      let meinPo = prevChannels
-      for(let i=0; i < meinPo.length; i++){
-        if(meinPo[i].id == element.id){
-          meinPo.slice(i,1);
+      for(let i=0; i < prevChannels.length; i++){
+        if(prevChannels[i].id == element.id){
+          prevChannels.splice(i,1);
         }
       }
-      console.log(meinPo)
+      console.log(prevChannels)
       return channels;
     });
   };
@@ -317,11 +313,14 @@ function App() {
     const arr = [].slice.call(channelsx)
     let nextID = -1;
     console.log(arr.length)
-    for(let i = 0; i < arr.length; i++){
-      console.log("ChannelID: " + arr[i].id)
-      if(arr[i].id != i){
-        nextID = i;
-        break;
+    for(let j = 0; j < 4; j++){
+      for(let i = 0; i < arr.length; i++){
+        if(arr[i].id == j){
+          break;
+        }
+        if(i == arr.length -1){
+          return j;
+        }
       }
     }
     if(nextID === -1) nextID = arr.length;
