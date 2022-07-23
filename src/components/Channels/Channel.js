@@ -82,11 +82,11 @@ function Channel(props) {
       setFileDuration(e.target.duration)
       setCurrentTime(e.target.currentTime)
     })
+    
   }, []);
 
   useEffect(() => {
     audioPlayer = document.getElementById(audioPlayerID);
-    console.log("Rerendered Player: " + audioPlayer)
   });
 
   const handleAutoPlay = (event) =>{
@@ -97,6 +97,7 @@ function Channel(props) {
   }
 
   const playAudio = () => {
+    audioPlayer = document.getElementById(audioPlayerID);
     if (!isChannelEnabled) return;
     if (audioContext.state === "suspended") {
       audioContext.resume();
@@ -104,12 +105,15 @@ function Channel(props) {
     audioPlayer.play();
     setIsPlaying(true);
     setplayBtnTxt("Pause");
+    props.setChannelsChanged((old) => !old)
   };
 
   const pauseAudio = () => {
+    audioPlayer = document.getElementById(audioPlayerID);
     audioPlayer.pause();
     setIsPlaying(false);
     setplayBtnTxt("Play");
+    props.setChannelsChanged((old) => !old)
   };
 
   const playPauseClicked = () => {
@@ -124,6 +128,7 @@ function Channel(props) {
     audioPlayer.pause()
     audioPlayer.currentTime = 0
     setIsPlaying(false)
+    props.setChannelsChanged((old) => !old)
   }
 
   const channelStateChange = (event) => {
@@ -161,7 +166,6 @@ function Channel(props) {
   }
 
   useEffect(()=>{
-    console.log("Master volume changed:" + props.masterVolume/100)
     handleVolumeChangeFromMidi(volume);
   },[props.masterVolume])
 
@@ -234,7 +238,6 @@ function Channel(props) {
   const filterClick = (e) => {
     var id = e.target.id;
     var filterType = id.split(" ");
-    console.log(filterType[0]);
     filterCheck(e.currentTarget.checked, filterType[0]);
   };
 
@@ -264,52 +267,49 @@ function Channel(props) {
         break;
     }
 
-    console.log("ChannelID: " + channelID);
-    console.log("MES: " )
-
     mediaElementSource[channelID].disconnect();
       if (highSet) {
-        console.log("highpass on")
+        //console.log("highpass on")
         highpassGain.gain.value = filterHighGain;
         highpassGain.connect(outputNode);
         highpassFilter.connect(highpassGain);
         mediaElementSource[channelID].connect(highpassFilter);
         highpassGain.connect(masterOutputNode);
       } else {
-        console.log("highpass off")
+        //console.log("highpass off")
         highpassGain.disconnect();
         highpassFilter.disconnect();
       }
 
       if (lowSet) {
-        console.log("lowpass on")
+        //console.log("lowpass on")
         lowpassGain.gain.value = filterLowGain;
         lowpassGain.connect(outputNode);
         lowpassFilter.connect(lowpassGain);
         mediaElementSource[channelID].connect(lowpassFilter);
         lowpassGain.connect(masterOutputNode);
       } else {
-        console.log("lowpass off")
+        //console.log("lowpass off")
         lowpassGain.disconnect();
         lowpassFilter.disconnect();
       }
 
 
       if (bandSet) {
-        console.log("bandpass on")
+        //console.log("bandpass on")
         bandpassGain.gain.value = filterBandGain;
         bandpassGain.connect(outputNode);
         bandpassFilter.connect(bandpassGain);
         mediaElementSource[channelID].connect(bandpassFilter);
         bandpassGain.connect(masterOutputNode);
       } else {
-        console.log("bandpass off")
+        //console.log("bandpass off")
         bandpassGain.disconnect();
         bandpassFilter.disconnect();
       }
 
     if(!highSet&&!lowSet&&!bandSet){
-      console.log("all off")
+      //console.log("all off")
       mediaElementSource[channelID].connect(outputNode);
     }
     toggleOutputConnection();
@@ -373,7 +373,7 @@ function Channel(props) {
   }
 
   return (
-    <div id={channelID}>
+    <div id={channelID} className="channelElement">
     <Container
     
     sx={{

@@ -53,6 +53,19 @@ function Master(props) {
     document.getElementById("masterRateSlider").value=props.masterRate;
   },[props.masterRate])
 
+  // useEffect(()=>{
+  //   let index = 0;
+  //   console.log(props.channels)
+  //   try{
+  //     for(index; index < props.channels.length; index++){
+  //       console.log(document.querySelector('#audio' + index).paused)
+  //     }
+  //   }
+  //   catch{
+  //     console.log("caca");
+  //   }
+  // },[props.channelsChanged])
+
   return (
     <Container
     id={channelID}

@@ -17,7 +17,7 @@ function MidiChannel(props){
             props.handleBandpassInput(props.midiValues[props.channelID].bandFilter)
         }
         setFirst(false);
-        console.log("midi values changed");
+        //console.log("midi values changed");
     }, [props.midiChanged])
 
     
