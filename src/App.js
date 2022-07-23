@@ -143,11 +143,6 @@ function App() {
     });
   };
 
-  // console.log("channelIDToDelete: "+channelIDToDelete)
-
-  // channelsContent.filter(channel => channel.id !== channelIDToDelete)
-  // console.log("channels[] in channels.js: "+channelsContent)
-
   const defineRandomColor = () => {
     let color = "#";
     for (let i = 0; i < 6; i++) {
@@ -166,7 +161,6 @@ function App() {
   };
   const masterPlayPause = () => {
     setMasterPlay(old => !old);
-    console.log("masterPlay: "+masterPlay)
   };
 
   useEffect(() => {
@@ -202,20 +196,7 @@ function App() {
     let cmd = event.data[0] >> 4;
     let btnID = event.data[1];
     let value = event.data[2];
-    //console.log(btnID)
     let channel = getChannel(cmd, btnID, value);
-    // console.log("_________________________________________")
-    // console.log(
-    //   "\n" +
-    //     "New Event (on Channel: " +
-    //     channel +
-    //     ")==> Type: " +
-    //     cmd +
-    //     ", Origin: " +
-    //     btnID +
-    //     ", Value: " +
-    //     value
-    // );
   }
 
   const getChannel = (type, btnID, value) => {
@@ -371,7 +352,8 @@ function App() {
     defaultAudioUrl,    //added for design purpose
     defaultColor,        //added for design purpose
     channels,
-    channelsChanged
+    channelsChanged,
+    setMasterPlay
   }
 
   return (

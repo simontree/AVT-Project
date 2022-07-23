@@ -82,6 +82,7 @@ function Channel(props) {
       setFileDuration(e.target.duration)
       setCurrentTime(e.target.currentTime)
     })
+    console.log(props.midiID)
     
   }, []);
 
@@ -513,7 +514,7 @@ function Channel(props) {
         handleVolumeChange={handleVolumeChangeFromMidi}
         handleRateChange={handleRateChange}
         handleTogglePlay={playPauseClicked}
-        channelID={channelID}
+        channelID={props.midiID}
         midiTogglePlay = {props.midiTogglePlay}
         handleHighpassInput = {handleHighpassInput}
         handleLowpassInput = {handleLowpassInput}
