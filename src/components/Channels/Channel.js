@@ -312,19 +312,28 @@ function Channel(props) {
     letterSpacing: 0.2,
   });  
 
-  function formatDuration(value) {
-    const minute = Math.floor(value/60)
-    const currTime = parseFloat(currentTime).toPrecision(2)
-    const secondLeft = parseFloat(Math.abs(currTime - minute * 60) % 60).toPrecision(2)
-    const absoluteValueOfLeftSeconds = Math.abs(currTime - minute * 60) % 60  // try to solve problem with first 5 seconds of each minute -> current minute not changing
-    console.log("minute: "+minute)
-    console.log("currTime: "+currTime)
-    console.log("secLeft: "+secondLeft)
-    console.log("betrag Secs: "+Math.abs(currTime - minute * 60) % 60)
 
-    return `${minute}:${secondLeft < 10? 
-      `0${secondLeft.slice(0,-2)}` 
-      : secondLeft}`;
+  /**
+   * for left hand side track duration display
+   * @returns already lapsed time in format M:SS
+   */
+  const formatDurationAscending = () => {
+    const currTime = currentTime.toFixed()
+    const minuteRounded = Math.floor((currentTime)/60)
+    const secondLapsed = currTime - minuteRounded * 60
+    return `${minuteRounded}:${secondLapsed < 10? `0${secondLapsed}`:secondLapsed}`
+  }
+ 
+  /**
+   * for right hand side track duration display
+   * @returns left time in format -M:SS
+   */
+  function formatDurationDescending() {
+    const minuteRounded = Math.floor((fileDuration - currentTime)/60)
+    const secLeftForCurrentMinute = parseFloat((fileDuration - currentTime) % 60).toPrecision(2)
+    return `${minuteRounded}:${secLeftForCurrentMinute < 10? 
+      `0${secLeftForCurrentMinute}` 
+      : secLeftForCurrentMinute}`;
   }
 
   useEffect(() => {
@@ -410,8 +419,8 @@ function Channel(props) {
               justifyContent: 'space-between',
               mt: -2,
             }}>
-            <TinyText>{formatDuration(currentTime)}</TinyText>
-            <TinyText>-{formatDuration(fileDuration - currentTime)}</TinyText>
+            <TinyText>{formatDurationAscending()}</TinyText>
+            <TinyText>-{formatDurationDescending()}</TinyText>
           </Box>
         </Grid>
         <Grid item sx={{marginBottom: '5px'}}>
