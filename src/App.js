@@ -130,6 +130,7 @@ function App() {
     console.log("destroyChannelEl-app.js: "+element)
     document
       .getElementById("channelsContainer").removeChild(element);
+    setChannelCount(channelCount-1)
   };
 
   // console.log("channelIDToDelete: "+channelIDToDelete)
@@ -294,6 +295,8 @@ function App() {
     setMasterVolume((old) => updated);
   };
 
+  const [channelCount, setChannelCount] = useState(0)
+
   const newChannelprops = {
     nextID,
     defaultMidi,
@@ -304,7 +307,9 @@ function App() {
     defaultRate,
     defineRandomColor,
     addChannelHandler,
-    setNextID
+    setNextID,
+    channelCount,
+    setChannelCount
   }
 
   const channelProps = {

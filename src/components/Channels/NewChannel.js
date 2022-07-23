@@ -3,7 +3,7 @@ import DragAndDrop from "../dragAndDrop/DragAndDrop";
 
 const NewChannel = (props) =>{
 
-    const [channelCount, setChannelCount] = useState(0)
+    // const [channelCount, setChannelCount] = useState(0)
     const createNewChannel = (source, type, name) =>{
         var channelData = 
         {   id: props.nextID,
@@ -19,11 +19,10 @@ const NewChannel = (props) =>{
         }
         props.addChannelHandler(channelData);
         props.setNextID(prev => prev + 1)
-        setChannelCount(channelCount+1)
-        console.log("channelCount: "+channelCount)
+        props.setChannelCount(props.channelCount+1)
     }
     return(
-        (channelCount < 4 ) ?
+        (props.channelCount < 4 ) ?
             <DragAndDrop createNewChannel={createNewChannel} />
             : <></>
     )
