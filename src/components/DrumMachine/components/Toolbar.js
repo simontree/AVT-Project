@@ -16,6 +16,9 @@ const ToolBar = ({
     BPM
 }) => {
 
+    /**
+     * to toggle between playing and paused drum machine
+     */
     function togglePlayback() {
         if (isPlaying) {
             setPastLapsedTime(l => l + performance.now() - startTime)
@@ -57,7 +60,7 @@ const ToolBar = ({
                 fontSize="large"
                 sx={{
                     color: '#bbdefb'
-                }}/> :
+                }}/> :   //else
                 <PlayArrowIcon 
                 fontSize="large"
                 sx={{color: '#bbdefb'}}/>}

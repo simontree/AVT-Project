@@ -124,6 +124,7 @@ function App() {
 
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
+      console.log("prevChannels: "+prevChannels)
       return [...channels, channel];
     });
   };
@@ -169,6 +170,7 @@ function App() {
   };
   const masterPlayPause = () => {
     setMasterPlay(old => !old);
+    console.log("masterPlay: "+masterPlay)
   };
 
   useEffect(() => {
@@ -374,7 +376,7 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }} margin={'20px'} marginTop={'30px'}>
+    <Box sx={{ width: 1 }} marginTop={'30px'} marginLeft={'20px'}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
         <Box gridColumn="span 12">
           <Grid container direction='row'>
@@ -391,11 +393,13 @@ function App() {
         <Box gridColumn="span 4" sx={{transform: 'translateY(25%)'}}>
           <Box><Master {...masterProps} /></Box>
         </Box>
-        <Box gridColumn="span 12">
-          <Box><DrumMachine/></Box>
-        </Box>
-        <Box gridColumn="span 4">
-          <Box>Visualization coming soon..</Box>
+        <Box gridColumn="span 16">
+          <Grid container
+          justifyContent="center">
+            <Grid item>
+            <DrumMachine/>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </Box>

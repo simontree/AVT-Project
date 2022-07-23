@@ -12,6 +12,10 @@ const Track = ({
     enabledNotes,
     filePath,
 }) => {
+
+    /**
+     * create 
+     */
     const [play] = useAudio(filePath)
     
     const trackNotes = [...Array(notes)].map((el, i) => {

@@ -14,14 +14,11 @@ function Master(props) {
   const [buttonTxt, setButtonTxt] = useState("All Play");
   //Initialization
   useEffect(() => {
-    
     masterOutputNode = audioContext.createGain();
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
     setButtonTxt("All Pause");
-
-
   }, []);
   //Midi Play Pause pressed
   useEffect(() => {
