@@ -358,11 +358,13 @@ function App() {
         <Box gridColumn="span 4" sx={{transform: 'translateY(25%)'}}>
           <Box><Master {...masterProps} /></Box>
         </Box>
-        <Box gridColumn="span 12">
-          <Box><DrumMachine/></Box>
-        </Box>
-        <Box gridColumn="span 4">
-          <Box>Visualization coming soon..</Box>
+        <Box gridColumn="span 16">
+          <Grid container
+          justifyContent="center">
+            <Grid item>
+            <DrumMachine/>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </Box>
