@@ -25,12 +25,16 @@ Dies ist eine Projektarbeit im Rahmen des Kurses "Audio & Videotechnik". Mit Rea
     - je Track 8 Notes ein- und ausschaltbar
     - Wiedergabe, Pausieren und Stoppen der Machine 
     - BPM-Steuerung
-    
 
 ## Setup
 
-- Midicontroller
-- lokale Installation
+### Midicontroller
+- Infos folgen..
+
+### lokale Installation
+ 1. Git-Repo in lokales Verzeichnis clonen
+ 2. in Terminal "npm i" eingeben um alle Dependencies lokal zu installieren
+ 3. "npm start" in Terminal eingeben um Browser-Anwendung auf localhost zu starten
 
 ## Anleitung zur Nutzung
 
@@ -38,4 +42,6 @@ Dies ist eine Projektarbeit im Rahmen des Kurses "Audio & Videotechnik". Mit Rea
 ## Empfohlene weitere Schritte
 
 Mit etwas mehr Zeit könnten folgende Features folgen:
-
+- Visualisierung der Audiodaten einzelner Channels
+- Dropdown Menü zur Auswahl von weiteren Drum-Machine-Samples
+- Light / Dark-Theme Switch
