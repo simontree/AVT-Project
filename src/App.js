@@ -133,11 +133,6 @@ function App() {
     setChannelCount(channelCount-1)
   };
 
-  // console.log("channelIDToDelete: "+channelIDToDelete)
-
-  // channelsContent.filter(channel => channel.id !== channelIDToDelete)
-  // console.log("channels[] in channels.js: "+channelsContent)
-
   const defineRandomColor = () => {
     let color = "#";
     for (let i = 0; i < 6; i++) {
@@ -340,7 +335,7 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }} margin={'20px'} marginTop={'30px'}>
+    <Box sx={{ width: 1, backgroundColor: 'blue.background' }} margin={'20px'} marginTop={'30px'}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
         <Box gridColumn="span 12">
           <Grid container direction='row'>

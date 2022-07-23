@@ -365,7 +365,6 @@ function Channel(props) {
   return (
     <div id={channelID}>
     <Container
-    
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
       width: '320px',
