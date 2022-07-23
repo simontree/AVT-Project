@@ -15,15 +15,16 @@ class DragAndDrop extends React.Component {
         const inactive = () => this.dndRef.current.classList.remove("green-border");
         const prevents = (event) => event.preventDefault();
         const handleNewChannel = (source, type, name) =>{ this.props.createNewChannel(source, type, name);}
+        
         const handleDrop = (event) => {
             const dt = event.dataTransfer;
             const files = dt.files;
             for (const file of files) {
+                const truncatedFileName = this.truncateFileName(file.name)
                 if (this.allowedFileTypes.includes(file.type)) {
                     const reader = new FileReader();
                     reader.onload = function (ev) {
-                        //console.log(source.src);
-                        handleNewChannel(ev.target.result, file.type, file.name);
+                        handleNewChannel(ev.target.result, file.type, truncatedFileName);
                     }
                     reader.readAsDataURL(file);
                 }  else {
@@ -51,6 +52,13 @@ class DragAndDrop extends React.Component {
         ['dragleave', 'drop'].forEach(eventName => {
             this.dndRef.current.addEventListener(eventName, inactive);
         });
+    }
+
+    truncateFileName(str){
+        if(str.length <= 18){
+            return str
+        }
+        return str.slice(0, 16) + '..'
     }
 
     render() {
