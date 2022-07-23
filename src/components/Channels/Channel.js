@@ -337,6 +337,7 @@ function Channel(props) {
   }
 
   useEffect(() => {
+    if(audioPlayer !== null)
     audioPlayer.addEventListener("timeupdate", e => {
       setCurrentTime(e.target.currentTime)
     })
@@ -362,8 +363,9 @@ function Channel(props) {
   }
 
   return (
+    <div id={channelID}>
     <Container
-    id={channelID}
+    
     sx={{
       backgroundColor: 'rgb(2, 40, 79)',
       width: '320px',
@@ -509,6 +511,7 @@ function Channel(props) {
 
       ></MidiChannel>
     </Container>
+    </div>
   )
 }
 export default Channel;

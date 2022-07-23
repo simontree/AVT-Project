@@ -127,10 +127,15 @@ function App() {
   };
 
   const destroyChannel = (element) => {
+    console.log("destroyChannelEl-app.js: "+element)
     document
-      .getElementById("channelsContainer")
-      .childNodes[0].removeChild(element);
+      .getElementById("channelsContainer").removeChild(element);
   };
+
+  // console.log("channelIDToDelete: "+channelIDToDelete)
+
+  // channelsContent.filter(channel => channel.id !== channelIDToDelete)
+  // console.log("channels[] in channels.js: "+channelsContent)
 
   const defineRandomColor = () => {
     let color = "#";
