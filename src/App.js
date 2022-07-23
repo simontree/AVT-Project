@@ -8,6 +8,7 @@ import Master from "./components/Master/Master";
 import { masterOutputNode } from "./components/Master/Master";
 import DrumMachine from "./components/DrumMachine/DrumMachine";
 import {Box, Grid, Container, Typography} from '@mui/material'
+import { arrayOf } from "prop-types";
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
@@ -119,6 +120,7 @@ function App() {
     }
   ])
   const [midiChanged, setMidiChanged] = useState(0);
+  const [channelsChanged, setChannelsChanged] = useState(false);
 
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
@@ -127,11 +129,21 @@ function App() {
   };
 
   const destroyChannel = (element) => {
-    console.log("destroyChannelEl-app.js: "+element)
+    console.log("destroyChannelEl-app.js: " + element)
     document
       .getElementById("channelsContainer").removeChild(element);
     setChannelCount(channelCount-1)
     setNextID(prev => prev-1)
+    setChannels((prevChannels) => {
+      let meinPo = prevChannels
+      for(let i=0; i < meinPo.length; i++){
+        if(meinPo[i].id == element.id){
+          meinPo.slice(i,1);
+        }
+      }
+      console.log(meinPo)
+      return channels;
+    });
   };
 
   // console.log("channelIDToDelete: "+channelIDToDelete)
@@ -298,8 +310,25 @@ function App() {
 
   const [channelCount, setChannelCount] = useState(0)
 
+  const getMyNextID = () =>{
+    let channelsx = document.getElementsByClassName("channelElement");
+    const arr = [].slice.call(channelsx)
+    let nextID = -1;
+    console.log(arr.length)
+    for(let i = 0; i < arr.length; i++){
+      console.log("ChannelID: " + arr[i].id)
+      if(arr[i].id != i){
+        nextID = i;
+        break;
+      }
+    }
+    if(nextID === -1) nextID = arr.length;
+    console.log("Next ID:  " + nextID)
+    return nextID;
+  }
+
   const newChannelprops = {
-    nextID,
+    getMyNextID,
     defaultMidi,
     defaultVolume,
     defaultState,
@@ -320,7 +349,9 @@ function App() {
     masterPlay,
     masterVolume,
     midiValues,
-    midiChanged
+    midiChanged,
+    setChannelsChanged,
+    getMyNextID
   }
 
   const masterProps = {
@@ -337,7 +368,9 @@ function App() {
     color:'#000000',
     addChannelHandler,  
     defaultAudioUrl,    //added for design purpose
-    defaultColor        //added for design purpose
+    defaultColor,        //added for design purpose
+    channels,
+    channelsChanged
   }
 
   return (

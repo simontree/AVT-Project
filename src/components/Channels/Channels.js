@@ -8,41 +8,14 @@ const Channels = (props) =>{
     var channels = props.channels;
     useEffect(()=>{
         channels = props.channels;
-        console.log("hi")
         mapChannels2();
     },[props.channels])
     let channelsContent = [];
 
-    // const changeMidiChannel = (num, radioID) => {
-    //     props.handleMidiChannelOrganization(num, radioID);
-    // }
     const destroyChannel = (element) => {
         props.destroyChannel(element);
     }
-    // const mapChannels = () => {
-    //     if(channels.length > 0){
-    //         channelsContent = channels.map((channel) =>(
-    //             <Grid item>
-    //             <Channel
-    //                 key={channel.id}
-    //                 id={channel.id}
-    //                 channelName={channel.name}
-    //                 selectedMidi={channel.selectedMidi}
-    //                 volume={channel.volume}
-    //                 rate={channel.rate}
-    //                 isEnabled={channel.isEnabled}
-    //                 isPlaying={channel.masterPlayisPlaying}
-    //                 audioURL={channel.audioURL}
-    //                 backgroundColor={channel.color}
-    //                 destroyChannel={destroyChannel}
-    //                 audioType = {channel.audioType}
-    //                 masterRate = {props.masterRate}
-    //                 masterPlay = {props.masterPlay}
-    //                 />
-    //             </Grid>
-    //         ))
-    //     }
-    // }
+
     const mapChannels2 = () =>{
         if(channels.length > 0) {
             for(var i = 0; i < channels.length; i++){
@@ -63,6 +36,7 @@ const Channels = (props) =>{
                     masterVolume = {props.masterVolume}
                     midiValues = {props.midiValues}
                     midiChanged = {props.midiChanged}
+                    setChannelsChanged = {props.setChannelsChanged}
                 />
             }
         }
