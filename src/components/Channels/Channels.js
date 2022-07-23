@@ -48,6 +48,7 @@ const Channels = (props) =>{
             for(var i = 0; i < channels.length; i++){
                 channelsContent[i] = <Channel
                     id={props.channels[i].id}
+                    channelName={props.channels[i].name}
                     selectedMidi={props.channels[i].selectedMidi}
                     volume={props.channels[i].volume}
                     rate={props.channels[i].rate}
