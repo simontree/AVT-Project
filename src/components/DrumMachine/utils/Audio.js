@@ -1,8 +1,11 @@
 import { audioContext } from '../../../App'
 import { masterOutputNode } from '../../Master/Master'
 
+/**
+ * utility class to load audio files, decode audio-buffer
+ * and create play-functionality to be used throughout app
+ */
 class Audio {
-
     constructor(path){
         if(!this.buffer) this.loadAudioFile(path)
     }

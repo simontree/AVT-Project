@@ -1,11 +1,19 @@
 import React, { useReducer, createContext } from 'react'
 import { audioClips } from '../audioClips'
 
+/**
+ * custom context-hook for note-state management throughout app
+ */
 const Context = createContext({
     clips: {},
     toggleNote: () => {},
 })
 
+/**
+ * @param state input state to enable / disable notes 
+ * @param action dispatch event element
+ * @returns 
+ */
 const appReducer = (state, action) => {
     switch (action.type) {
         case 'setNotes':
@@ -28,6 +36,10 @@ const appReducer = (state, action) => {
     }
 }
 
+/**
+ * @param children all elements that are surrounded by Provider
+ * @returns Context.Provider to be wrapped around all DrumMachine-Components
+ */
 const Provider = ({ children }) => {
     const [clips, dispatch] = useReducer(appReducer, { ...audioClips[0] }) 
 
