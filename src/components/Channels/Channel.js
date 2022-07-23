@@ -491,8 +491,8 @@ function Channel(props) {
       <audio
         id={audioPlayerID}
         className="channelAudio invisible"
-        controls={true}
-        autoPlay={false}
+        controls="true"
+        autoplay="false"
         onEnded={pauseAudio}
       >
         <source type={type} src={audioSourceURL} />
