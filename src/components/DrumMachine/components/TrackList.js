@@ -4,6 +4,10 @@ import Track from './Track'
 import { Context } from '../hooks/useNoteContext'
 import { Container } from '@mui/material'
 
+/**
+ * @param currentClipID prop to get clip ID from DrumMachine.js
+ * @returns all four tracks (kick, cowbell, snare, tom) to be used within DrumMachine.js
+ */
 const TrackList = ({ currentClipID }) => {
         const { clips: { clipList, notes }} = useContext(Context)
         const content = clipList.map((track, trackID) => {

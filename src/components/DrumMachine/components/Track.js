@@ -14,7 +14,7 @@ const Track = ({
 }) => {
 
     /**
-     * create 
+     * creates play function via callback and custom useAudio-hook from filepath to be used for each note created in trackNotes-Array
      */
     const [play] = useAudio(filePath)
     

@@ -357,10 +357,12 @@ function App() {
   }
 
   return (
-    <Box sx={{ width: 1 }} marginTop={'30px'} marginLeft={'20px'}>
-      <Box display="grid" gridTemplateColumns="repeat(16, 1fr)">
-        <Box gridColumn="span 12">
-          <Grid container direction='row'>
+    <Grid container padding={'20px'}>
+      <Grid item xs={12}>
+        <Grid 
+        container direction='row'
+        alignItems="center"
+        >
             <Grid container direction='row'>
               <Grid item>
               <Channels {...channelProps}/>
@@ -370,20 +372,20 @@ function App() {
               </Grid>
             </Grid>
           </Grid>
-        </Box>
-        <Box gridColumn="span 4" sx={{transform: 'translateY(25%)'}}>
-          <Box><Master {...masterProps} /></Box>
-        </Box>
-        <Box gridColumn="span 16">
-          <Grid container
-          justifyContent="center">
-            <Grid item>
-            <DrumMachine/>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Box>
+      </Grid>
+      <Grid container 
+            direction="row"
+            alignItems="center"
+            padding={'15px'}
+            >
+        <Grid item xs={8}>
+          <DrumMachine/>
+        </Grid>
+        <Grid item xs={4}>
+            <Master {...masterProps} />
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
