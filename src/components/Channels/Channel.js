@@ -4,10 +4,7 @@ import "./ChannelCss/Slider.css";
 import React, { useEffect, useState } from "react";
 import { audioContext, primaryGainControl } from "../../App";
 import { masterOutputNode, masterRate } from "../Master/Master";
-import { element } from "prop-types";
-import Filter from "./Filters/Filter";
-import NewFilter from "./Filters/NewFilter";
-import Filters from "./Filters/Filters";
+import MidiChannel from "./MidiChannel/MidiChannel";
 
 import {Box, Grid, Container, Typography} from '@mui/material'
 import StopIcon from '@mui/icons-material/Stop'
@@ -16,8 +13,6 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import ClearIcon from '@mui/icons-material/Clear';
 import VolumeUp from '@mui/icons-material/VolumeUp';
@@ -76,7 +71,7 @@ function Channel(props) {
     setAudioPlayerID("audio" + channelID);
     outputNode.gain.value=0.35;
     outputNode.connect(masterOutputNode);
-    audioPlayer = document.querySelector("#" + audioPlayerID);
+    audioPlayer = document.getElementById(audioPlayerID)
     mediaElementSource[channelID] = audioContext.createMediaElementSource(audioPlayer);
     mediaElementSource[channelID].connect(outputNode);
     audioPlayer.volume = 5 / 100;
@@ -88,9 +83,38 @@ function Channel(props) {
   }, []);
 
   useEffect(() => {
-    setAudioPlayerID("audio" + channelID);
     audioPlayer = document.getElementById(audioPlayerID);
   });
+
+  const playAudio = () => {
+    if (!isChannelEnabled) return;
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+    audioPlayer.play();
+    setIsPlaying(true);
+    setplayBtnTxt("Pause");
+  };
+
+  const pauseAudio = () => {
+    audioPlayer.pause();
+    setIsPlaying(false);
+    setplayBtnTxt("Play");
+  };
+
+  const playPauseClicked = () => {
+    isPlaying ? pauseAudio() : playAudio();
+  };
+
+  useEffect(()=>{
+    props.masterPlay ? playAudio() : pauseAudio();
+  },[props.masterPlay])
+
+  const stopPlayback = () => {
+    audioPlayer.pause()
+    audioPlayer.currentTime = 0
+    setIsPlaying(false)
+  }
 
   const channelStateChange = (event) => {
     const isSliderOn = event.target.checked;
@@ -121,10 +145,15 @@ function Channel(props) {
   const handleVolumeChangeFromMidi = (value) =>{
     setVolume(() => {
       const updatedVolume = Math.ceil(value);
-      audioPlayer.volume = updatedVolume / 100;
+      audioPlayer.volume = Math.ceil((updatedVolume/100)*(props.masterVolume/100)*10)/10;
       return updatedVolume;
     });
   }
+
+  useEffect(()=>{
+    console.log("Master volume changed:" + props.masterVolume/100)
+    handleVolumeChangeFromMidi(volume);
+  },[props.masterVolume])
 
   const rateSliderChange = (event) => {
     const updatedRate = event.target.value;
@@ -133,9 +162,9 @@ function Channel(props) {
 
   const handleRateChange = (value) => {
     setRate(() => {
-      const updatedRate = value == undefined ? 1 : value;
-      const realRate = value * Math.ceil(props.masterRate*10)/10;
-      audioPlayer.playbackRate = updatedRate * props.masterRate;
+      const updatedRate = value === undefined ? 1 : value;
+      const realRate =  Math.ceil(updatedRate *props.masterRate*10)/10;
+      audioPlayer.playbackRate = realRate;
       return updatedRate;
     });
   }
@@ -181,7 +210,7 @@ function Channel(props) {
   const bandpassFilterInput = (e) => { 
     handleBandpassInput(e.target.value);
   }
-  const handleBandpassInput = (value) => {    
+  const handleBandpassInput = (value) => {  
     setFilterBandGain(() =>{
       var updatedGain = value;
       bandpassGain.gain.value = updatedGain;
@@ -225,8 +254,10 @@ function Channel(props) {
         break;
     }
 
-    mediaElementSource[channelID].disconnect();
+    console.log("ChannelID: " + channelID);
+    console.log("MES: " )
 
+    mediaElementSource[channelID].disconnect();
       if (highSet) {
         console.log("highpass on")
         highpassGain.gain.value = filterHighGain;
@@ -274,40 +305,6 @@ function Channel(props) {
     toggleOutputConnection();
   }
 
-
-  const playAudio = () => {
-    if (!isChannelEnabled) return;
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-    audioPlayer = document.getElementById(audioPlayerID);
-    audioPlayer.play();
-    setIsPlaying(true);
-    setplayBtnTxt("Pause");
-  };
-
-  const pauseAudio = () => {
-    audioPlayer = document.getElementById(audioPlayerID);
-    audioPlayer.pause();
-    setIsPlaying(false);
-    setplayBtnTxt("Play");
-  };
-
-  const playPauseClicked = () => {
-    isPlaying ? pauseAudio() : playAudio();
-  };
-
-  useEffect(()=>{
-    props.masterPlay ? playAudio() : pauseAudio();
-  },[props.masterPlay])
-
-  const stopPlayback = () => {
-    audioPlayer = document.getElementById(audioPlayerID)
-    audioPlayer.pause()
-    audioPlayer.currentTime = 0
-    setIsPlaying(false)
-  }
-
   const TinyText = styled(Typography)({
     fontSize: '1rem',
     opacity: 0.5,
@@ -350,7 +347,6 @@ function Channel(props) {
     filterBandGain,
     bandpassFilterInput,
     bandpassSet,
-    filterClick,
     filterLowGain,
     lowpassFilterInput,
     lowpassSet
@@ -470,7 +466,7 @@ function Channel(props) {
             max={3}
             step={0.1}
             value={rate}
-            id="sSlider"
+            id={"sSlider"+channelID}
             onChange={rateSliderChange}
             valueLabelDisplay="auto"
             sx={{color: '#bbdefb', height: 4}}
@@ -490,7 +486,19 @@ function Channel(props) {
       >
         <source type={type} src={audioSourceURL} />
       </audio>
+      <MidiChannel
+        midiValues={props.midiValues}
+        midiChanged = {props.midiChanged}
+        handleVolumeChange={handleVolumeChangeFromMidi}
+        handleRateChange={handleRateChange}
+        handleTogglePlay={playPauseClicked}
+        channelID={channelID}
+        midiTogglePlay = {props.midiTogglePlay}
+        handleHighpassInput = {handleHighpassInput}
+        handleLowpassInput = {handleLowpassInput}
+        handleBandpassInput = {handleBandpassInput}
 
+      ></MidiChannel>
     </Container>
   )
 }

@@ -14,23 +14,13 @@ function Master(props) {
   const [buttonTxt, setButtonTxt] = useState("All Play");
   //Initialization
   useEffect(() => {
+    
     masterOutputNode = audioContext.createGain();
-    masterOutputNode.gain.value = 0.35;
+    masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
     setColor(props.backgroundColor);
     setButtonTxt("All Pause");
 
-    //added for design purpose
-    props.addChannelHandler({
-      id: 0,
-      selectedMidi: 0,
-      volume: 50,
-      rate: 1,
-      isEnabled: true,
-      isPlaying: false,
-      audioURL: props.defaultAudioUrl,
-      color: props.defaultColor,
-    });
 
   }, []);
   //Midi Play Pause pressed
@@ -38,7 +28,7 @@ function Master(props) {
     playPauseClicked();
   }, [props.masterPlayMidi]);
 
-  const playPauseClicked = () => {
+  const playPauseClicked = () =>{
     props.masterPlayPause();
     playBtnTxt();
   };
@@ -54,6 +44,7 @@ function Master(props) {
   const volSliderChange = (event) => {
     const updatedVolume = event.target.value;
     masterOutputNode.gain.value = updatedVolume / 100;
+    console.log("master volume changed")
     props.updateMasterVolume(updatedVolume);
   };
 
