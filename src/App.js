@@ -2,18 +2,14 @@ import "./App.css";
 import React, { useEffect, useState } from "react";
 import Channels from "./components/Channels/Channels";
 import NewChannel from "./components/Channels/NewChannel";
-import { toBeChecked } from "@testing-library/jest-dom/dist/matchers";
-import Channel from "./components/Channels/Channel";
 import Master from "./components/Master/Master";
-import { masterOutputNode } from "./components/Master/Master";
 import DrumMachine from "./components/DrumMachine/DrumMachine";
-import {Box, Grid, Container, Typography} from '@mui/material'
-import { arrayOf } from "prop-types";
+import {Grid} from '@mui/material'
 
 export const audioContext = new AudioContext();
 export const out = audioContext.destination;
 export const primaryGainControl = audioContext.createGain();
-primaryGainControl.gain.setValueAtTime(0.4, 0);
+primaryGainControl.gain.setValueAtTime(0.7, 0);
 primaryGainControl.connect(out);
 
 const defaultMidi = 0;
@@ -21,63 +17,10 @@ const defaultVolume = 5;
 const defaultRate = 1;
 const defaultState = true;
 const defaultIsPlaying = false;
-const defaultAudioUrl = "Audios/sample4.mp3";
 const defaultColor = "#FE80F0";
-
-const DUMMY_CHANNELS = [
-  {
-    id: 0,
-    selectedMidi: defaultMidi,
-    volume: defaultVolume,
-    rate: defaultRate,
-    isEnabled: defaultState,
-    isPlaying: defaultIsPlaying,
-    audioURL: defaultAudioUrl,
-    color: defaultColor,
-  },
-  {
-    id: 1,
-    selectedMidi: defaultMidi,
-    volume: defaultVolume,
-    rate: defaultRate,
-    isEnabled: defaultState,
-    isPlaying: defaultIsPlaying,
-    audioURL: defaultAudioUrl,
-    color: defaultColor,
-  },
-  {
-    id: 2,
-    selectedMidi: defaultMidi,
-    volume: defaultVolume,
-    rate: defaultRate,
-    isEnabled: defaultState,
-    isPlaying: defaultIsPlaying,
-    audioURL: defaultAudioUrl,
-    color: defaultColor,
-  },
-  {
-    id: 3,
-    selectedMidi: defaultMidi,
-    volume: defaultVolume,
-    rate: defaultRate,
-    isEnabled: defaultState,
-    isPlaying: defaultIsPlaying,
-    audioURL: defaultAudioUrl,
-    color: defaultColor,
-  },
-  {
-    id: 4,
-    selectedMidi: defaultMidi,
-    volume: defaultVolume,
-    rate: defaultRate,
-    isEnabled: defaultState,
-    isPlaying: defaultIsPlaying,
-    audioURL: defaultAudioUrl,
-    color: defaultColor,
-  },
-];
-
+const defaultAudioUrl = "Audios/sample4.mp3";
 const defaultAudioType = "audio/mp3";
+
 function App() {
   const [channels, setChannels] = useState([]);
   const [nextID, setNextID] = useState(0);
@@ -122,6 +65,7 @@ function App() {
   ])
   const [midiChanged, setMidiChanged] = useState(0);
   const [channelsChanged, setChannelsChanged] = useState(false);
+  const [channelCount, setChannelCount] = useState(0)
 
   const addChannelHandler = (channel) => {
     setChannels((prevChannels) => {
@@ -144,16 +88,6 @@ function App() {
     });
   };
 
-  const defineRandomColor = () => {
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      const random = Math.random();
-      const bit = (random * 16) | 0;
-      color += bit.toString(16);
-    }
-    return color;
-  };
-
   const updateMasterRate = (e) => {
     setMasterRate((old) => {
       const updatedMasterRate = e;
@@ -164,12 +98,14 @@ function App() {
     setMasterChangedByChannel(false)
     setMasterPlay(old => !old);
   };
+  const updateMasterVolume = (updated) => {
+    setMasterVolume((old) => updated);
+  };
 
   const channelPlayClicked = () => {
     setMasterChangedByChannel(true)
     let index = 0
     for (index; index < channels.length; index++) {
-      //console.log(document.querySelector('#audio' + index).paused)
       if (!document.querySelector('#audio' + index).paused) {
         setMasterPlay(true);
         return;
@@ -178,6 +114,8 @@ function App() {
     setMasterPlay(false);
   }
 
+  //Midi connection taken from class example
+  //Start ------- Ueb 05 MIDI Beispiel ------
   useEffect(() => {
     initMidi();
   }, []);
@@ -194,7 +132,6 @@ function App() {
   let midiAccess;
   function midiSuccess(midi) {
     console.log("Midi is working!");
-
     midiAccess = midi;
     console.log(midi.inputs);
     var inputs = midi.inputs;
@@ -211,10 +148,11 @@ function App() {
     let cmd = event.data[0] >> 4;
     let btnID = event.data[1];
     let value = event.data[2];
-    let channel = getChannel(cmd, btnID, value);
+    passMidiValues(cmd, btnID, value);
   }
+  //End ------ Ueb 05 MIDI Beispiel ---------
 
-  const getChannel = (type, btnID, value) => {
+  const passMidiValues = (type, btnID, value) => {
     //console.log(channelsOnMidi);
     var index = 0;
     //Channels Volume
@@ -251,7 +189,7 @@ function App() {
     if ((btnID > 13 && btnID < 18) && type==11) {
       index = btnID - 14;
       setMidiValues((old) => {
-        old[index].highFilter = Math.ceil((value*2) /12.7) / 10;
+        old[index].lowFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
       setMidiChanged((old) => ++old);
@@ -261,7 +199,7 @@ function App() {
     if ((btnID > 9 && btnID < 14) && type==11) {
       index = btnID - 10;
       setMidiValues((old) => {
-        old[index].lowFilter = Math.ceil((value*2) /12.7) / 10;
+        old[index].bandFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
       setMidiChanged((old) => ++old);
@@ -271,7 +209,7 @@ function App() {
     if ((btnID > 5 && btnID < 10) && type==11) {
       index = btnID - 6;
       setMidiValues((old) => {
-        old[index].bandFilter = Math.ceil((value*2) /12.7) / 10;
+        old[index].highFilter = Math.ceil((value*2) /12.7) / 10;
         return old;
       });
       setMidiChanged((old) => ++old);
@@ -297,12 +235,6 @@ function App() {
       updateMasterRate(Math.ceil(mapped * 10) / 10);
     }
   };
-
-  const updateMasterVolume = (updated) => {
-    setMasterVolume((old) => updated);
-  };
-
-  const [channelCount, setChannelCount] = useState(0)
 
   const getMyNextID = () =>{
     let channelsx = document.getElementsByClassName("channelElement");
@@ -332,7 +264,6 @@ function App() {
     defaultIsPlaying,
     defaultAudioUrl,
     defaultRate,
-    defineRandomColor,
     addChannelHandler,
     setNextID,
     channelCount,

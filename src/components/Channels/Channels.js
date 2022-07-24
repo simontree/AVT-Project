@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Card from "../UI/Card";
 import Channel from "./Channel";
 import {Grid} from '@mui/material'
 
@@ -8,7 +7,7 @@ const Channels = (props) =>{
     var channels = props.channels;
     useEffect(()=>{
         channels = props.channels;
-        mapChannels2();
+        mapChannels();
     },[props.channels])
     let channelsContent = [];
 
@@ -16,7 +15,7 @@ const Channels = (props) =>{
         props.destroyChannel(element);
     }
 
-    const mapChannels2 = () =>{
+    const mapChannels = () =>{
         if(channels.length > 0) {
             for(var i = 0; i < channels.length; i++){
                 channelsContent[i] = <Channel
@@ -29,7 +28,6 @@ const Channels = (props) =>{
                     isEnabled={props.channels[i].isEnabled}
                     isPlaying={props.channels[i].isPlaying}
                     audioURL={props.channels[i].audioURL}
-                    backgroundColor={props.channels[i].color}
                     destroyChannel={destroyChannel}
                     audioType = {props.channels[i].audioType}
                     masterRate = {props.masterRate}
@@ -46,7 +44,7 @@ const Channels = (props) =>{
             }
         }
     }
-    mapChannels2();
+    mapChannels();
 
     return(
         <Grid container direction='row' id="channelsContainer" className="channels" >

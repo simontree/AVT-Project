@@ -14,7 +14,6 @@ const NewChannel = (props) =>{
             isPlaying: props.defaultIsPlaying,
             audioURL: source == null ? props.defaultAudioUrl : source,
             audioType: type==null ? props.defaultAudioType : type,
-            color: props.defineRandomColor(),
             name: name
         }
         props.addChannelHandler(channelData);

@@ -10,7 +10,6 @@ export var masterRate = 1;
 
 function Master(props) {
   const [channelID] = useState(props.id);
-  const [color, setColor] = useState(props.backgroundColor);
   const [buttonTxt, setButtonTxt] = useState("Play all");
   const [initStateChangePrevented, setinitStateChangePrevented] = useState(false)
 
@@ -19,7 +18,6 @@ function Master(props) {
     masterOutputNode = audioContext.createGain();
     masterOutputNode.gain.value=0.35;
     masterOutputNode.connect(primaryGainControl);
-    setColor(props.backgroundColor);
   }, []);
   //Midi Play Pause pressed
   useEffect(() => {
@@ -63,18 +61,6 @@ function Master(props) {
     document.getElementById("masterRateSlider").value=props.masterRate;
   },[props.masterRate])
 
-  // useEffect(()=>{
-  //   let index = 0;
-  //   console.log(props.channels)
-  //   try{
-  //     for(index; index < props.channels.length; index++){
-  //       console.log(document.querySelector('#audio' + index).paused)
-  //     }
-  //   }
-  //   catch{
-  //     console.log("caca");
-  //   }
-  // },[props.channelsChanged])
 
   return (
     <Container
