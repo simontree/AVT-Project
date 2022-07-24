@@ -15,6 +15,8 @@ Dies ist eine Projektarbeit im Rahmen des Kurses "Audio & Videotechnik". Mit Rea
 - Bis zu vier verschiedene Audio-Channels
     - je Channel diverse Funktionen:
         - Abspielen & Pausieren einer Soundfile
+        - Wiedergabe-Steuerung während des laufenden Tracks
+        - zeitliche Darstellung der Trackdauer und verbleibender Zeit
         - Lautstärkeregelung
         - drei Filter (Lowpass, Bandpass, Highpass) die jeweils an- bzw. ausgeschaltet werden können
         - Löschen eines Channels
