@@ -19,7 +19,6 @@ const defaultState = true;
 const defaultIsPlaying = false;
 const defaultColor = "#FE80F0";
 const defaultAudioUrl = "Audios/sample4.mp3";
-const defaultAudioType = "audio/mp3";
 
 function App() {
   const [channels, setChannels] = useState([]);
@@ -79,7 +78,7 @@ function App() {
     setNextID(prev => prev-1)
     setChannels((prevChannels) => {
       for(let i=0; i < prevChannels.length; i++){
-        if(prevChannels[i].id == element.id){
+        if(prevChannels[i].id === element.id){
           prevChannels.splice(i,1);
         }
       }

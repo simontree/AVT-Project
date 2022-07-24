@@ -19,7 +19,7 @@ function MidiChannel(props){
     }, [props.midiChanged])
 
     const togglePlay = () => {
-        if(props.midiValues[props.channelID].play != oldPlayState){
+        if(props.midiValues[props.channelID].play !== oldPlayState){
             props.handleTogglePlay();
             setOldPlayState((old) => !old)
         }
